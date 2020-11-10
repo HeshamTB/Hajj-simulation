@@ -5,6 +5,8 @@ public class Accident {
     private Date date;
     private Breakable[] involvedCars;
     private Street location;
+    //Add expext fixed by (Date) object.
+
 
     public Accident(Date date, Breakable[] involvedCars, Street location) {
         setDate(date);
