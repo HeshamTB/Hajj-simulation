@@ -22,7 +22,7 @@ public class DataManeger {
     }
 
     public boolean stateAvailable(Date time) {
-        File f = new File(workingDir.toString()+time.getTime());
+        File f = new File(String.format("0x%016X.bin", time.getTime()));
         return f.exists();
     }
 
@@ -31,7 +31,7 @@ public class DataManeger {
         if (stateAvailable(time)){
             try {
                 ObjectInputStream objectInputStream = new ObjectInputStream(
-                        new FileInputStream(String.format("%s%d",workingDir,time.getTime())));
+                        new FileInputStream(String.format("0x%016X.bin", time.getTime())));
                 state = (State)objectInputStream.readObject();
                 objectInputStream.close();
             } catch (IOException | ClassNotFoundException e) {
@@ -43,7 +43,7 @@ public class DataManeger {
 
     public boolean saveState(State state, Date time){
         try {
-            FileOutputStream fs = new FileOutputStream(String.format("%s%d",workingDir,time.getTime()));
+            FileOutputStream fs = new FileOutputStream(String.format("0x%016X.bin", time.getTime()));
             BufferedOutputStream bfs = new BufferedOutputStream(fs);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(bfs);
             objectOutputStream.writeObject(state);
