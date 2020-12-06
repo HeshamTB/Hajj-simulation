@@ -25,6 +25,7 @@ public class MakkahCity {
 
 	private static final InputListener inputListener = new InputListener();
 	private static final Thread t = new Thread(inputListener,"InputThread-Makkah");
+	private static boolean isAllRoutSet;
 
 	public static void main(String[] args) {
 
@@ -48,7 +49,6 @@ public class MakkahCity {
 		makeRoutes();
 
 		//Set Routes for Campaigns
-		setRoutesForCampaigns(Mashier.ARAFAT);
 		while(!firstDayTimeMan.isEnded()) {
 			checkInput();
 			//Start of Every hour
@@ -57,15 +57,19 @@ public class MakkahCity {
 			}
 			else System.out.print(".");
 			
-			//TODO: setRout rework
-			//TODO: find Best Rout method
-
+			if (!isAllRoutSet) {
+				isAllRoutSet = true;
+				setRoutesForCampaigns(Mashier.ARAFAT);
+				}
 			clearDoneCivilVehicles();
 			addCivilVehicleNoise();
 			for (Vehicle vehicle : listOfVehicles) {
+				if (vehicle.getRoute() == null)
+					continue;
 				Route route = vehicle.getRoute();
 				double currentLocation = vehicle.getCurrentLocation();
 				if (vehicle.getCurrentStreet() == null &&
+				firstDayTimeMan.getCurrentCalendar().get(Calendar.MINUTE) % 3 == 0 &&
 				route.getStreets()[0].capcityPoint(0,1000) < 1) {
 					vehicle.setCurrentStreet(route.getStreets()[0]);
 				}
@@ -92,8 +96,8 @@ public class MakkahCity {
 		
 		currenttimeManager = lastDayTimeMan;
 		System.out.println("\n***************FINSHIED ARAFAT DAY***************");
-		setRoutesForCampaigns(Mashier.MINA);
 		//Collections.shuffle(listOfVehicles);
+		isAllRoutSet = false;
 		for (Vehicle vehicle : listOfVehicles) {
 			vehicle.setCurrentStreet(null);
 		}
@@ -109,13 +113,19 @@ public class MakkahCity {
 				System.out.println("\n\n" + getStreetsReport());
 			}
 			else System.out.print(".");
-
+			
+			
+			if (!isAllRoutSet) {
+				isAllRoutSet = true;
+				setRoutesForCampaigns(Mashier.MINA);
+				}
 			clearDoneCivilVehicles();
 			addCivilVehicleNoise();
 			for (Vehicle vehicle : listOfVehicles) {
 				Route route = vehicle.getRoute();
 				double currentLocation = vehicle.getCurrentLocation();
 				if (vehicle.getCurrentStreet() == null &&
+						lastDayTimeMan.getCurrentCalendar().get(Calendar.MINUTE) % 3 == 0 &&
 						route.getStreets()[0].capcityPoint(0,1000) < 1) {
 					vehicle.setCurrentStreet(route.getStreets()[0]);
 				}
@@ -293,7 +303,10 @@ public class MakkahCity {
 
 	private static void setRoutesForCampaigns(Mashier mashier) {
 		for (Campaign camp : listOfCampaigns){
-			camp.setRoute(getShortestRoute(camp, mashier));
+			if (camp.getVehicles().get(0).getCurrentStreet() == null) {
+				isAllRoutSet = false;
+				camp.setRoute(getBestRoute(camp, mashier));
+			}
 		}
 	}
 
@@ -446,7 +459,7 @@ public class MakkahCity {
 	private static void addCivilVehicleNoise() {
 
 		for (Street street: stdStreet) {
-			if (street.getPercentRemainingCapacity() >= 100) 
+			if (street.getPercentRemainingCapacity() >= 80) 
 				continue;
 			
 			int numOfSedan = (int)getRandom(10,15);
@@ -515,6 +528,38 @@ public class MakkahCity {
 	 * @param campaign
 	 * @return
 	 */
+	
+	private static Route getBestRoute(Campaign campaign , Mashier mashier) {
+		//ArrayList<Route> routes = (ArrayList<Route>) Arrays.asList(getRoutesToDistrict(campaign.getHotelDistrict()));
+		Route[] routes = getRoutesToDistrict(campaign.getHotelDistrict());
+		routes = sortRoutes(routes);
+		for (Route r : routes) {
+			if (r.getMashier() == mashier){
+				if (r.capcity() < 70) 
+					return r;
+				else if (r.getHotelArea() == District.ALAZIZIYA)
+					return r;
+				}
+			}
+		return null;
+	}
+	
+	private static Route[] sortRoutes(Route[] routes) {
+		Route[] sortingRoute = new Route[routes.length];
+		double[] lengthes = new double[routes.length];
+		
+		for (int i = 0; i < lengthes.length ; i++) 
+			lengthes[i] = routes[i].getTotalLength();
+		
+		Arrays.sort(lengthes);
+		for (int i = 0; i < lengthes.length ; i++) {
+			for (Route r : routes)
+				if (lengthes[i] == r.getTotalLength())
+					sortingRoute[i] = r;
+		}
+		return sortingRoute;
+	}
+	
 	private static Route getShortestRoute(Campaign campaign, Mashier mashier) {
 		Route[] routes = getRoutesToDistrict(campaign.getHotelDistrict());
 		Route route = null;
@@ -707,7 +752,7 @@ public class MakkahCity {
 			report.append(String.format(" %-20s|", getShortestRoute(campPerDistrict[i].get(0), Mashier.ARAFAT).getFastestTimeOfTravel(new Bus())));
 			report.append(String.format(" %-22s|", getShortestRoute(campPerDistrict[i].get(0), Mashier.MINA).getFastestTimeOfTravel(new Bus())));
 			//Calc values per dist here.
-			//TODO: add arrived buses colum
+			//TODO: add arrived buses colum (NO NEED)
 			report.append("\n");
 		}
 		return report.toString();
