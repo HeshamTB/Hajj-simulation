@@ -22,8 +22,8 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
  
 public class testfx extends Application {
- 
-			private TableView table = new TableView();
+	
+			private TableView<MakkahCity> table = new TableView();
     		Stage window;
     		private Button btVeiwBuses = new Button("View Buses");
     		private Button btViewStreets = new Button("View Streets");
@@ -43,25 +43,26 @@ public class testfx extends Application {
        
         //table
         table.setEditable(true);
-        TableColumn streetName = new TableColumn("Street Name");
+        TableColumn<MakkahCity,String>streetName = new TableColumn<>("Street Name");
         streetName.setPrefWidth(150);
         streetName.setStyle("-fx-base: SILVER");
-        TableColumn StreetLoad = new TableColumn("Street Load");
+        streetName.setCellValueFactory(new PropertyValueFactory<>("x"));
+        TableColumn<MakkahCity,String> StreetLoad = new TableColumn<>("Street Load");
         StreetLoad.setPrefWidth(150);
         StreetLoad.setStyle("-fx-base: SILVER");
-        TableColumn Total = new TableColumn("Total");
+        TableColumn<MakkahCity,String> Total = new TableColumn<>("Total");
         Total.setPrefWidth(100);
         Total.setStyle("-fx-base: SILVER");
-        TableColumn Buses = new TableColumn("Buses");
+        TableColumn<MakkahCity,String> Buses = new TableColumn<>("Buses");
         Buses.setStyle("-fx-base: SILVER");
-        TableColumn localVehicles = new TableColumn("Local Vehicles");
+        TableColumn<MakkahCity,String> localVehicles = new TableColumn<>("Local Vehicles");
         localVehicles.setStyle("-fx-base: SILVER");
         localVehicles.setPrefWidth(150);
-        TableColumn avgTime = new TableColumn("Avg. Time");
+        TableColumn<MakkahCity,String> avgTime = new TableColumn<>("Avg. Time");
         avgTime.setStyle("-fx-base: SILVER");
         avgTime.setPrefWidth(150);
         table.getColumns().addAll(streetName, StreetLoad, Total,Buses,localVehicles,avgTime);
-        
+        table.setItems(getInfo());
         //table root
         VBox root1 = new VBox();
         root1.setSpacing(5);
@@ -96,6 +97,11 @@ public class testfx extends Application {
         window.setScene(scene);
         window.show();
         
+    }
+    
+    public ObservableList<MakkahCity> getInfo(){
+		ObservableList<MakkahCity>table=FXCollections.observableArrayList();
+		return  table;
     }
  
     public static void main(String[] args) {
