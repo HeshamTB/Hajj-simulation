@@ -1,4 +1,6 @@
-public class Route implements Travelable {
+import java.io.Serializable;
+
+public class Route implements Travelable, Serializable {
 
     private Street[] streets;
     private District hotelArea;

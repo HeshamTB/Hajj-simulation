@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Campaign {
+public class Campaign implements Serializable {
 
     private String UID;
     private int numberOfAriivedBuses;

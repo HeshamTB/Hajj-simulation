@@ -53,6 +53,7 @@ public class MakkahCity {
 			//Start of Every hour
 			if (firstDayTimeMan.getCurrentCalendar().get(Calendar.MINUTE) == 0){
 				System.out.println("\n\n" + getStreetsReport());
+				saveState();
 			}
 			else System.out.print(".");
 
@@ -731,5 +732,24 @@ public class MakkahCity {
 			buses += campaign.getNumberOfBusses();
 		}
 		return buses;
+	}
+
+	private static void saveState(){
+		State s = new State(listOfCampaigns,
+				listOfVehicles,
+				stdRoutes,
+				stdStreet,
+				allArrivedToArafatTime,
+				allArrivedToHotelsTime);
+		DataManeger dataManeger = new DataManeger();
+		dataManeger.saveState(s, currenttimeManager.getCurrentTime());
+
+		boolean result = dataManeger.saveState(s, currenttimeManager.getCurrentTime());
+		if (!result) System.out.println("Could not save state "+currenttimeManager.getCurrentTime().getTime());
+	}
+
+	private static State loadState(Date time){
+		DataManeger dataManeger = new DataManeger();
+		return dataManeger.loadState(time);
 	}
 }

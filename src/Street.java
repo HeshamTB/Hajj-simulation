@@ -1,31 +1,22 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-public class Street implements Travelable {
+public class Street implements Travelable, Serializable {
 
     private double length;
     private int numberOfLanes;
     private ArrayList<Vehicle> vehicles; //Current
-    private HashMap<Vehicle, ArrayList<Date>> vehiclesHistory;//History of vehicles
     private StreetNames name;
   
   
 
     public Street(double length, int numberOfLanes, StreetNames name) {
         vehicles = new ArrayList<>();
-        vehiclesHistory = new HashMap<>();
         setLength(length);
         setNumberOfLanes(numberOfLanes);
         this.name = name;
-    }
-
-    public Date[] getHistoryForVehicle(Vehicle vehicle){
-        if (vehiclesHistory.containsKey(vehicle)){
-            Date[] hist = new Date[vehiclesHistory.get(vehicle).size()];
-            return vehiclesHistory.get(vehicle).toArray(hist);
-        }
-        return null;
     }
 
     private void setLength(double length) {
@@ -96,14 +87,6 @@ public class Street implements Travelable {
 
     public void addVehicle(Vehicle vehicle) {
         vehicles.add(vehicle);
-        addHistoryEntry(vehicle);
-    }
-
-    private void addHistoryEntry(Vehicle vehicle) {
-        if (!vehiclesHistory.containsKey(vehicle)) {
-            vehiclesHistory.put(vehicle, new ArrayList<>());
-        }
-        vehiclesHistory.get(vehicle).add(MakkahCity.getTimeMan().getCurrentTime());//Add time
     }
 
     public double capcityPoint(double min, double max) {
