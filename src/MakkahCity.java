@@ -105,27 +105,23 @@ public class MakkahCity {
 			btnViewCampaigns.setBounds(336, 428, 137, 23);
 			f.getContentPane().add(btnViewCampaigns);
 			
-			JButton btnNewButton_2 = new JButton("View Routes");
-			btnNewButton_2.setBackground(new Color(211, 211, 211));
-			btnNewButton_2.setForeground(new Color(0, 0, 0));
-			btnNewButton_2.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-				}
-			});
-			btnNewButton_2.setBounds(496, 428, 113, 23);
-			f.getContentPane().add(btnNewButton_2);
+			JButton btnViewRoutes = new JButton("View Routes");
+			btnViewRoutes.setBackground(new Color(211, 211, 211));
+			btnViewRoutes.setForeground(new Color(0, 0, 0));
+			btnViewRoutes.setBounds(496, 428, 113, 23);
+			f.getContentPane().add(btnViewRoutes);
 			
-			JButton btnNewButton_3 = new JButton("Print Report");
-			btnNewButton_3.setForeground(new Color(0, 0, 0));
-			btnNewButton_3.setBackground(new Color(211, 211, 211));
-			btnNewButton_3.setBounds(633, 428, 113, 23);
-			f.getContentPane().add(btnNewButton_3);
+			JButton btnPrintReport = new JButton("Print Report");
+			btnPrintReport.setForeground(new Color(0, 0, 0));
+			btnPrintReport.setBackground(new Color(211, 211, 211));
+			btnPrintReport.setBounds(633, 428, 113, 23);
+			f.getContentPane().add(btnPrintReport);
 			
-			JButton btnNewButton_4 = new JButton("Exit");
-			btnNewButton_4.setForeground(new Color(0, 0, 0));
-			btnNewButton_4.setBackground(new Color(211, 211, 211));
-			btnNewButton_4.setBounds(766, 428, 72, 23);
-			f.getContentPane().add(btnNewButton_4);
+			JButton btnExit = new JButton("Exit");
+			btnExit.setForeground(new Color(0, 0, 0));
+			btnExit.setBackground(new Color(211, 211, 211));
+			btnExit.setBounds(766, 428, 72, 23);
+			f.getContentPane().add(btnExit);
 		 
 		//window
 		f.getContentPane().setBackground(new Color(0, 0, 0));
