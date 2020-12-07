@@ -1,9 +1,6 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.*;
 
 
@@ -53,89 +50,8 @@ public class MakkahCity {
 		addCivilVehicleNoise();
 
 		makeRoutes();
-		//table
-		JFrame frame = new JFrame("Streets");
-		Object[][] streetData = new Object[stdStreet.length][6];
-		
-		for (int i = 0; i < stdStreet.length; i++) {
-			streetData[i][0] = stdStreet[i].getName().name();
-			streetData[i][1] = stdStreet[i].getPercentRemainingCapacity();
-			streetData[i][2] = stdStreet[i].getVehicles().size();
-			streetData[i][3] = stdStreet[i].getNumberOfBuses();
-			streetData[i][4] = stdStreet[i].getNumberOfLocalCars();
-			streetData[i][5] = avgTimeOnStreet(stdStreet[i]);
-		}
-		
-		String[] colNames = {"Street name", "Street Load", "Total", "Buses", 
-				 "Local Vehicles",
-				 "Avg. Time"};	
-		
-		 JTable table = new JTable(streetData,colNames);
-		 DefaultTableModel model = new DefaultTableModel();
-		 model.setColumnIdentifiers(colNames);
-		 table.getTableHeader().setBackground(Color.lightGray);
-		 table.setBackground(Color.DARK_GRAY);
-		 table.setForeground(Color.white);
-		 table.setSelectionBackground(Color.BLUE);
-		 table.setGridColor(Color.white);
-		 table.setSelectionForeground(Color.white);
-		 table.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		 table.setRowHeight(30);
-		 table.setAutoCreateRowSorter(true);
-		 
-		 JScrollPane scroll = new JScrollPane(table);
-		 scroll.setBounds(10,11,871,383);
-		 
-		 //buttons
-		 JButton btnViewBuses = new JButton("View Buses");
-		 btnViewBuses.setForeground(new Color(0, 0, 0));
-			btnViewBuses.setFont(UIManager.getFont("Button.font"));
-			btnViewBuses.setBackground(new Color(211, 211, 211));
-			btnViewBuses.setBounds(67, 428, 121, 23);
-			frame.getContentPane().add(btnViewBuses);
-			
-			JButton btnViewStreet = new JButton("View Street");
-			btnViewStreet.setBackground(new Color(211, 211, 211));
-			btnViewStreet.setForeground(new Color(0, 0, 0));
-			btnViewStreet.setBounds(211, 428, 103, 23);
-			frame.getContentPane().add(btnViewStreet);
-			
-			JButton btnViewCampaigns = new JButton("View Campaigns");
-			btnViewCampaigns.setForeground(new Color(0, 0, 0));
-			btnViewCampaigns.setBackground(new Color(211, 211, 211));
-			btnViewCampaigns.setBounds(336, 428, 137, 23);
-			frame.getContentPane().add(btnViewCampaigns);
-			
-			JButton btnViewRoutes = new JButton("View Routes");
-			btnViewRoutes.setBackground(new Color(211, 211, 211));
-			btnViewRoutes.setForeground(new Color(0, 0, 0));
-			btnViewRoutes.setBounds(496, 428, 113, 23);
-			frame.getContentPane().add(btnViewRoutes);
-			
-			JButton btnPrintReport = new JButton("Print Report");
-			btnPrintReport.setForeground(new Color(0, 0, 0));
-			btnPrintReport.setBackground(new Color(211, 211, 211));
-			btnPrintReport.setBounds(633, 428, 113, 23);
-			frame.getContentPane().add(btnPrintReport);
-			
-			JButton btnExit = new JButton("Exit");
-			btnExit.setForeground(new Color(0, 0, 0));
-			btnExit.setBackground(new Color(211, 211, 211));
-			btnExit.setBounds(766, 428, 72, 23);
-			frame.getContentPane().add(btnExit);
-		 
-		//window
-		frame.getContentPane().setBackground(new Color(0, 0, 0));
-		frame.getContentPane().setForeground(SystemColor.inactiveCaptionBorder);
-		frame.setBounds(100,100,907,514);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
-		frame.setLocationRelativeTo(null);
-		frame.getContentPane().add(scroll);
-		frame.setVisible(true);
-		frame.setLocation(700, 200);
-		frame.revalidate();
-
+		GUI.init();
+		GUI.startStreetsFrame();
 		//Set Routes for Campaigns
 		while(!firstDayTimeMan.isEnded()) {
 			checkInput();
@@ -179,6 +95,7 @@ public class MakkahCity {
 				}
 			}
 			if (isAllArrived() && allArrivedToArafatTime == null) allArrivedToArafatTime = (Date)currenttimeManager.getCurrentTime().clone();
+			GUI.updateStreetFrame();
 			firstDayTimeMan.step(Calendar.MINUTE, 1);
 		}
 		
@@ -873,9 +790,95 @@ public class MakkahCity {
 	static class GUI {
 
 		static Checkbox autoModeCheckBox;
+		static JFrame streetsFrame;
+		static JTable streetTable;
 
 		static void init() {
 			autoModeCheckBox = new Checkbox();
+			streetsFrame = new JFrame("Streets");
+		}
+
+		static void startStreetsFrame() {
+			Object[][] streetData = streetData(stdStreet);
+
+			String[] colNames = {"Street name", "Street Load", "Total", "Buses",
+					"Local Vehicles",
+					"Avg. Time"};
+			//table
+			streetTable = new JTable(streetData,colNames);
+			DefaultTableModel model = new DefaultTableModel();
+			model.setColumnIdentifiers(colNames);
+			streetTable.getTableHeader().setBackground(Color.lightGray);
+			streetTable.setBackground(Color.DARK_GRAY);
+			streetTable.setForeground(Color.white);
+			streetTable.setSelectionBackground(Color.BLUE);
+			streetTable.setGridColor(Color.white);
+			streetTable.setSelectionForeground(Color.white);
+			streetTable.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			streetTable.setRowHeight(30);
+			streetTable.setAutoCreateRowSorter(true);
+
+			JScrollPane scroll = new JScrollPane(streetTable);
+			scroll.setBounds(10,11,871,383);
+
+			//buttons
+			JButton btnViewBuses = new JButton("View Buses");
+			btnViewBuses.setForeground(new Color(0, 0, 0));
+			btnViewBuses.setFont(UIManager.getFont("Button.font"));
+			btnViewBuses.setBackground(new Color(211, 211, 211));
+			btnViewBuses.setBounds(67, 428, 121, 23);
+			streetsFrame.getContentPane().add(btnViewBuses);
+
+			JButton btnViewStreet = new JButton("View Street");
+			btnViewStreet.setBackground(new Color(211, 211, 211));
+			btnViewStreet.setForeground(new Color(0, 0, 0));
+			btnViewStreet.setBounds(211, 428, 103, 23);
+			streetsFrame.getContentPane().add(btnViewStreet);
+
+			JButton btnViewCampaigns = new JButton("View Campaigns");
+			btnViewCampaigns.setForeground(new Color(0, 0, 0));
+			btnViewCampaigns.setBackground(new Color(211, 211, 211));
+			btnViewCampaigns.setBounds(336, 428, 137, 23);
+			streetsFrame.getContentPane().add(btnViewCampaigns);
+
+			JButton btnViewRoutes = new JButton("View Routes");
+			btnViewRoutes.setBackground(new Color(211, 211, 211));
+			btnViewRoutes.setForeground(new Color(0, 0, 0));
+			btnViewRoutes.setBounds(496, 428, 113, 23);
+			streetsFrame.getContentPane().add(btnViewRoutes);
+
+			JButton btnPrintReport = new JButton("Print Report");
+			btnPrintReport.setForeground(new Color(0, 0, 0));
+			btnPrintReport.setBackground(new Color(211, 211, 211));
+			btnPrintReport.setBounds(633, 428, 113, 23);
+			streetsFrame.getContentPane().add(btnPrintReport);
+
+			JButton btnExit = new JButton("Exit");
+			btnExit.setForeground(new Color(0, 0, 0));
+			btnExit.setBackground(new Color(211, 211, 211));
+			btnExit.setBounds(766, 428, 72, 23);
+			streetsFrame.getContentPane().add(btnExit);
+
+			//window
+			streetsFrame.getContentPane().setBackground(new Color(0, 0, 0));
+			streetsFrame.getContentPane().setForeground(SystemColor.inactiveCaptionBorder);
+			streetsFrame.setBounds(100,100,907,514);
+			streetsFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			streetsFrame.getContentPane().setLayout(null);
+			streetsFrame.setLocationRelativeTo(null);
+			streetsFrame.getContentPane().add(scroll);
+			streetsFrame.setVisible(true);
+			streetsFrame.setLocation(700, 200);
+			streetsFrame.revalidate();
+		}
+
+		static void updateStreetFrame() {
+			Object[][] streetData = streetData(stdStreet);
+			for (int i = 0; i < streetData.length; i++) {
+				for (int j = 0; j < streetData[i].length; j++) {
+					streetTable.setValueAt(streetData[i][j], i, j);
+				}
+			}
 		}
 
 		//Street data for GUI table
@@ -891,14 +894,5 @@ public class MakkahCity {
 			}
 			return streetData;
 		}
-
-		static String[] streetColNames = new String[]{
-				"Street name",
-				"Street Load",
-				"Total",
-				"Buses",
-				"Local Vehicles",
-				"Avg. Time"
-		};
 	}
 }
