@@ -91,7 +91,7 @@ public class MakkahCity {
 					}
 				}
 			}
-			if (isAllArrived()) allArrivedToArafatTime = (Date)currenttimeManager.getCurrentTime().clone();
+			if (isAllArrived() && allArrivedToArafatTime == null) allArrivedToArafatTime = (Date)currenttimeManager.getCurrentTime().clone();
 			firstDayTimeMan.step(Calendar.MINUTE, 1);
 		}
 		
@@ -147,7 +147,7 @@ public class MakkahCity {
 					}
 				}
 			}
-			if (isAllArrived()) allArrivedToHotelsTime = (Date)currenttimeManager.getCurrentTime().clone();
+			if (isAllArrived() && allArrivedToHotelsTime == null) allArrivedToHotelsTime = (Date)currenttimeManager.getCurrentTime().clone();
 			lastDayTimeMan.step(Calendar.MINUTE, 1);
 		}
 		//When done show menu to analyze. Exit from menu too.
