@@ -50,6 +50,8 @@ public class Route implements Travelable {
                 .append("\n")
                 .append("Length: ").append(getTotalLength())
                 .append("\n")
+                .append("Capacity: ").append(String.format("%.2f", capcity()))
+                .append("\n")
                 .append("Streets: ");
         for (Street street : this.getStreets())
             s.append(street.getName().name()).append(" ");
@@ -64,6 +66,15 @@ public class Route implements Travelable {
     public Mashier getMashier() {
         return mashier;
     }
+    
+    public double capcity() {
+    	double capcity = 0;
+		for (Street str : getStreets()) {
+			capcity += str.getPercentRemainingCapacity();
+		}
+		double c = capcity/(getStreets().length);
+		return c;
+	}
 
     private void setStreets(Street[] streets) {
         if (streets != null) this.streets = streets;

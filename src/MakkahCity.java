@@ -31,6 +31,7 @@ public class MakkahCity {
 
 	private static final InputListener inputListener = new InputListener();
 	private static final Thread t = new Thread(inputListener,"InputThread-Makkah");
+	private static boolean isAllRoutSet;
 
 	public static void main(String[] args) {
 
@@ -136,7 +137,6 @@ public class MakkahCity {
 		frame.revalidate();
 
 		//Set Routes for Campaigns
-		setRoutesForCampaigns(Mashier.ARAFAT);
 		while(!firstDayTimeMan.isEnded()) {
 			checkInput();
 			//Start of Every hour
@@ -145,15 +145,19 @@ public class MakkahCity {
 			}
 			else System.out.print(".");
 			
-			//TODO: setRout rework
-			//TODO: find Best Rout method
-
+			if (!isAllRoutSet) {
+				isAllRoutSet = true;
+				setRoutesForCampaigns(Mashier.ARAFAT);
+				}
 			clearDoneCivilVehicles();
 			addCivilVehicleNoise();
 			for (Vehicle vehicle : listOfVehicles) {
+				if (vehicle.getRoute() == null)
+					continue;
 				Route route = vehicle.getRoute();
 				double currentLocation = vehicle.getCurrentLocation();
 				if (vehicle.getCurrentStreet() == null &&
+				firstDayTimeMan.getCurrentCalendar().get(Calendar.MINUTE) % 3 == 0 &&
 				route.getStreets()[0].capcityPoint(0,1000) < 1) {
 					vehicle.setCurrentStreet(route.getStreets()[0]);
 				}
@@ -174,14 +178,14 @@ public class MakkahCity {
 					}
 				}
 			}
-			if (isAllArrived()) allArrivedToArafatTime = (Date)currenttimeManager.getCurrentTime().clone();
+			if (isAllArrived() && allArrivedToArafatTime == null) allArrivedToArafatTime = (Date)currenttimeManager.getCurrentTime().clone();
 			firstDayTimeMan.step(Calendar.MINUTE, 1);
 		}
 		
 		currenttimeManager = lastDayTimeMan;
 		System.out.println("\n***************FINSHIED ARAFAT DAY***************");
-		setRoutesForCampaigns(Mashier.MINA);
 		//Collections.shuffle(listOfVehicles);
+		isAllRoutSet = false;
 		for (Vehicle vehicle : listOfVehicles) {
 			vehicle.setCurrentStreet(null);
 		}
@@ -197,13 +201,19 @@ public class MakkahCity {
 				System.out.println("\n\n" + getStreetsReport());
 			}
 			else System.out.print(".");
-
+			
+			
+			if (!isAllRoutSet) {
+				isAllRoutSet = true;
+				setRoutesForCampaigns(Mashier.MINA);
+				}
 			clearDoneCivilVehicles();
 			addCivilVehicleNoise();
 			for (Vehicle vehicle : listOfVehicles) {
 				Route route = vehicle.getRoute();
 				double currentLocation = vehicle.getCurrentLocation();
 				if (vehicle.getCurrentStreet() == null &&
+						lastDayTimeMan.getCurrentCalendar().get(Calendar.MINUTE) % 3 == 0 &&
 						route.getStreets()[0].capcityPoint(0,1000) < 1) {
 					vehicle.setCurrentStreet(route.getStreets()[0]);
 				}
@@ -224,7 +234,7 @@ public class MakkahCity {
 					}
 				}
 			}
-			if (isAllArrived()) allArrivedToHotelsTime = (Date)currenttimeManager.getCurrentTime().clone();
+			if (isAllArrived() && allArrivedToHotelsTime == null) allArrivedToHotelsTime = (Date)currenttimeManager.getCurrentTime().clone();
 			lastDayTimeMan.step(Calendar.MINUTE, 1);
 		}
 		//When done show menu to analyze. Exit from menu too.
@@ -233,6 +243,7 @@ public class MakkahCity {
 	}
 
 	private static void checkInput() {
+		//TODO: check GUI static variables and pause accordingly.
 		String input = "";
 		if (inputListener.hasNew()){
 			input = inputListener.getInput();
@@ -246,8 +257,6 @@ public class MakkahCity {
 	}
 
 	private static void startMenu() {
-		//TODO: add used by (District) in street menu as option
-		//TODO: add capacity to street list output avg time too?
 		Scanner in = new Scanner(System.in);
 		System.out.println("\n"+currenttimeManager.getCurrentTime()+"\n"+
 							"---------------------------\n" +
@@ -381,7 +390,10 @@ public class MakkahCity {
 
 	private static void setRoutesForCampaigns(Mashier mashier) {
 		for (Campaign camp : listOfCampaigns){
-			camp.setRoute(getShortestRoute(camp, mashier));
+			if (camp.getVehicles().get(0).getCurrentStreet() == null) {
+				isAllRoutSet = false;
+				camp.setRoute(getBestRoute(camp, mashier));
+			}
 		}
 	}
 
@@ -534,7 +546,7 @@ public class MakkahCity {
 	private static void addCivilVehicleNoise() {
 
 		for (Street street: stdStreet) {
-			if (street.getPercentRemainingCapacity() >= 100) 
+			if (street.getPercentRemainingCapacity() >= 80) 
 				continue;
 			
 			int numOfSedan = (int)getRandom(10,15);
@@ -603,6 +615,38 @@ public class MakkahCity {
 	 * @param campaign
 	 * @return
 	 */
+	
+	private static Route getBestRoute(Campaign campaign , Mashier mashier) {
+		//ArrayList<Route> routes = (ArrayList<Route>) Arrays.asList(getRoutesToDistrict(campaign.getHotelDistrict()));
+		Route[] routes = getRoutesToDistrict(campaign.getHotelDistrict());
+		routes = sortRoutes(routes);
+		for (Route r : routes) {
+			if (r.getMashier() == mashier){
+				if (r.capcity() < 70) 
+					return r;
+				else if (r.getHotelArea() == District.ALAZIZIYA)
+					return r;
+				}
+			}
+		return null;
+	}
+	
+	private static Route[] sortRoutes(Route[] routes) {
+		Route[] sortingRoute = new Route[routes.length];
+		double[] lengthes = new double[routes.length];
+		
+		for (int i = 0; i < lengthes.length ; i++) 
+			lengthes[i] = routes[i].getTotalLength();
+		
+		Arrays.sort(lengthes);
+		for (int i = 0; i < lengthes.length ; i++) {
+			for (Route r : routes)
+				if (lengthes[i] == r.getTotalLength())
+					sortingRoute[i] = r;
+		}
+		return sortingRoute;
+	}
+	
 	private static Route getShortestRoute(Campaign campaign, Mashier mashier) {
 		Route[] routes = getRoutesToDistrict(campaign.getHotelDistrict());
 		Route route = null;
@@ -795,7 +839,7 @@ public class MakkahCity {
 			report.append(String.format(" %-20s|", getShortestRoute(campPerDistrict[i].get(0), Mashier.ARAFAT).getFastestTimeOfTravel(new Bus())));
 			report.append(String.format(" %-22s|", getShortestRoute(campPerDistrict[i].get(0), Mashier.MINA).getFastestTimeOfTravel(new Bus())));
 			//Calc values per dist here.
-			//TODO: add arrived buses colum
+			//TODO: add arrived buses colum (NO NEED)
 			report.append("\n");
 		}
 		return report.toString();
@@ -824,5 +868,37 @@ public class MakkahCity {
 			buses += campaign.getNumberOfBusses();
 		}
 		return buses;
+	}
+
+	static class GUI {
+
+		static Checkbox autoModeCheckBox;
+
+		static void init() {
+			autoModeCheckBox = new Checkbox();
+		}
+
+		//Street data for GUI table
+		static Object[][] streetData(Street[] streets) {
+			Object[][] streetData = new Object[streets.length][6];
+			for (int i = 0; i < streets.length; i++) {
+				streetData[i][0] = streets[i].getName().name();
+				streetData[i][1] = streets[i].getPercentRemainingCapacity();
+				streetData[i][2] = streets[i].getVehicles().size();
+				streetData[i][3] = streets[i].getNumberOfBuses();
+				streetData[i][4] = streets[i].getNumberOfLocalCars();
+				streetData[i][5] = avgTimeOnStreet(streets[i]);
+			}
+			return streetData;
+		}
+
+		static String[] streetColNames = new String[]{
+				"Street name",
+				"Street Load",
+				"Total",
+				"Buses",
+				"Local Vehicles",
+				"Avg. Time"
+		};
 	}
 }
