@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -51,16 +52,10 @@ public class MakkahCity {
 		addCivilVehicleNoise();
 
 		makeRoutes();
-
+		//table
+		JFrame f = new JFrame("Streets");
 		Object[][] streetData = new Object[stdStreet.length][6];
-		String[] colNames = new String[]{
-			"Street name",
-			"Street Load",
-			"Total",
-			"Buses",
-			"Local Vehicles",
-			"Avg. Time"
-		};
+		
 		for (int i = 0; i < stdStreet.length; i++) {
 			streetData[i][0] = stdStreet[i].getName().name();
 			streetData[i][1] = stdStreet[i].getPercentRemainingCapacity();
@@ -69,16 +64,80 @@ public class MakkahCity {
 			streetData[i][4] = stdStreet[i].getNumberOfLocalCars();
 			streetData[i][5] = avgTimeOnStreet(stdStreet[i]);
 		}
-		JFrame frame = new JFrame("Streets");
-		JPanel panel = new JPanel(new GridLayout());
-		JTable table = new JTable(streetData,colNames);
-		Button btn = new Button("OK");
-		panel.add(table);
-		panel.add(btn);
-		frame.add(panel);
-		frame.setSize(500,500);
-		frame.setVisible(true);
-
+		
+		String[] colNames = {"Street name", "Street Load", "Total", "Buses", 
+				 "Local Vehicles",
+				 "Avg. Time"};	
+		
+		 JTable table = new JTable(streetData,colNames);
+		 DefaultTableModel model = new DefaultTableModel();
+		 model.setColumnIdentifiers(colNames);
+		 table.getTableHeader().setBackground(Color.lightGray);
+		 table.setBackground(Color.DARK_GRAY);
+		 table.setForeground(Color.white);
+		 table.setSelectionBackground(Color.BLUE);
+		 table.setGridColor(Color.white);
+		 table.setSelectionForeground(Color.white);
+		 table.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		 table.setRowHeight(30);
+		 table.setAutoCreateRowSorter(true);
+		 
+		 JScrollPane scroll = new JScrollPane(table);
+		 scroll.setBounds(10,11,871,383);
+		 
+		 //buttons
+		 JButton btnViewBuses = new JButton("View Buses");
+		 btnViewBuses.setForeground(new Color(0, 0, 0));
+			btnViewBuses.setFont(UIManager.getFont("Button.font"));
+			btnViewBuses.setBackground(new Color(211, 211, 211));
+			btnViewBuses.setBounds(67, 428, 121, 23);
+			f.getContentPane().add(btnViewBuses);
+			
+			JButton btnViewStreet = new JButton("View Street");
+			btnViewStreet.setBackground(new Color(211, 211, 211));
+			btnViewStreet.setForeground(new Color(0, 0, 0));
+			btnViewStreet.setBounds(211, 428, 103, 23);
+			f.getContentPane().add(btnViewStreet);
+			
+			JButton btnViewCampaigns = new JButton("View Campaigns");
+			btnViewCampaigns.setForeground(new Color(0, 0, 0));
+			btnViewCampaigns.setBackground(new Color(211, 211, 211));
+			btnViewCampaigns.setBounds(336, 428, 137, 23);
+			f.getContentPane().add(btnViewCampaigns);
+			
+			JButton btnNewButton_2 = new JButton("View Routes");
+			btnNewButton_2.setBackground(new Color(211, 211, 211));
+			btnNewButton_2.setForeground(new Color(0, 0, 0));
+			btnNewButton_2.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+				}
+			});
+			btnNewButton_2.setBounds(496, 428, 113, 23);
+			f.getContentPane().add(btnNewButton_2);
+			
+			JButton btnNewButton_3 = new JButton("Print Report");
+			btnNewButton_3.setForeground(new Color(0, 0, 0));
+			btnNewButton_3.setBackground(new Color(211, 211, 211));
+			btnNewButton_3.setBounds(633, 428, 113, 23);
+			f.getContentPane().add(btnNewButton_3);
+			
+			JButton btnNewButton_4 = new JButton("Exit");
+			btnNewButton_4.setForeground(new Color(0, 0, 0));
+			btnNewButton_4.setBackground(new Color(211, 211, 211));
+			btnNewButton_4.setBounds(766, 428, 72, 23);
+			f.getContentPane().add(btnNewButton_4);
+		 
+		//window
+		f.getContentPane().setBackground(new Color(0, 0, 0));
+		f.getContentPane().setForeground(SystemColor.inactiveCaptionBorder);
+		f.setBounds(100,100,907,514);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.getContentPane().setLayout(null);
+		f.setLocationRelativeTo(null);
+		f.getContentPane().add(scroll);
+		f.setVisible(true);
+		f.setLocation(700, 200);
+		f.revalidate();
 
 		//Set Routes for Campaigns
 		setRoutesForCampaigns(Mashier.ARAFAT);
