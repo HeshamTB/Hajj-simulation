@@ -1,4 +1,5 @@
-import java.util.*; 
+import java.awt.*;
+import java.util.*;
 
 
 public class MakkahCity {
@@ -155,6 +156,7 @@ public class MakkahCity {
 	}
 
 	private static void checkInput() {
+		//TODO: check GUI static variables and pause accordingly.
 		String input = "";
 		if (inputListener.hasNew()){
 			input = inputListener.getInput();
@@ -168,8 +170,6 @@ public class MakkahCity {
 	}
 
 	private static void startMenu() {
-		//TODO: add used by (District) in street menu as option
-		//TODO: add capacity to street list output avg time too?
 		Scanner in = new Scanner(System.in);
 		System.out.println("\n"+currenttimeManager.getCurrentTime()+"\n"+
 							"---------------------------\n" +
@@ -781,5 +781,37 @@ public class MakkahCity {
 			buses += campaign.getNumberOfBusses();
 		}
 		return buses;
+	}
+
+	static class GUI {
+
+		static Checkbox autoModeCheckBox;
+
+		static void init() {
+			autoModeCheckBox = new Checkbox();
+		}
+
+		//Street data for GUI table
+		static Object[][] streetData(Street[] streets) {
+			Object[][] streetData = new Object[streets.length][6];
+			for (int i = 0; i < streets.length; i++) {
+				streetData[i][0] = streets[i].getName().name();
+				streetData[i][1] = streets[i].getPercentRemainingCapacity();
+				streetData[i][2] = streets[i].getVehicles().size();
+				streetData[i][3] = streets[i].getNumberOfBuses();
+				streetData[i][4] = streets[i].getNumberOfLocalCars();
+				streetData[i][5] = avgTimeOnStreet(streets[i]);
+			}
+			return streetData;
+		}
+
+		static String[] streetColNames = new String[]{
+				"Street name",
+				"Street Load",
+				"Total",
+				"Buses",
+				"Local Vehicles",
+				"Avg. Time"
+		};
 	}
 }
