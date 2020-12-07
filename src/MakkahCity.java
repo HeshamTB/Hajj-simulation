@@ -1,4 +1,9 @@
-import java.util.*; 
+import javax.swing.*;
+import javax.swing.table.TableColumn;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.*;
 
 
 public class MakkahCity {
@@ -46,6 +51,34 @@ public class MakkahCity {
 		addCivilVehicleNoise();
 
 		makeRoutes();
+
+		Object[][] streetData = new Object[stdStreet.length][6];
+		String[] colNames = new String[]{
+			"Street name",
+			"Street Load",
+			"Total",
+			"Buses",
+			"Local Vehicles",
+			"Avg. Time"
+		};
+		for (int i = 0; i < stdStreet.length; i++) {
+			streetData[i][0] = stdStreet[i].getName().name();
+			streetData[i][1] = stdStreet[i].getPercentRemainingCapacity();
+			streetData[i][2] = stdStreet[i].getVehicles().size();
+			streetData[i][3] = stdStreet[i].getNumberOfBuses();
+			streetData[i][4] = stdStreet[i].getNumberOfLocalCars();
+			streetData[i][5] = avgTimeOnStreet(stdStreet[i]);
+		}
+		JFrame frame = new JFrame("Streets");
+		JPanel panel = new JPanel(new GridLayout());
+		JTable table = new JTable(streetData,colNames);
+		Button btn = new Button("OK");
+		panel.add(table);
+		panel.add(btn);
+		frame.add(panel);
+		frame.setSize(500,500);
+		frame.setVisible(true);
+
 
 		//Set Routes for Campaigns
 		setRoutesForCampaigns(Mashier.ARAFAT);
