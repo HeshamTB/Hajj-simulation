@@ -50,7 +50,7 @@ public class Route implements Travelable {
                 .append("\n")
                 .append("Length: ").append(getTotalLength())
                 .append("\n")
-                .append("capcete: ").append(String.format("%.2f", capcity()))
+                .append("Capacity: ").append(String.format("%.2f", capcity()))
                 .append("\n")
                 .append("Streets: ");
         for (Street street : this.getStreets())
