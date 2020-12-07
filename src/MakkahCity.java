@@ -1,6 +1,8 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.*;
 
 
@@ -29,6 +31,8 @@ public class MakkahCity {
 	private static final InputListener inputListener = new InputListener();
 	private static final Thread t = new Thread(inputListener,"InputThread-Makkah");
 	private static boolean isAllRoutSet;
+
+	private static boolean exit_flag;
 
 	public static void main(String[] args) {
 
@@ -160,8 +164,8 @@ public class MakkahCity {
 	}
 
 	private static void checkInput() {
-		//TODO: check GUI static variables and pause accordingly.
 		String input = "";
+		if (exit_flag) System.exit(0);
 		if (inputListener.hasNew()){
 			input = inputListener.getInput();
 			if (input.equals("m")){
@@ -858,7 +862,7 @@ public class MakkahCity {
 			btnExit.setBackground(new Color(211, 211, 211));
 			btnExit.setBounds(766, 428, 72, 23);
 			streetsFrame.getContentPane().add(btnExit);
-
+			btnExit.addActionListener(actionEvent -> exit_flag = true);
 			//window
 			streetsFrame.getContentPane().setBackground(new Color(0, 0, 0));
 			streetsFrame.getContentPane().setForeground(SystemColor.inactiveCaptionBorder);
