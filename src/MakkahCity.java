@@ -53,7 +53,7 @@ public class MakkahCity {
 
 		makeRoutes();
 		//table
-		JFrame f = new JFrame("Streets");
+		JFrame frame = new JFrame("Streets");
 		Object[][] streetData = new Object[stdStreet.length][6];
 		
 		for (int i = 0; i < stdStreet.length; i++) {
@@ -91,49 +91,49 @@ public class MakkahCity {
 			btnViewBuses.setFont(UIManager.getFont("Button.font"));
 			btnViewBuses.setBackground(new Color(211, 211, 211));
 			btnViewBuses.setBounds(67, 428, 121, 23);
-			f.getContentPane().add(btnViewBuses);
+			frame.getContentPane().add(btnViewBuses);
 			
 			JButton btnViewStreet = new JButton("View Street");
 			btnViewStreet.setBackground(new Color(211, 211, 211));
 			btnViewStreet.setForeground(new Color(0, 0, 0));
 			btnViewStreet.setBounds(211, 428, 103, 23);
-			f.getContentPane().add(btnViewStreet);
+			frame.getContentPane().add(btnViewStreet);
 			
 			JButton btnViewCampaigns = new JButton("View Campaigns");
 			btnViewCampaigns.setForeground(new Color(0, 0, 0));
 			btnViewCampaigns.setBackground(new Color(211, 211, 211));
 			btnViewCampaigns.setBounds(336, 428, 137, 23);
-			f.getContentPane().add(btnViewCampaigns);
+			frame.getContentPane().add(btnViewCampaigns);
 			
 			JButton btnViewRoutes = new JButton("View Routes");
 			btnViewRoutes.setBackground(new Color(211, 211, 211));
 			btnViewRoutes.setForeground(new Color(0, 0, 0));
 			btnViewRoutes.setBounds(496, 428, 113, 23);
-			f.getContentPane().add(btnViewRoutes);
+			frame.getContentPane().add(btnViewRoutes);
 			
 			JButton btnPrintReport = new JButton("Print Report");
 			btnPrintReport.setForeground(new Color(0, 0, 0));
 			btnPrintReport.setBackground(new Color(211, 211, 211));
 			btnPrintReport.setBounds(633, 428, 113, 23);
-			f.getContentPane().add(btnPrintReport);
+			frame.getContentPane().add(btnPrintReport);
 			
 			JButton btnExit = new JButton("Exit");
 			btnExit.setForeground(new Color(0, 0, 0));
 			btnExit.setBackground(new Color(211, 211, 211));
 			btnExit.setBounds(766, 428, 72, 23);
-			f.getContentPane().add(btnExit);
+			frame.getContentPane().add(btnExit);
 		 
 		//window
-		f.getContentPane().setBackground(new Color(0, 0, 0));
-		f.getContentPane().setForeground(SystemColor.inactiveCaptionBorder);
-		f.setBounds(100,100,907,514);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.getContentPane().setLayout(null);
-		f.setLocationRelativeTo(null);
-		f.getContentPane().add(scroll);
-		f.setVisible(true);
-		f.setLocation(700, 200);
-		f.revalidate();
+		frame.getContentPane().setBackground(new Color(0, 0, 0));
+		frame.getContentPane().setForeground(SystemColor.inactiveCaptionBorder);
+		frame.setBounds(100,100,907,514);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		frame.setLocationRelativeTo(null);
+		frame.getContentPane().add(scroll);
+		frame.setVisible(true);
+		frame.setLocation(700, 200);
+		frame.revalidate();
 
 		//Set Routes for Campaigns
 		setRoutesForCampaigns(Mashier.ARAFAT);
