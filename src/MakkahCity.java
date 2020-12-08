@@ -221,6 +221,7 @@ public class MakkahCity {
 			//Start of Every hour
 			if (firstDayTimeMan.getCurrentCalendar().get(Calendar.MINUTE) == 0){
 				System.out.println("\n\n" + getStreetsReport());
+				saveState();
 			}
 			else System.out.print(".");
 			
@@ -359,8 +360,9 @@ public class MakkahCity {
 							"[3] View Campaigns\n" +
 							"[4] View Routes\n" +
 							"[5] Print report\n" +
-							"[6] Continue\n" +
-							"[7] Exit");
+							"[6] Browse History\n" +
+							"[7] Continue\n" +
+							"[8] Exit");
 		String choice = in.next();
 		//Split into methods?
 		if (choice.equals("1")){
@@ -393,8 +395,9 @@ public class MakkahCity {
 			}
 		}
 		if (choice.equals("5")) System.out.println(getStreetsReport());
-		if (choice.equals("6")) return;
-		if (choice.equals("7")) {
+		if (choice.equals("6")) browseHistory();
+		if (choice.equals("7")) return;
+		if (choice.equals("8")) {
 			inputListener.stop();
 			t.interrupt();
 			System.exit(0);
@@ -469,6 +472,46 @@ public class MakkahCity {
 
 	private static void showRoute(Route route){
 		System.out.println(route.toString());
+	}
+
+	private static void browseHistory() {
+		Calendar dummyCal = new GregorianCalendar();
+		dummyCal.setTime(currenttimeManager.getCurrentTime());
+		//dummyCal.roll(Calendar.HOUR, -1);
+		dummyCal.set(Calendar.MINUTE, 0);//Go down to last hour.
+		Scanner in = new Scanner(System.in);
+		boolean selected = false;
+		while (!selected){
+			System.out.println(new HijriDate(dummyCal.getTimeInMillis()));
+			System.out.print("[1] Forward\n" +
+							"[2] Backward\n" +
+							"[3] Select\n" +
+							"[4] Return\n");
+			String choice = in.next();
+			if (choice.equals("1")) dummyCal.roll(Calendar.HOUR, 1);
+			if (choice.equals("2")) dummyCal.roll(Calendar.HOUR, -1);
+			if (choice.equals("3")) {
+				selected = true;
+				DataManeger dataManeger = new DataManeger();
+				if (dataManeger.stateAvailable(dummyCal.getTime())) {
+					State state = dataManeger.loadState(dummyCal.getTime());
+					System.out.print(dummyCal.getTime() + " (History)\n");
+					System.out.println("\n"+
+							"---------------------------\n" +
+							"[1] View Buses\n" +
+							"[2] View Streets\n" +
+							"[3] View Campaigns\n" +
+							"[4] View Routes\n");
+					choice = in.next();
+					if (choice.equals("1")){
+						System.out.print("0 - "+state.getListOfVehicles().size());
+						choice = in.next();
+						showVehicle(state.getListOfVehicles().get(Integer.parseInt(choice)));
+					}
+				} else System.out.print("Not saved");
+			}
+		}
+
 	}
 
 	private static void clearDoneCivilVehicles() {
@@ -967,7 +1010,26 @@ public class MakkahCity {
 		}
 		return buses;
 	}
-	
+
+	private static void saveState(){
+		State s = new State(listOfCampaigns,
+				listOfVehicles,
+				stdRoutes,
+				stdStreet,
+				allArrivedToArafatTime,
+				allArrivedToHotelsTime);
+		DataManeger dataManeger = new DataManeger();
+		dataManeger.saveState(s, currenttimeManager.getCurrentTime());
+
+		boolean result = dataManeger.saveState(s, currenttimeManager.getCurrentTime());
+		if (!result) System.out.println("Could not save state "+currenttimeManager.getCurrentTime().getTime());
+	}
+
+	private static State loadState(Date time){
+		DataManeger dataManeger = new DataManeger();
+		return dataManeger.loadState(time);
+	}
+
 	static void updateStreetFrame() {
 		Object[][] streetData = new Object[stdStreet.length][6];
 		for (int i = 0; i < stdStreet.length; i++) {

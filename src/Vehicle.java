@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 
-public abstract class Vehicle {
+public abstract class Vehicle implements Serializable {
 
     private double vehicleSize;
     private Route route;
