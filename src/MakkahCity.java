@@ -147,6 +147,10 @@ public class MakkahCity {
 		btnViewRoutes.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		btnViewRoutes.setBackground(new Color(9,9,9));
 		btnViewRoutes.setForeground(Color.white);
+		btnViewRoutes.addActionListener(e -> {
+			EventControll t =  new EventControll();
+			t.setData(stdRoutes[0]);
+		});
 		
 		JButton btnViewBuses = new JButton("View Buses");
 		btnViewBuses.setBounds(1384, 75, 184, 29);
@@ -1046,5 +1050,5 @@ public class MakkahCity {
 			}
 		}
 		lblDate.setText(currenttimeManager.getCurrentTime().toString());
-}
-}
+	}
+	}
