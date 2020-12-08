@@ -33,6 +33,10 @@ public class MakkahCity {
 	private static boolean isAllRoutSet;
 
 	private static boolean exit_flag;
+	private static Checkbox autoModeCheckBox;
+	private static JFrame makkahFrame;
+	private static JTable streetTable;
+	private static JTable districtTable;
 
 	public static void main(String[] args) {
 
@@ -54,8 +58,152 @@ public class MakkahCity {
 		addCivilVehicleNoise();
 
 		makeRoutes();
-		GUI.init();
-		GUI.startStreetsFrame();
+		
+		//GUI
+		autoModeCheckBox = new Checkbox();
+		makkahFrame = new JFrame("Streets");
+		
+		//Street data and district for GUI table
+		
+		//Street data
+		Object[][] streetData = new Object[stdStreet.length][6];
+		String[] streetColNames = {"Street Name", "Street Load", "Total", "Buses",
+				"Local Vehicles",
+				"Avg. Time"};
+
+		for (int i = 0; i < stdStreet.length; i++) {
+			streetData[i][0] = stdStreet[i].getName().name();
+			streetData[i][1] = stdStreet[i].getPercentRemainingCapacity();
+			streetData[i][2] = stdStreet[i].getVehicles().size();
+			streetData[i][3] = stdStreet[i].getNumberOfBuses();
+			streetData[i][4] = stdStreet[i].getNumberOfLocalCars();
+			streetData[i][5] = avgTimeOnStreet(stdStreet[i]);
+		}
+		//District data
+		Object[][] districtData = new Object[campPerDistrict.length][7];
+		String[] districtColNames = {"District", "Campaigns", "Busses", "Arrival",
+				"Avg. Time", "Best time to Arafat", "Best time to District"};
+		
+		for (int i = 0; i < campPerDistrict.length; i++) {
+			districtData[i][0] = campPerDistrict[i].get(0).getHotelDistrict().name();
+			districtData[i][1] = campPerDistrict[i].size();
+			districtData[i][2] = busesInDistrict(District.values()[i]);
+			districtData[i][3] = getPercentArrival(District.values()[i]);
+			districtData[i][4] = getAvgTimeOfTrip(District.values()[i]);
+			districtData[i][5] = getShortestRoute(campPerDistrict[i].get(0), Mashier.ARAFAT).getFastestTimeOfTravel(new Bus());
+			districtData[i][6] = getShortestRoute(campPerDistrict[i].get(0), Mashier.MINA).getFastestTimeOfTravel(new Bus());
+			
+		}
+				
+		//tables
+		
+		//Street table
+		streetTable = new JTable(streetData,streetColNames);
+		DefaultTableModel model = new DefaultTableModel();
+		model.setColumnIdentifiers(streetColNames);
+		streetTable.getTableHeader().setBackground(new Color(17,17,17));
+		streetTable.getTableHeader().setForeground(Color.WHITE);
+		streetTable.getTableHeader().setFont(new Font("Rockwell", Font.PLAIN, 18));
+		streetTable.setBackground(new Color(17,17,17));
+		streetTable.setForeground(Color.white);
+		streetTable.setSelectionBackground(Color.RED);
+		streetTable.setGridColor(new Color(102, 102, 102));
+		streetTable.setSelectionForeground(Color.white);
+		streetTable.setFont(new Font("Rockwell", Font.PLAIN, 18));
+		streetTable.setRowHeight(30);
+		streetTable.setAutoCreateRowSorter(true);
+		makkahFrame.setLocation(700, 200);
+		makkahFrame.revalidate();
+		JScrollPane streetScroll = new JScrollPane(streetTable);
+		streetScroll.setBounds(50,145,1271,391);
+		
+		//District table
+		districtTable = new JTable(districtData,districtColNames);
+		districtTable.setForeground(new Color(255, 255, 255));
+		districtTable.getTableHeader().setFont(new Font("Rockwell", Font.PLAIN, 18));
+		districtTable.getTableHeader().setBackground(new Color(17,17,17));
+		districtTable.getTableHeader().setForeground(Color.WHITE);
+		districtTable.setBackground(new Color(17,17,17));
+		districtTable.setSelectionBackground(Color.RED);
+		model.setColumnIdentifiers(districtColNames);
+		districtTable.setSelectionForeground(Color.white);
+		districtTable.setFont(new Font("Rockwell", Font.PLAIN, 18));
+		districtTable.setGridColor(new Color(102, 102, 102));
+		JScrollPane districtScroll = new JScrollPane(districtTable);
+		districtTable.setAutoCreateRowSorter(true);
+		districtTable.setRowHeight(30);
+		districtTable.revalidate();
+		districtScroll.setBounds(61,791,1271,121);
+		
+		//Buttons
+		JButton btnViewRoutes = new JButton("View Routes");
+		btnViewRoutes.setBounds(1678, 39, 184, 29);
+		makkahFrame.getContentPane().add(btnViewRoutes);
+		btnViewRoutes.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		btnViewRoutes.setBackground(new Color(9,9,9));
+		btnViewRoutes.setForeground(Color.white);
+		
+		JButton btnViewBuses = new JButton("View Buses");
+		btnViewBuses.setBounds(1678, 79, 184, 29);
+		makkahFrame.getContentPane().add(btnViewBuses);
+		btnViewBuses.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		btnViewBuses.setBackground(new Color(9,9,9));
+		btnViewBuses.setForeground(Color.white);
+		
+		JButton btnViewCampaigns = new JButton("View Campaigns");
+		btnViewCampaigns.setBounds(1678, 119, 184, 29);
+		makkahFrame.getContentPane().add(btnViewCampaigns);
+		btnViewCampaigns.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		btnViewCampaigns.setBackground(new Color(9,9,9));
+		btnViewCampaigns.setForeground(Color.white);
+		
+		JButton btnViewStreet = new JButton("View Street");
+		btnViewStreet.setBounds(1678, 159, 184, 29);
+		makkahFrame.getContentPane().add(btnViewStreet);
+		btnViewStreet.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		btnViewStreet.setBackground(new Color(9,9,9));
+		btnViewStreet.setForeground(Color.white);
+
+		JButton btnExit = new JButton("Exit");
+		btnExit.setBackground(new Color(9,9,9));
+		btnExit.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		btnExit.setForeground(Color.white);
+		btnExit.setBounds(1790, 920, 72, 23);
+		makkahFrame.getContentPane().add(btnExit);
+		btnExit.addActionListener(actionEvent -> exit_flag = true);
+		
+		//Label 
+		JLabel lblStreets = new JLabel("Streets History");
+		lblStreets.setFont(new Font("Rockwell", Font.PLAIN, 24));
+		lblStreets.setForeground(new Color(255, 255, 255));
+		lblStreets.setBounds(50, 104, 208, 30);
+		
+		JLabel lblDistrict = new JLabel("District History");
+		lblDistrict.setFont(new Font("Rockwell", Font.PLAIN, 24));
+		lblDistrict.setForeground(new Color(255, 255, 255));
+		lblDistrict.setBounds(61, 757, 166, 23);
+		
+		JLabel lblTime = new JLabel("Time");
+		lblTime.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblTime.setForeground(new Color(255, 255, 255));
+		lblTime.setBounds(50, 11, 72, 14);
+		
+		
+		//window
+		makkahFrame.getContentPane().setBackground(new Color(0, 0, 0));
+		makkahFrame.getContentPane().setForeground(SystemColor.inactiveCaptionBorder);
+		makkahFrame.setBounds(100,100,1909,1019);
+		makkahFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		makkahFrame.getContentPane().setLayout(null);
+		makkahFrame.setLocationRelativeTo(null);
+		makkahFrame.getContentPane().add(streetScroll);
+		makkahFrame.getContentPane().add(districtScroll);
+		makkahFrame.getContentPane().add(lblDistrict);
+		makkahFrame.getContentPane().add(lblStreets);
+		makkahFrame.setVisible(true);
+		makkahFrame.getContentPane().add(lblTime);
+		makkahFrame.revalidate();
+
 		//Set Routes for Campaigns
 		while(!firstDayTimeMan.isEnded()) {
 			checkInput();
@@ -99,7 +247,6 @@ public class MakkahCity {
 				}
 			}
 			if (isAllArrived() && allArrivedToArafatTime == null) allArrivedToArafatTime = (Date)currenttimeManager.getCurrentTime().clone();
-			GUI.updateStreetFrame();
 			firstDayTimeMan.step(Calendar.MINUTE, 1);
 		}
 		
@@ -789,114 +936,5 @@ public class MakkahCity {
 			buses += campaign.getNumberOfBusses();
 		}
 		return buses;
-	}
-
-	static class GUI {
-
-		static Checkbox autoModeCheckBox;
-		static JFrame streetsFrame;
-		static JTable streetTable;
-
-		static void init() {
-			autoModeCheckBox = new Checkbox();
-			streetsFrame = new JFrame("Streets");
-		}
-
-		static void startStreetsFrame() {
-			Object[][] streetData = streetData(stdStreet);
-
-			String[] colNames = {"Street name", "Street Load", "Total", "Buses",
-					"Local Vehicles",
-					"Avg. Time"};
-			//table
-			streetTable = new JTable(streetData,colNames);
-			DefaultTableModel model = new DefaultTableModel();
-			model.setColumnIdentifiers(colNames);
-			streetTable.getTableHeader().setBackground(Color.lightGray);
-			streetTable.setBackground(Color.DARK_GRAY);
-			streetTable.setForeground(Color.white);
-			streetTable.setSelectionBackground(Color.BLUE);
-			streetTable.setGridColor(Color.white);
-			streetTable.setSelectionForeground(Color.white);
-			streetTable.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			streetTable.setRowHeight(30);
-			streetTable.setAutoCreateRowSorter(true);
-
-			JScrollPane scroll = new JScrollPane(streetTable);
-			scroll.setBounds(10,11,871,383);
-
-			//buttons
-			JButton btnViewBuses = new JButton("View Buses");
-			btnViewBuses.setForeground(new Color(0, 0, 0));
-			btnViewBuses.setFont(UIManager.getFont("Button.font"));
-			btnViewBuses.setBackground(new Color(211, 211, 211));
-			btnViewBuses.setBounds(67, 428, 121, 23);
-			streetsFrame.getContentPane().add(btnViewBuses);
-
-			JButton btnViewStreet = new JButton("View Street");
-			btnViewStreet.setBackground(new Color(211, 211, 211));
-			btnViewStreet.setForeground(new Color(0, 0, 0));
-			btnViewStreet.setBounds(211, 428, 103, 23);
-			streetsFrame.getContentPane().add(btnViewStreet);
-
-			JButton btnViewCampaigns = new JButton("View Campaigns");
-			btnViewCampaigns.setForeground(new Color(0, 0, 0));
-			btnViewCampaigns.setBackground(new Color(211, 211, 211));
-			btnViewCampaigns.setBounds(336, 428, 137, 23);
-			streetsFrame.getContentPane().add(btnViewCampaigns);
-
-			JButton btnViewRoutes = new JButton("View Routes");
-			btnViewRoutes.setBackground(new Color(211, 211, 211));
-			btnViewRoutes.setForeground(new Color(0, 0, 0));
-			btnViewRoutes.setBounds(496, 428, 113, 23);
-			streetsFrame.getContentPane().add(btnViewRoutes);
-
-			JButton btnPrintReport = new JButton("Print Report");
-			btnPrintReport.setForeground(new Color(0, 0, 0));
-			btnPrintReport.setBackground(new Color(211, 211, 211));
-			btnPrintReport.setBounds(633, 428, 113, 23);
-			streetsFrame.getContentPane().add(btnPrintReport);
-
-			JButton btnExit = new JButton("Exit");
-			btnExit.setForeground(new Color(0, 0, 0));
-			btnExit.setBackground(new Color(211, 211, 211));
-			btnExit.setBounds(766, 428, 72, 23);
-			streetsFrame.getContentPane().add(btnExit);
-			btnExit.addActionListener(actionEvent -> exit_flag = true);
-			//window
-			streetsFrame.getContentPane().setBackground(new Color(0, 0, 0));
-			streetsFrame.getContentPane().setForeground(SystemColor.inactiveCaptionBorder);
-			streetsFrame.setBounds(100,100,907,514);
-			streetsFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			streetsFrame.getContentPane().setLayout(null);
-			streetsFrame.setLocationRelativeTo(null);
-			streetsFrame.getContentPane().add(scroll);
-			streetsFrame.setVisible(true);
-			streetsFrame.setLocation(700, 200);
-			streetsFrame.revalidate();
-		}
-
-		static void updateStreetFrame() {
-			Object[][] streetData = streetData(stdStreet);
-			for (int i = 0; i < streetData.length; i++) {
-				for (int j = 0; j < streetData[i].length; j++) {
-					streetTable.setValueAt(streetData[i][j], i, j);
-				}
-			}
-		}
-
-		//Street data for GUI table
-		static Object[][] streetData(Street[] streets) {
-			Object[][] streetData = new Object[streets.length][6];
-			for (int i = 0; i < streets.length; i++) {
-				streetData[i][0] = streets[i].getName().name();
-				streetData[i][1] = streets[i].getPercentRemainingCapacity();
-				streetData[i][2] = streets[i].getVehicles().size();
-				streetData[i][3] = streets[i].getNumberOfBuses();
-				streetData[i][4] = streets[i].getNumberOfLocalCars();
-				streetData[i][5] = avgTimeOnStreet(streets[i]);
-			}
-			return streetData;
-		}
 	}
 }
