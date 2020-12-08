@@ -1,5 +1,9 @@
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.*;
-
 
 
 public class MakkahCity {
@@ -26,6 +30,15 @@ public class MakkahCity {
 
 	private static final InputListener inputListener = new InputListener();
 	private static final Thread t = new Thread(inputListener,"InputThread-Makkah");
+	private static boolean isAllRoutSet;
+
+	private static boolean exit_flag;
+	private static Checkbox autoModeCheckBox;
+	private static JFrame makkahFrame;
+	private static JTable streetTable;
+	private static JTable districtTable;
+	private static JLabel lblDate;
+	
 
 	public static void main(String[] args) {
 
@@ -37,17 +50,172 @@ public class MakkahCity {
 		generateCamps(District.ALAZIZIYA, (int)getRandom(1200, 1400));
 		generateCamps(District.ALMANSOOR, (int)getRandom(1600, 1800));
 		generateCamps(District.ALHIJRA, (int)getRandom(1400, 1600));
+		
+		Collections.shuffle(listOfCampaigns);
 
 		fillBusesToList();
-
+		
 		makeStreets();
 
 		addCivilVehicleNoise();
 
 		makeRoutes();
+		
+//		 Vehicle car = traceCar();
+		
+		
+		//GUI
+		autoModeCheckBox = new Checkbox();
+		makkahFrame = new JFrame("Streets");
+		
+		//Street data and district for GUI table
+		
+		//Street data
+		Object[][] streetData = new Object[stdStreet.length][6];
+		String[] streetColNames = {"Street Name", "Street Load", "Total", "Buses",
+				"Local Vehicles",
+				"Avg. Time"};
+
+		for (int i = 0; i < stdStreet.length; i++) {
+			streetData[i][0] = stdStreet[i].getName().name();
+			streetData[i][1] = stdStreet[i].getPercentRemainingCapacity();
+			streetData[i][2] = stdStreet[i].getVehicles().size();
+			streetData[i][3] = stdStreet[i].getNumberOfBuses();
+			streetData[i][4] = stdStreet[i].getNumberOfLocalCars();
+			streetData[i][5] = avgTimeOnStreet(stdStreet[i]);
+		}
+		//District data
+		Object[][] districtData = new Object[campPerDistrict.length][7];
+		String[] districtColNames = {"District", "Campaigns", "Busses", "Arrival",
+				"Avg. Time", "Best time to Arafat", "Best time to District"};
+		
+		for (int i = 0; i < campPerDistrict.length; i++) {
+			districtData[i][0] = campPerDistrict[i].get(0).getHotelDistrict().name();
+			districtData[i][1] = campPerDistrict[i].size();
+			districtData[i][2] = busesInDistrict(District.values()[i]);
+			districtData[i][3] = getPercentArrival(District.values()[i]);
+			districtData[i][4] = getAvgTimeOfTrip(District.values()[i]);
+			districtData[i][5] = getShortestRoute(campPerDistrict[i].get(0), Mashier.ARAFAT).getFastestTimeOfTravel(new Bus());
+			districtData[i][6] = getShortestRoute(campPerDistrict[i].get(0), Mashier.MINA).getFastestTimeOfTravel(new Bus());
+			
+		}
+				
+		//tables
+		
+		//Street table
+		streetTable = new JTable(streetData,streetColNames);
+		DefaultTableModel model = new DefaultTableModel();
+		model.setColumnIdentifiers(streetColNames);
+		streetTable.getTableHeader().setBackground(new Color(17,17,17));
+		streetTable.getTableHeader().setForeground(Color.WHITE);
+		streetTable.getTableHeader().setFont(new Font("Rockwell", Font.PLAIN, 18));
+		streetTable.setBackground(new Color(17,17,17));
+		streetTable.setForeground(Color.white);
+		streetTable.setSelectionBackground(Color.RED);
+		streetTable.setGridColor(new Color(102, 102, 102));
+		streetTable.setSelectionForeground(Color.white);
+		streetTable.setFont(new Font("Rockwell", Font.PLAIN, 18));
+		streetTable.setRowHeight(30);
+		streetTable.setAutoCreateRowSorter(true);
+		makkahFrame.setLocation(700, 200);
+		makkahFrame.revalidate();
+		JScrollPane streetScroll = new JScrollPane(streetTable);
+		streetScroll.setBounds(50,145,1271,391);
+		
+		//District table
+		districtTable = new JTable(districtData,districtColNames);
+		districtTable.setForeground(new Color(255, 255, 255));
+		districtTable.getTableHeader().setFont(new Font("Rockwell", Font.PLAIN, 18));
+		districtTable.getTableHeader().setBackground(new Color(17,17,17));
+		districtTable.getTableHeader().setForeground(Color.WHITE);
+		districtTable.setBackground(new Color(17,17,17));
+		districtTable.setSelectionBackground(Color.RED);
+		model.setColumnIdentifiers(districtColNames);
+		districtTable.setSelectionForeground(Color.white);
+		districtTable.setFont(new Font("Rockwell", Font.PLAIN, 18));
+		districtTable.setGridColor(new Color(102, 102, 102));
+		JScrollPane districtScroll = new JScrollPane(districtTable);
+		districtTable.setAutoCreateRowSorter(true);
+		districtTable.setRowHeight(30);
+		districtTable.revalidate();
+		districtScroll.setBounds(61,791,1271,121);
+		
+		//Buttons
+		JButton btnViewRoutes = new JButton("View Routes");
+		btnViewRoutes.setBounds(1384, 35, 184, 29);
+		makkahFrame.getContentPane().add(btnViewRoutes);
+		btnViewRoutes.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		btnViewRoutes.setBackground(new Color(9,9,9));
+		btnViewRoutes.setForeground(Color.white);
+		
+		JButton btnViewBuses = new JButton("View Buses");
+		btnViewBuses.setBounds(1384, 75, 184, 29);
+		makkahFrame.getContentPane().add(btnViewBuses);
+		btnViewBuses.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		btnViewBuses.setBackground(new Color(9,9,9));
+		btnViewBuses.setForeground(Color.white);
+		
+		JButton btnViewCampaigns = new JButton("View Campaigns");
+		btnViewCampaigns.setBounds(1384, 115, 184, 29);
+		makkahFrame.getContentPane().add(btnViewCampaigns);
+		btnViewCampaigns.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		btnViewCampaigns.setBackground(new Color(9,9,9));
+		btnViewCampaigns.setForeground(Color.white);
+		
+		JButton btnViewStreet = new JButton("View Street");
+		btnViewStreet.setBounds(1384, 156, 184, 29);
+		makkahFrame.getContentPane().add(btnViewStreet);
+		btnViewStreet.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		btnViewStreet.setBackground(new Color(9,9,9));
+		btnViewStreet.setForeground(Color.white);
+
+		JButton btnExit = new JButton("Exit");
+		btnExit.setBackground(new Color(9,9,9));
+		btnExit.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		btnExit.setForeground(Color.white);
+		btnExit.setBounds(1427, 908, 184, 23);
+		makkahFrame.getContentPane().add(btnExit);
+		btnExit.addActionListener(actionEvent -> exit_flag = true);
+		
+		//Label 
+		JLabel lblStreets = new JLabel("Streets History");
+		lblStreets.setFont(new Font("Rockwell", Font.PLAIN, 24));
+		lblStreets.setForeground(new Color(255, 255, 255));
+		lblStreets.setBounds(50, 104, 208, 30);
+		
+		JLabel lblDistrict = new JLabel("District History");
+		lblDistrict.setFont(new Font("Rockwell", Font.PLAIN, 24));
+		lblDistrict.setForeground(new Color(255, 255, 255));
+		lblDistrict.setBounds(61, 757, 166, 23);
+		
+		JLabel lblTime = new JLabel("Time: ");
+		lblTime.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblTime.setForeground(new Color(255, 255, 255));
+		lblTime.setBounds(50, 11, 72, 14);
+		
+		
+		//window
+		makkahFrame.getContentPane().setBackground(new Color(70, 70, 70));
+		makkahFrame.getContentPane().setForeground(SystemColor.inactiveCaptionBorder);
+		makkahFrame.setBounds(100,100,1637,1019);
+		makkahFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		makkahFrame.getContentPane().setLayout(null);
+		makkahFrame.setLocationRelativeTo(null);
+		makkahFrame.getContentPane().add(streetScroll);
+		makkahFrame.getContentPane().add(districtScroll);
+		makkahFrame.getContentPane().add(lblDistrict);
+		makkahFrame.getContentPane().add(lblStreets);
+		makkahFrame.setVisible(true);
+		makkahFrame.getContentPane().add(lblTime);
+		
+		lblDate = new JLabel(currenttimeManager.getCurrentTime().toString());
+		lblDate.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblDate.setForeground(Color.WHITE);
+		lblDate.setBounds(107, 4, 326, 29);
+		makkahFrame.getContentPane().add(lblDate);
+		makkahFrame.revalidate();
 
 		//Set Routes for Campaigns
-		setRoutesForCampaigns(Mashier.ARAFAT);
 		while(!firstDayTimeMan.isEnded()) {
 			checkInput();
 			//Start of Every hour
@@ -56,13 +224,20 @@ public class MakkahCity {
 				saveState();
 			}
 			else System.out.print(".");
-
+			
+			if (!isAllRoutSet) {
+				isAllRoutSet = true;
+				setRoutesForCampaigns(Mashier.ARAFAT);
+				}
 			clearDoneCivilVehicles();
 			addCivilVehicleNoise();
 			for (Vehicle vehicle : listOfVehicles) {
+				if (vehicle.getRoute() == null)
+					continue;
 				Route route = vehicle.getRoute();
 				double currentLocation = vehicle.getCurrentLocation();
 				if (vehicle.getCurrentStreet() == null &&
+				firstDayTimeMan.getCurrentCalendar().get(Calendar.MINUTE) % 2 == 0 &&
 				route.getStreets()[0].capcityPoint(0,1000) < 1) {
 					vehicle.setCurrentStreet(route.getStreets()[0]);
 				}
@@ -83,13 +258,16 @@ public class MakkahCity {
 					}
 				}
 			}
-			if (isAllArrived()) allArrivedToArafatTime = (Date)currenttimeManager.getCurrentTime().clone();
+			if (isAllArrived() && allArrivedToArafatTime == null) allArrivedToArafatTime = (Date)currenttimeManager.getCurrentTime().clone();
+			updateStreetFrame();
 			firstDayTimeMan.step(Calendar.MINUTE, 1);
+//			System.out.println(car);
 		}
-		//TODO make report
+		
 		currenttimeManager = lastDayTimeMan;
 		System.out.println("\n***************FINSHIED ARAFAT DAY***************");
-		setRoutesForCampaigns(Mashier.MINA);
+		//Collections.shuffle(listOfVehicles);
+		isAllRoutSet = false;
 		for (Vehicle vehicle : listOfVehicles) {
 			vehicle.setCurrentStreet(null);
 		}
@@ -98,6 +276,7 @@ public class MakkahCity {
 		addCivilVehicleNoise();
 
 		System.out.println("***************STARTING LAST DAY***************");
+		setRoutesForCampaigns(Mashier.MINA);
 		while(!lastDayTimeMan.isEnded()) {
 			checkInput();
 			//Start of Every hour
@@ -105,10 +284,17 @@ public class MakkahCity {
 				System.out.println("\n\n" + getStreetsReport());
 			}
 			else System.out.print(".");
-
+			
+			
+			if (!isAllRoutSet) {
+				isAllRoutSet = true;
+				setRoutesForCampaigns(Mashier.MINA);
+				}
 			clearDoneCivilVehicles();
 			addCivilVehicleNoise();
 			for (Vehicle vehicle : listOfVehicles) {
+				if (vehicle.getRoute() == null)
+					continue;
 				Route route = vehicle.getRoute();
 				double currentLocation = vehicle.getCurrentLocation();
 				if (vehicle.getCurrentStreet() == null &&
@@ -132,16 +318,28 @@ public class MakkahCity {
 					}
 				}
 			}
-			if (isAllArrived()) allArrivedToHotelsTime = (Date)currenttimeManager.getCurrentTime().clone();
+			if (isAllArrived() && allArrivedToHotelsTime == null) allArrivedToHotelsTime = (Date)currenttimeManager.getCurrentTime().clone();
 			lastDayTimeMan.step(Calendar.MINUTE, 1);
 		}
 		//When done show menu to analyze. Exit from menu too.
 		inputListener.pause();
 		startMenu();
 	}
+	
+	private  static Vehicle traceCar() {
+		
+		for(int x = 20000; x < listOfVehicles.size(); x++) {
+			if(listOfVehicles.get(x) instanceof Bus)
+				if(((Bus)listOfVehicles.get(x)).getCampaign().getHotelDistrict() == District.ALAZIZIYA) {
+					return listOfVehicles.get(x);
+				}
+		}
+		return null;
+	}
 
 	private static void checkInput() {
 		String input = "";
+		if (exit_flag) System.exit(0);
 		if (inputListener.hasNew()){
 			input = inputListener.getInput();
 			if (input.equals("m")){
@@ -154,8 +352,6 @@ public class MakkahCity {
 	}
 
 	private static void startMenu() {
-		//TODO: add used by (District) in street menu as option
-		//TODO: add capacity to street list output avg time too?
 		Scanner in = new Scanner(System.in);
 		System.out.println("\n"+currenttimeManager.getCurrentTime()+"\n"+
 							"---------------------------\n" +
@@ -331,7 +527,10 @@ public class MakkahCity {
 
 	private static void setRoutesForCampaigns(Mashier mashier) {
 		for (Campaign camp : listOfCampaigns){
-			camp.setRoute(getShortestRoute(camp, mashier));
+			if(camp.getVehicles().get(0).getCurrentStreet() == null) {
+				isAllRoutSet = false;
+				camp.setRoute(getBestRoute(camp, mashier));
+			}
 		}
 	}
 
@@ -353,7 +552,7 @@ public class MakkahCity {
 		stdStreet[StreetNames.FOURTH_HIGHWAY2.ordinal()] = new Street(4850,4, StreetNames.FOURTH_HIGHWAY2);
 		stdStreet[StreetNames.FOURTH_HIGHWAY3.ordinal()] = new Street(4500,4, StreetNames.FOURTH_HIGHWAY3);
 		stdStreet[StreetNames.THIRD_HIGHWAY.ordinal()] = new Street(8200,3, StreetNames.THIRD_HIGHWAY);
-		stdStreet[StreetNames.STREET1.ordinal()] = new Street(7800,3, StreetNames.STREET1);
+		stdStreet[StreetNames.STREET1.ordinal()] = new Street(7800,4, StreetNames.STREET1);
 		stdStreet[StreetNames.STREET2.ordinal()] = new Street(2400,3,StreetNames.STREET2);
 		stdStreet[StreetNames.STREET3.ordinal()] = new Street(4800,2, StreetNames.STREET3);
 		stdStreet[StreetNames.JABAL_THAWR_STREET.ordinal()] = new Street(3800,3,StreetNames.JABAL_THAWR_STREET);
@@ -484,7 +683,7 @@ public class MakkahCity {
 	private static void addCivilVehicleNoise() {
 
 		for (Street street: stdStreet) {
-			if (street.getPercentRemainingCapacity() >= 100) 
+			if (street.getPercentRemainingCapacity() >= 80) 
 				continue;
 			
 			int numOfSedan = (int)getRandom(10,15);
@@ -553,6 +752,42 @@ public class MakkahCity {
 	 * @param campaign
 	 * @return
 	 */
+	
+	private static Route getBestRoute(Campaign campaign , Mashier mashier) {
+		//ArrayList<Route> routes = (ArrayList<Route>) Arrays.asList(getRoutesToDistrict(campaign.getHotelDistrict()));
+		Route[] routes = getRoutesToDistrict(campaign.getHotelDistrict());
+		routes = sortRoutes(routes);
+		for (Route r : routes) {
+			if(r.getMashier() == Mashier.ARAFAT && r.getHotelArea() == District.ALHIJRA) {
+				return r;
+			}
+			if (r.getMashier() == mashier){
+				if (r.capcity() < 70) {
+					return r;
+				}
+				else if (r.getHotelArea() == District.ALAZIZIYA)
+					return r;
+			}
+		}
+		return null;
+	}
+	
+	private static Route[] sortRoutes(Route[] routes) {
+		Route[] sortingRoute = new Route[routes.length];
+		double[] lengthes = new double[routes.length];
+		
+		for (int i = 0; i < lengthes.length ; i++) 
+			lengthes[i] = routes[i].getTotalLength();
+		
+		Arrays.sort(lengthes);
+		for (int i = 0; i < lengthes.length ; i++) {
+			for (Route r : routes)
+				if (lengthes[i] == r.getTotalLength())
+					sortingRoute[i] = r;
+		}
+		return sortingRoute;
+	}
+	
 	private static Route getShortestRoute(Campaign campaign, Mashier mashier) {
 		Route[] routes = getRoutesToDistrict(campaign.getHotelDistrict());
 		Route route = null;
@@ -619,7 +854,7 @@ public class MakkahCity {
 		//Redundant loops slow down execution. find better sol.
 		for (Campaign campaign : listOfCampaigns) {
 			numberOfBusses += campaign.getNumberOfBusses();
-		} //TODO Add max min time.
+		} 
 		String fFormat = "All arrived to %s at: %s";
 		boolean arr = isAllArrived();//since it has looping. use once.
 		if (arr && allArrivedToArafatTime != null)
@@ -745,7 +980,7 @@ public class MakkahCity {
 			report.append(String.format(" %-20s|", getShortestRoute(campPerDistrict[i].get(0), Mashier.ARAFAT).getFastestTimeOfTravel(new Bus())));
 			report.append(String.format(" %-22s|", getShortestRoute(campPerDistrict[i].get(0), Mashier.MINA).getFastestTimeOfTravel(new Bus())));
 			//Calc values per dist here.
-
+			//TODO: add arrived buses colum (NO NEED)
 			report.append("\n");
 		}
 		return report.toString();
@@ -794,4 +1029,22 @@ public class MakkahCity {
 		DataManeger dataManeger = new DataManeger();
 		return dataManeger.loadState(time);
 	}
+
+	static void updateStreetFrame() {
+		Object[][] streetData = new Object[stdStreet.length][6];
+		for (int i = 0; i < stdStreet.length; i++) {
+			streetData[i][0] = stdStreet[i].getName().name();
+			streetData[i][1] = stdStreet[i].getPercentRemainingCapacity();
+			streetData[i][2] = stdStreet[i].getVehicles().size();
+			streetData[i][3] = stdStreet[i].getNumberOfBuses();
+			streetData[i][4] = stdStreet[i].getNumberOfLocalCars();
+			streetData[i][5] = avgTimeOnStreet(stdStreet[i]);
+		}
+		for (int i = 0; i < streetData.length; i++) {
+			for (int j = 0; j < streetData[i].length; j++) {
+				streetTable.setValueAt(streetData[i][j], i, j);
+			}
+		}
+		lblDate.setText(currenttimeManager.getCurrentTime().toString());
+}
 }
