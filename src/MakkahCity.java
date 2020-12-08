@@ -37,6 +37,8 @@ public class MakkahCity {
 	private static JFrame makkahFrame;
 	private static JTable streetTable;
 	private static JTable districtTable;
+	private static JLabel lblDate;
+	
 
 	public static void main(String[] args) {
 
@@ -58,6 +60,9 @@ public class MakkahCity {
 		addCivilVehicleNoise();
 
 		makeRoutes();
+		
+//		 Vehicle car = traceCar();
+		
 		
 		//GUI
 		autoModeCheckBox = new Checkbox();
@@ -137,28 +142,28 @@ public class MakkahCity {
 		
 		//Buttons
 		JButton btnViewRoutes = new JButton("View Routes");
-		btnViewRoutes.setBounds(1678, 39, 184, 29);
+		btnViewRoutes.setBounds(1384, 35, 184, 29);
 		makkahFrame.getContentPane().add(btnViewRoutes);
 		btnViewRoutes.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		btnViewRoutes.setBackground(new Color(9,9,9));
 		btnViewRoutes.setForeground(Color.white);
 		
 		JButton btnViewBuses = new JButton("View Buses");
-		btnViewBuses.setBounds(1678, 79, 184, 29);
+		btnViewBuses.setBounds(1384, 75, 184, 29);
 		makkahFrame.getContentPane().add(btnViewBuses);
 		btnViewBuses.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		btnViewBuses.setBackground(new Color(9,9,9));
 		btnViewBuses.setForeground(Color.white);
 		
 		JButton btnViewCampaigns = new JButton("View Campaigns");
-		btnViewCampaigns.setBounds(1678, 119, 184, 29);
+		btnViewCampaigns.setBounds(1384, 115, 184, 29);
 		makkahFrame.getContentPane().add(btnViewCampaigns);
 		btnViewCampaigns.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		btnViewCampaigns.setBackground(new Color(9,9,9));
 		btnViewCampaigns.setForeground(Color.white);
 		
 		JButton btnViewStreet = new JButton("View Street");
-		btnViewStreet.setBounds(1678, 159, 184, 29);
+		btnViewStreet.setBounds(1384, 156, 184, 29);
 		makkahFrame.getContentPane().add(btnViewStreet);
 		btnViewStreet.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		btnViewStreet.setBackground(new Color(9,9,9));
@@ -168,7 +173,7 @@ public class MakkahCity {
 		btnExit.setBackground(new Color(9,9,9));
 		btnExit.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		btnExit.setForeground(Color.white);
-		btnExit.setBounds(1790, 920, 72, 23);
+		btnExit.setBounds(1427, 908, 184, 23);
 		makkahFrame.getContentPane().add(btnExit);
 		btnExit.addActionListener(actionEvent -> exit_flag = true);
 		
@@ -183,16 +188,16 @@ public class MakkahCity {
 		lblDistrict.setForeground(new Color(255, 255, 255));
 		lblDistrict.setBounds(61, 757, 166, 23);
 		
-		JLabel lblTime = new JLabel("Time");
+		JLabel lblTime = new JLabel("Time: ");
 		lblTime.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblTime.setForeground(new Color(255, 255, 255));
 		lblTime.setBounds(50, 11, 72, 14);
 		
 		
 		//window
-		makkahFrame.getContentPane().setBackground(new Color(0, 0, 0));
+		makkahFrame.getContentPane().setBackground(new Color(70, 70, 70));
 		makkahFrame.getContentPane().setForeground(SystemColor.inactiveCaptionBorder);
-		makkahFrame.setBounds(100,100,1909,1019);
+		makkahFrame.setBounds(100,100,1637,1019);
 		makkahFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		makkahFrame.getContentPane().setLayout(null);
 		makkahFrame.setLocationRelativeTo(null);
@@ -202,6 +207,12 @@ public class MakkahCity {
 		makkahFrame.getContentPane().add(lblStreets);
 		makkahFrame.setVisible(true);
 		makkahFrame.getContentPane().add(lblTime);
+		
+		lblDate = new JLabel(currenttimeManager.getCurrentTime().toString());
+		lblDate.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblDate.setForeground(Color.WHITE);
+		lblDate.setBounds(107, 4, 326, 29);
+		makkahFrame.getContentPane().add(lblDate);
 		makkahFrame.revalidate();
 
 		//Set Routes for Campaigns
@@ -225,7 +236,7 @@ public class MakkahCity {
 				Route route = vehicle.getRoute();
 				double currentLocation = vehicle.getCurrentLocation();
 				if (vehicle.getCurrentStreet() == null &&
-				firstDayTimeMan.getCurrentCalendar().get(Calendar.MINUTE) % 3 == 0 &&
+				firstDayTimeMan.getCurrentCalendar().get(Calendar.MINUTE) % 2 == 0 &&
 				route.getStreets()[0].capcityPoint(0,1000) < 1) {
 					vehicle.setCurrentStreet(route.getStreets()[0]);
 				}
@@ -247,7 +258,9 @@ public class MakkahCity {
 				}
 			}
 			if (isAllArrived() && allArrivedToArafatTime == null) allArrivedToArafatTime = (Date)currenttimeManager.getCurrentTime().clone();
+			updateStreetFrame();
 			firstDayTimeMan.step(Calendar.MINUTE, 1);
+//			System.out.println(car);
 		}
 		
 		currenttimeManager = lastDayTimeMan;
@@ -262,6 +275,7 @@ public class MakkahCity {
 		addCivilVehicleNoise();
 
 		System.out.println("***************STARTING LAST DAY***************");
+		setRoutesForCampaigns(Mashier.MINA);
 		while(!lastDayTimeMan.isEnded()) {
 			checkInput();
 			//Start of Every hour
@@ -278,10 +292,11 @@ public class MakkahCity {
 			clearDoneCivilVehicles();
 			addCivilVehicleNoise();
 			for (Vehicle vehicle : listOfVehicles) {
+				if (vehicle.getRoute() == null)
+					continue;
 				Route route = vehicle.getRoute();
 				double currentLocation = vehicle.getCurrentLocation();
 				if (vehicle.getCurrentStreet() == null &&
-						lastDayTimeMan.getCurrentCalendar().get(Calendar.MINUTE) % 3 == 0 &&
 						route.getStreets()[0].capcityPoint(0,1000) < 1) {
 					vehicle.setCurrentStreet(route.getStreets()[0]);
 				}
@@ -308,6 +323,17 @@ public class MakkahCity {
 		//When done show menu to analyze. Exit from menu too.
 		inputListener.pause();
 		startMenu();
+	}
+	
+	private  static Vehicle traceCar() {
+		
+		for(int x = 20000; x < listOfVehicles.size(); x++) {
+			if(listOfVehicles.get(x) instanceof Bus)
+				if(((Bus)listOfVehicles.get(x)).getCampaign().getHotelDistrict() == District.ALAZIZIYA) {
+					return listOfVehicles.get(x);
+				}
+		}
+		return null;
 	}
 
 	private static void checkInput() {
@@ -458,7 +484,7 @@ public class MakkahCity {
 
 	private static void setRoutesForCampaigns(Mashier mashier) {
 		for (Campaign camp : listOfCampaigns){
-			if (camp.getVehicles().get(0).getCurrentStreet() == null) {
+			if(camp.getVehicles().get(0).getCurrentStreet() == null) {
 				isAllRoutSet = false;
 				camp.setRoute(getBestRoute(camp, mashier));
 			}
@@ -483,7 +509,7 @@ public class MakkahCity {
 		stdStreet[StreetNames.FOURTH_HIGHWAY2.ordinal()] = new Street(4850,4, StreetNames.FOURTH_HIGHWAY2);
 		stdStreet[StreetNames.FOURTH_HIGHWAY3.ordinal()] = new Street(4500,4, StreetNames.FOURTH_HIGHWAY3);
 		stdStreet[StreetNames.THIRD_HIGHWAY.ordinal()] = new Street(8200,3, StreetNames.THIRD_HIGHWAY);
-		stdStreet[StreetNames.STREET1.ordinal()] = new Street(7800,3, StreetNames.STREET1);
+		stdStreet[StreetNames.STREET1.ordinal()] = new Street(7800,4, StreetNames.STREET1);
 		stdStreet[StreetNames.STREET2.ordinal()] = new Street(2400,3,StreetNames.STREET2);
 		stdStreet[StreetNames.STREET3.ordinal()] = new Street(4800,2, StreetNames.STREET3);
 		stdStreet[StreetNames.JABAL_THAWR_STREET.ordinal()] = new Street(3800,3,StreetNames.JABAL_THAWR_STREET);
@@ -689,13 +715,17 @@ public class MakkahCity {
 		Route[] routes = getRoutesToDistrict(campaign.getHotelDistrict());
 		routes = sortRoutes(routes);
 		for (Route r : routes) {
+			if(r.getMashier() == Mashier.ARAFAT && r.getHotelArea() == District.ALHIJRA) {
+				return r;
+			}
 			if (r.getMashier() == mashier){
-				if (r.capcity() < 70) 
-					return r;
-				else if (r.getHotelArea() == District.ALAZIZIYA)
+				if (r.capcity() < 70) {
 					return r;
 				}
+				else if (r.getHotelArea() == District.ALAZIZIYA)
+					return r;
 			}
+		}
 		return null;
 	}
 	
@@ -937,4 +967,22 @@ public class MakkahCity {
 		}
 		return buses;
 	}
+	
+	static void updateStreetFrame() {
+		Object[][] streetData = new Object[stdStreet.length][6];
+		for (int i = 0; i < stdStreet.length; i++) {
+			streetData[i][0] = stdStreet[i].getName().name();
+			streetData[i][1] = stdStreet[i].getPercentRemainingCapacity();
+			streetData[i][2] = stdStreet[i].getVehicles().size();
+			streetData[i][3] = stdStreet[i].getNumberOfBuses();
+			streetData[i][4] = stdStreet[i].getNumberOfLocalCars();
+			streetData[i][5] = avgTimeOnStreet(stdStreet[i]);
+		}
+		for (int i = 0; i < streetData.length; i++) {
+			for (int j = 0; j < streetData[i].length; j++) {
+				streetTable.setValueAt(streetData[i][j], i, j);
+			}
+		}
+		lblDate.setText(currenttimeManager.getCurrentTime().toString());
+}
 }
