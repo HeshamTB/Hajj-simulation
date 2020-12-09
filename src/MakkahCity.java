@@ -43,6 +43,7 @@ public class MakkahCity {
 	private static JLabel lblNumOfDonebuses;
 	private static JLabel lblMaximumTripValue;
 	private static JLabel lblMinimumTripValue;
+    private static JLabel lblBusesArrivedInTheLastHourValue;
 	
 
 	public static void main(String[] args) {
@@ -224,7 +225,7 @@ public class MakkahCity {
 		lblBuses.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblBuses.setForeground(new Color(255, 255, 255));
 		lblBuses.setBackground(new Color(192, 192, 192));
-		lblBuses.setBounds(50, 578, 56, 14);
+		lblBuses.setBounds(50, 580, 56, 14);
 		makkahFrame.getContentPane().add(lblBuses);
 		
 		lblNumOfBuses = new JLabel();
@@ -237,39 +238,52 @@ public class MakkahCity {
 		JLabel lblBusesDone = new JLabel("Buses Done:");
 		lblBusesDone.setForeground(new Color(255, 255, 255));
 		lblBusesDone.setFont(new Font("Rockwell", Font.PLAIN, 16));
-		lblBusesDone.setBounds(200, 580, 101, 12);
+		lblBusesDone.setBounds(200, 579, 101, 12);
 		makkahFrame.getContentPane().add(lblBusesDone);
 		
 		lblNumOfDonebuses = new JLabel();
 		lblNumOfDonebuses.setForeground(new Color(255, 255, 255));
 		lblNumOfDonebuses.setFont(new Font("Rockwell", Font.PLAIN, 16));
-		lblNumOfDonebuses.setBounds(293, 578, 90, 16);
+		lblNumOfDonebuses.setBounds(296, 578, 90, 16);
 		makkahFrame.getContentPane().add(lblNumOfDonebuses);
 		
 		JLabel lblMaximumTrip = new JLabel("Maximum Trip:");
 		lblMaximumTrip.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblMaximumTrip.setForeground(new Color(255, 255, 255));
-		lblMaximumTrip.setBounds(383, 574, 112, 22);
+		lblMaximumTrip.setBounds(50, 664, 112, 22);
 		makkahFrame.getContentPane().add(lblMaximumTrip);
 		
 		lblMaximumTripValue = new JLabel();
 		lblMaximumTripValue.setText("0:00");
 		lblMaximumTripValue.setForeground(new Color(255, 255, 255));
 		lblMaximumTripValue.setFont(new Font("Rockwell", Font.PLAIN, 16));
-		lblMaximumTripValue.setBounds(506, 578, 46, 14);
+		lblMaximumTripValue.setBounds(172, 666, 46, 18);
 		makkahFrame.getContentPane().add(lblMaximumTripValue);
 		
 		JLabel lblMinimumTrip = new JLabel("MinimumTrip:");
 		lblMinimumTrip.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblMinimumTrip.setForeground(Color.WHITE);
-		lblMinimumTrip.setBounds(623, 576, 112, 18);
+		lblMinimumTrip.setBounds(50, 695, 112, 18);
 		makkahFrame.getContentPane().add(lblMinimumTrip);
 		
 		lblMinimumTripValue = new JLabel("0:00");
 		lblMinimumTripValue.setForeground(Color.WHITE);
 		lblMinimumTripValue.setFont(new Font("Rockwell", Font.PLAIN, 16));
-		lblMinimumTripValue.setBounds(734, 580, 90, 14);
+		lblMinimumTripValue.setBounds(172, 697, 90, 14);
 		makkahFrame.getContentPane().add(lblMinimumTripValue);
+		
+		JLabel lblBusesArrivedInTheLastHour = new JLabel("Buses Arrived In The Last Hour:");
+		lblBusesArrivedInTheLastHour.setForeground(Color.WHITE);
+		lblBusesArrivedInTheLastHour.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblBusesArrivedInTheLastHour.setBounds(396, 579, 237, 14);
+		makkahFrame.getContentPane().add(lblBusesArrivedInTheLastHour);
+		
+		lblBusesArrivedInTheLastHourValue = new JLabel();
+		lblBusesArrivedInTheLastHourValue.setText("0");
+		lblBusesArrivedInTheLastHourValue.setForeground(Color.WHITE);
+		lblBusesArrivedInTheLastHourValue.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblBusesArrivedInTheLastHourValue.setBounds(629, 580, 90, 14);
+		makkahFrame.getContentPane().add(lblBusesArrivedInTheLastHourValue);
 		
 		//window
 		makkahFrame.getContentPane().setBackground(new Color(70, 70, 70));
@@ -1157,8 +1171,11 @@ public class MakkahCity {
 			lblMaximumTripValue.setText(Vehicle.getMaxArrived().getTripTime().toString());
 			lblMinimumTripValue.setText(Vehicle.getMinArrived().getTripTime().toString());
 		}
-			
+		
+		String NumberOfBussPerHour = String.format("%d", getNumberOfArrivedBussesPerHour());
+		lblBusesArrivedInTheLastHourValue.setText(NumberOfBussPerHour);
 		
 	}
 }
+
 
