@@ -257,7 +257,7 @@ public class MakkahCity {
 		makkahFrame.getContentPane().add(lblMaximumTrip);
 		
 		lblMaximumTripValue = new JLabel();
-		lblMaximumTripValue.setText("0:00");
+		lblMaximumTripValue.setText("-:--");
 		lblMaximumTripValue.setForeground(new Color(255, 255, 255));
 		lblMaximumTripValue.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblMaximumTripValue.setBounds(168, 666, 46, 18);
@@ -269,7 +269,7 @@ public class MakkahCity {
 		lblMinimumTrip.setBounds(50, 695, 112, 18);
 		makkahFrame.getContentPane().add(lblMinimumTrip);
 		
-		lblMinimumTripValue = new JLabel("0:00");
+		lblMinimumTripValue = new JLabel("-:--");
 		lblMinimumTripValue.setForeground(Color.WHITE);
 		lblMinimumTripValue.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblMinimumTripValue.setBounds(168, 697, 90, 14);
@@ -315,6 +315,18 @@ public class MakkahCity {
 		makkahFrame.setVisible(true);
 		makkahFrame.getContentPane().add(lblTime);
 		makkahFrame.getContentPane().add(lblDate);
+		
+		JLabel lblAvgTime = new JLabel("Average Time For The Trip:");
+		lblAvgTime.setForeground(Color.WHITE);
+		lblAvgTime.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblAvgTime.setBounds(287, 690, 208, 29);
+		makkahFrame.getContentPane().add(lblAvgTime);
+		
+		JLabel lblAverageTimeForTheTrip = new JLabel("-:--");
+		lblAverageTimeForTheTrip.setForeground(Color.WHITE);
+		lblAverageTimeForTheTrip.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblAverageTimeForTheTrip.setBounds(513, 697, 101, 14);
+		makkahFrame.getContentPane().add(lblAverageTimeForTheTrip);
 		
 		//Set Routes for Campaigns
 		while(!firstDayTimeMan.isEnded()) {
@@ -1200,9 +1212,7 @@ public class MakkahCity {
 		 for (int i = 0; i < campPerDistrict.length; i++) {
 			 getAvgTimeOfTrip(District.values()[i]);
 		 }
-		 
 		 //lblAverageTripForLastHourValue.setText();
-		 
 	 }
 }
 
