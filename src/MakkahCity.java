@@ -38,6 +38,9 @@ public class MakkahCity {
 	private static JTable streetTable;
 	private static JTable districtTable;
 	private static JLabel lblDate;
+	private static JLabel lblDestination;
+	private static JLabel lblNumOfBuses;
+	private static JLabel lblNumOfDonebuses;
 	
 
 	public static void main(String[] args) {
@@ -72,7 +75,7 @@ public class MakkahCity {
 		
 		//Street data
 		Object[][] streetData = new Object[stdStreet.length][6];
-		String[] streetColNames = {"Street Name", "Street Load", "Total", "Buses",
+		String[] streetColNames = {"Street Name", "Street Load %", "Total", "Buses",
 				"Local Vehicles",
 				"Avg. Time"};
 
@@ -86,7 +89,7 @@ public class MakkahCity {
 		}
 		//District data
 		Object[][] districtData = new Object[campPerDistrict.length][7];
-		String[] districtColNames = {"District", "Campaigns", "Busses", "Arrival",
+		String[] districtColNames = {"District", "Campaigns", "Busses", "Arrival %",
 				"Avg. Time", "Best time to Arafat", "Best time to District"};
 		
 		for (int i = 0; i < campPerDistrict.length; i++) {
@@ -177,7 +180,7 @@ public class MakkahCity {
 		btnExit.setBackground(new Color(9,9,9));
 		btnExit.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		btnExit.setForeground(Color.white);
-		btnExit.setBounds(1427, 908, 184, 23);
+		btnExit.setBounds(1384, 940, 184, 29);
 		makkahFrame.getContentPane().add(btnExit);
 		btnExit.addActionListener(actionEvent -> exit_flag = true);
 		
@@ -192,16 +195,60 @@ public class MakkahCity {
 		lblDistrict.setForeground(new Color(255, 255, 255));
 		lblDistrict.setBounds(61, 757, 166, 23);
 		
-		JLabel lblTime = new JLabel("Time: ");
+		JLabel lblTime = new JLabel("Time:");
 		lblTime.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblTime.setForeground(new Color(255, 255, 255));
 		lblTime.setBounds(50, 11, 72, 14);
 		
+		JLabel lblStatus = new JLabel("Status:");
+		lblStatus.setForeground(new Color(255, 255, 255));
+		lblStatus.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblStatus.setBounds(423, 11, 72, 18);
+		makkahFrame.getContentPane().add(lblStatus);
+		
+		lblDestination = new JLabel();
+		lblDestination.setForeground(new Color(255, 255, 255));
+		lblDestination.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblDestination.setBounds(479, 11, 184, 18);
+		makkahFrame.getContentPane().add(lblDestination);
+		makkahFrame.revalidate();
+
+		lblDate = new JLabel(currenttimeManager.getCurrentTime().toString());
+		lblDate.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblDate.setForeground(Color.WHITE);
+		lblDate.setBounds(100, 8, 326, 21);
+		
+		JLabel lblBuses = new JLabel("Buses: ");
+		lblBuses.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblBuses.setForeground(new Color(255, 255, 255));
+		lblBuses.setBackground(new Color(192, 192, 192));
+		lblBuses.setBounds(50, 578, 56, 14);
+		makkahFrame.getContentPane().add(lblBuses);
+		
+		lblNumOfBuses = new JLabel();
+		lblNumOfBuses.setBackground(new Color(0, 0, 0));
+		lblNumOfBuses.setForeground(new Color(255, 255, 255));
+		lblNumOfBuses.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblNumOfBuses.setBounds(100, 580, 90, 12);
+		makkahFrame.getContentPane().add(lblNumOfBuses);
+		
+		JLabel lblBusesDone = new JLabel("Buses Done:");
+		lblBusesDone.setForeground(new Color(255, 255, 255));
+		lblBusesDone.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblBusesDone.setBounds(200, 580, 101, 12);
+		makkahFrame.getContentPane().add(lblBusesDone);
+		
+		lblNumOfDonebuses = new JLabel();
+		lblNumOfDonebuses.setForeground(new Color(255, 255, 255));
+		lblNumOfDonebuses.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblNumOfDonebuses.setBounds(293, 578, 90, 16);
+		makkahFrame.getContentPane().add(lblNumOfDonebuses);
+		
 		
 		//window
 		makkahFrame.getContentPane().setBackground(new Color(70, 70, 70));
-		makkahFrame.getContentPane().setForeground(SystemColor.inactiveCaptionBorder);
-		makkahFrame.setBounds(100,100,1637,1019);
+		makkahFrame.getContentPane().setForeground(new Color(0, 0, 0));
+		makkahFrame.setBounds(100,100,1637,1058);
 		makkahFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		makkahFrame.getContentPane().setLayout(null);
 		makkahFrame.setLocationRelativeTo(null);
@@ -211,14 +258,8 @@ public class MakkahCity {
 		makkahFrame.getContentPane().add(lblStreets);
 		makkahFrame.setVisible(true);
 		makkahFrame.getContentPane().add(lblTime);
-		
-		lblDate = new JLabel(currenttimeManager.getCurrentTime().toString());
-		lblDate.setFont(new Font("Rockwell", Font.PLAIN, 16));
-		lblDate.setForeground(Color.WHITE);
-		lblDate.setBounds(107, 4, 326, 29);
 		makkahFrame.getContentPane().add(lblDate);
-		makkahFrame.revalidate();
-
+		
 		//Set Routes for Campaigns
 		while(!firstDayTimeMan.isEnded()) {
 			checkInput();
@@ -323,6 +364,7 @@ public class MakkahCity {
 				}
 			}
 			if (isAllArrived() && allArrivedToHotelsTime == null) allArrivedToHotelsTime = (Date)currenttimeManager.getCurrentTime().clone();
+			updateStreetFrame();
 			lastDayTimeMan.step(Calendar.MINUTE, 1);
 		}
 		//When done show menu to analyze. Exit from menu too.
@@ -1034,7 +1076,7 @@ public class MakkahCity {
 		return dataManeger.loadState(time);
 	}
 
-	static void updateStreetFrame() {
+	 private static void updateStreetFrame() {
 		Object[][] streetData = new Object[stdStreet.length][6];
 		for (int i = 0; i < stdStreet.length; i++) {
 			streetData[i][0] = stdStreet[i].getName().name();
@@ -1049,6 +1091,46 @@ public class MakkahCity {
 				streetTable.setValueAt(streetData[i][j], i, j);
 			}
 		}
+		Object[][] districtData = new Object[campPerDistrict.length][7];
+		for (int i = 0; i < campPerDistrict.length; i++) {
+			districtData[i][0] = campPerDistrict[i].get(0).getHotelDistrict().name();
+			districtData[i][1] = campPerDistrict[i].size();
+			districtData[i][2] = busesInDistrict(District.values()[i]);
+			districtData[i][3] = getPercentArrival(District.values()[i]);
+			districtData[i][4] = getAvgTimeOfTrip(District.values()[i]);
+			districtData[i][5] = getShortestRoute(campPerDistrict[i].get(0), Mashier.ARAFAT).getFastestTimeOfTravel(new Bus());
+			districtData[i][6] = getShortestRoute(campPerDistrict[i].get(0), Mashier.MINA).getFastestTimeOfTravel(new Bus());
+		}
+		for (int i = 0; i < districtData.length; i++) {
+			for (int j = 0; j < districtData[i].length; j++) {
+				districtTable.setValueAt(districtData[i][j], i, j);
+			}
+		}
 		lblDate.setText(currenttimeManager.getCurrentTime().toString());
+		
+		 String status = "";
+		 if (currenttimeManager == firstDayTimeMan) {
+			 status = "Heading to Arafat";
+		 }
+			else{
+				status = "Heading to Hotels";
+			}
+		 	lblDestination.setText(status);
+		 	
+		 int numberOfBusses = 0;
+		 for (Campaign campaign : listOfCampaigns) {
+				numberOfBusses += campaign.getNumberOfBusses();
+			} 
+		 String bus = String.format("%d", numberOfBusses);
+		 lblNumOfBuses.setText(bus);
+		
+		String numOfdoneBuses = String.format("%d",getNumberOfArrivedBusses());
+		lblNumOfDonebuses.setText(numOfdoneBuses);
 	}
-	}
+	 
+}
+
+
+
+
+
