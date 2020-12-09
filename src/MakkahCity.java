@@ -31,7 +31,7 @@ public class MakkahCity {
 	private static final InputListener inputListener = new InputListener();
 	private static final Thread t = new Thread(inputListener,"InputThread-Makkah");
 	private static boolean isAllRoutSet;
-
+	//GUI
 	private static boolean exit_flag;
 	private static Checkbox autoModeCheckBox;
 	private static JFrame makkahFrame;
@@ -126,7 +126,7 @@ public class MakkahCity {
 		streetTable.setRowHeight(25);
 		streetTable.setAutoCreateRowSorter(true);
 		JScrollPane streetScroll = new JScrollPane(streetTable);
-		streetScroll.setBounds(50,100,1046,329);
+		streetScroll.setBounds(50,100,1216,329);
 		
 		//District table
 		districtTable = new JTable(districtData,districtColNames);
@@ -144,11 +144,11 @@ public class MakkahCity {
 		districtTable.setAutoCreateRowSorter(true);
 		districtTable.setRowHeight(25);
 		districtTable.revalidate();
-		districtScroll.setBounds(50,478,1046,105);
+		districtScroll.setBounds(50,478,1216,105);
 		
 		//Buttons
 		JButton btnViewRoutes = new JButton("View Routes");
-		btnViewRoutes.setBounds(1149, 33, 157, 29);
+		btnViewRoutes.setBounds(1307, 33, 166, 29);
 		btnViewRoutes.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		btnViewRoutes.setBackground(new Color(9,9,9));
 		btnViewRoutes.setForeground(Color.white);
@@ -158,7 +158,7 @@ public class MakkahCity {
 		});
 		
 		JButton btnViewBuses = new JButton("View Buses");
-		btnViewBuses.setBounds(1149, 82, 157, 29);
+		btnViewBuses.setBounds(1307, 76, 166, 29);
 		btnViewBuses.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		btnViewBuses.setBackground(new Color(9,9,9));
 		btnViewBuses.setForeground(Color.white);
@@ -168,13 +168,13 @@ public class MakkahCity {
 		});
 		
 		JButton btnViewCampaigns = new JButton("View Campaigns");
-		btnViewCampaigns.setBounds(1149, 130, 157, 29);
+		btnViewCampaigns.setBounds(1307, 119, 166, 29);
 		btnViewCampaigns.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		btnViewCampaigns.setBackground(new Color(9,9,9));
 		btnViewCampaigns.setForeground(Color.white);
 		
 		JButton btnViewStreet = new JButton("View Street");
-		btnViewStreet.setBounds(1149, 182, 157, 29);
+		btnViewStreet.setBounds(1307, 159, 166, 29);
 		btnViewStreet.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		btnViewStreet.setBackground(new Color(9,9,9));
 		btnViewStreet.setForeground(Color.white);
@@ -183,8 +183,14 @@ public class MakkahCity {
 		btnExit.setBackground(new Color(9,9,9));
 		btnExit.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		btnExit.setForeground(Color.white);
-		btnExit.setBounds(1149, 622, 157, 29);
+		btnExit.setBounds(1307, 623, 166, 29);
 		btnExit.addActionListener(actionEvent -> exit_flag = true);
+		
+		JButton btnBrowseHistory = new JButton("Browse History");
+		btnBrowseHistory.setBounds(1307, 199, 166, 29);
+		btnBrowseHistory.setBackground(new Color(9,9,9));
+		btnBrowseHistory.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		btnBrowseHistory.setForeground(Color.white);
 		
 		//Label 
 		JLabel lblStreets = new JLabel("Streets History");
@@ -322,16 +328,17 @@ public class MakkahCity {
 		makkahFrame.getContentPane().add(lblMinimumTripValue);
 		makkahFrame.getContentPane().add(lblMaximumTrip);
 		makkahFrame.getContentPane().add(lblMinimumTrip);
+		makkahFrame.getContentPane().add(btnBrowseHistory);
 		
 		//Frame Settings
 		makkahFrame.getContentPane().setBackground(new Color(70, 70, 70));
 		makkahFrame.getContentPane().setForeground(new Color(0, 0, 0));
-		makkahFrame.setBounds(100,100,1404,777);
+		makkahFrame.setBounds(100,100,1519,777);
 		makkahFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		makkahFrame.getContentPane().setLayout(null);
 		makkahFrame.setLocationRelativeTo(null);
 		makkahFrame.revalidate();
-		makkahFrame.setLocation(700, 200);
+		makkahFrame.setLocation(200,150);
 		makkahFrame.setAutoRequestFocus(false);
 		makkahFrame.setVisible(true);
 		
