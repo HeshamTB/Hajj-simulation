@@ -288,17 +288,17 @@ public class MakkahCity {
 		lblBusesArrivedInTheLastHourValue.setBounds(629, 580, 90, 14);
 		makkahFrame.getContentPane().add(lblBusesArrivedInTheLastHourValue);
 		
-		JLabel lblAverageTripForLastHour = new JLabel("AverageTrip For Last Hour:");
+		JLabel lblAverageTripForLastHour = new JLabel("Average Trip For Last Hour:");
 		lblAverageTripForLastHour.setForeground(Color.WHITE);
 		lblAverageTripForLastHour.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblAverageTripForLastHour.setBackground(Color.BLACK);
-		lblAverageTripForLastHour.setBounds(296, 666, 208, 18);
+		lblAverageTripForLastHour.setBounds(287, 666, 208, 18);
 		makkahFrame.getContentPane().add(lblAverageTripForLastHour);
 		
-		lblAverageTripForLastHourValue = new JLabel("(No arrivals) in last Hour");
+		lblAverageTripForLastHourValue = new JLabel("(No Arrivals) In Last Hour");
 		lblAverageTripForLastHourValue.setForeground(Color.WHITE);
 		lblAverageTripForLastHourValue.setFont(new Font("Rockwell", Font.PLAIN, 16));
-		lblAverageTripForLastHourValue.setBounds(503, 668, 216, 14);
+		lblAverageTripForLastHourValue.setBounds(503, 666, 216, 18);
 		makkahFrame.getContentPane().add(lblAverageTripForLastHourValue);
 		
 		//window
@@ -1001,7 +1001,7 @@ public class MakkahCity {
 		sum = sum /counter;
 		int hours = sum / 60;
 		int minutes = sum % 60;
-		if (hours == 0 && minutes == 0) return "(No arrivals) in last Hour";
+		if (hours == 0 && minutes == 0) return "(No Arrivals) In Last Hour";
 		return String.format("%2d:%02d", hours, minutes);
 	}
 
@@ -1194,6 +1194,16 @@ public class MakkahCity {
 		lblAverageTripForLastHourValue.setText(avgTimeOfTrip());
 		
 	}
+	 
+	 //TODO Avg for All the Dist
+	 public static void getAvgTripForAllDis() {
+		 for (int i = 0; i < campPerDistrict.length; i++) {
+			 getAvgTimeOfTrip(District.values()[i]);
+		 }
+		 
+		 //lblAverageTripForLastHourValue.setText();
+		 
+	 }
 }
 
 
