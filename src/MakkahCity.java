@@ -70,7 +70,7 @@ public class MakkahCity {
 		
 //		 Vehicle car = traceCar();
 		
-		
+		//TODO Arrival Time for Each Day
 		//GUI
 		autoModeCheckBox = new Checkbox();
 		makkahFrame = new JFrame("Streets");
