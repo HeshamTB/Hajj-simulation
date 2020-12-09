@@ -73,8 +73,7 @@ public class MakkahCity {
 		//TODO Arrival Time for Each Day
 		//GUI
 		autoModeCheckBox = new Checkbox();
-		makkahFrame = new JFrame("Streets");
-		makkahFrame.setAutoRequestFocus(false);
+		makkahFrame = new JFrame("Hajj Simulation");
 		
 		//Street data and district for GUI table
 		
@@ -126,8 +125,6 @@ public class MakkahCity {
 		streetTable.setFont(new Font("Rockwell", Font.PLAIN, 18));
 		streetTable.setRowHeight(25);
 		streetTable.setAutoCreateRowSorter(true);
-		makkahFrame.setLocation(700, 200);
-		makkahFrame.revalidate();
 		JScrollPane streetScroll = new JScrollPane(streetTable);
 		streetScroll.setBounds(50,100,1046,329);
 		
@@ -152,7 +149,6 @@ public class MakkahCity {
 		//Buttons
 		JButton btnViewRoutes = new JButton("View Routes");
 		btnViewRoutes.setBounds(1149, 33, 157, 29);
-		makkahFrame.getContentPane().add(btnViewRoutes);
 		btnViewRoutes.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		btnViewRoutes.setBackground(new Color(9,9,9));
 		btnViewRoutes.setForeground(Color.white);
@@ -163,7 +159,6 @@ public class MakkahCity {
 		
 		JButton btnViewBuses = new JButton("View Buses");
 		btnViewBuses.setBounds(1149, 82, 157, 29);
-		makkahFrame.getContentPane().add(btnViewBuses);
 		btnViewBuses.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		btnViewBuses.setBackground(new Color(9,9,9));
 		btnViewBuses.setForeground(Color.white);
@@ -174,14 +169,12 @@ public class MakkahCity {
 		
 		JButton btnViewCampaigns = new JButton("View Campaigns");
 		btnViewCampaigns.setBounds(1149, 130, 157, 29);
-		makkahFrame.getContentPane().add(btnViewCampaigns);
 		btnViewCampaigns.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		btnViewCampaigns.setBackground(new Color(9,9,9));
 		btnViewCampaigns.setForeground(Color.white);
 		
 		JButton btnViewStreet = new JButton("View Street");
 		btnViewStreet.setBounds(1149, 182, 157, 29);
-		makkahFrame.getContentPane().add(btnViewStreet);
 		btnViewStreet.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		btnViewStreet.setBackground(new Color(9,9,9));
 		btnViewStreet.setForeground(Color.white);
@@ -191,7 +184,6 @@ public class MakkahCity {
 		btnExit.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		btnExit.setForeground(Color.white);
 		btnExit.setBounds(1149, 622, 157, 29);
-		makkahFrame.getContentPane().add(btnExit);
 		btnExit.addActionListener(actionEvent -> exit_flag = true);
 		
 		//Label 
@@ -214,14 +206,11 @@ public class MakkahCity {
 		lblStatus.setForeground(new Color(255, 255, 255));
 		lblStatus.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblStatus.setBounds(423, 9, 72, 18);
-		makkahFrame.getContentPane().add(lblStatus);
 		
 		lblDestination = new JLabel();
 		lblDestination.setForeground(new Color(255, 255, 255));
 		lblDestination.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblDestination.setBounds(477, 9, 184, 18);
-		makkahFrame.getContentPane().add(lblDestination);
-		makkahFrame.revalidate();
 
 		lblDate = new JLabel(currenttimeManager.getCurrentTime().toString());
 		lblDate.setFont(new Font("Rockwell", Font.PLAIN, 16));
@@ -233,7 +222,6 @@ public class MakkahCity {
 		lblBuses.setForeground(new Color(255, 255, 255));
 		lblBuses.setBackground(new Color(192, 192, 192));
 		lblBuses.setBounds(49, 605, 56, 14);
-		makkahFrame.getContentPane().add(lblBuses);
 		
 		lblNumOfBuses = new JLabel();
 		lblNumOfBuses.setText("0");
@@ -241,98 +229,112 @@ public class MakkahCity {
 		lblNumOfBuses.setForeground(new Color(255, 255, 255));
 		lblNumOfBuses.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblNumOfBuses.setBounds(100, 606, 90, 12);
-		makkahFrame.getContentPane().add(lblNumOfBuses);
 		
 		JLabel lblBusesDone = new JLabel("Buses Done:");
 		lblBusesDone.setForeground(new Color(255, 255, 255));
 		lblBusesDone.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblBusesDone.setBounds(199, 606, 101, 12);
-		makkahFrame.getContentPane().add(lblBusesDone);
 		
 		lblNumOfDonebuses = new JLabel();
 		lblNumOfDonebuses.setText("0");
 		lblNumOfDonebuses.setForeground(new Color(255, 255, 255));
 		lblNumOfDonebuses.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblNumOfDonebuses.setBounds(293, 604, 80, 16);
-		makkahFrame.getContentPane().add(lblNumOfDonebuses);
 		
 		JLabel lblMaximumTrip = new JLabel("Maximum Trip:");
 		lblMaximumTrip.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblMaximumTrip.setForeground(new Color(255, 255, 255));
 		lblMaximumTrip.setBounds(49, 666, 112, 22);
-		makkahFrame.getContentPane().add(lblMaximumTrip);
 		
 		lblMaximumTripValue = new JLabel();
 		lblMaximumTripValue.setText("-:--");
 		lblMaximumTripValue.setForeground(new Color(255, 255, 255));
 		lblMaximumTripValue.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblMaximumTripValue.setBounds(169, 668, 46, 18);
-		makkahFrame.getContentPane().add(lblMaximumTripValue);
 		
 		JLabel lblMinimumTrip = new JLabel("MinimumTrip:");
 		lblMinimumTrip.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblMinimumTrip.setForeground(Color.WHITE);
 		lblMinimumTrip.setBounds(49, 699, 112, 18);
-		makkahFrame.getContentPane().add(lblMinimumTrip);
 		
 		lblMinimumTripValue = new JLabel("-:--");
 		lblMinimumTripValue.setForeground(Color.WHITE);
 		lblMinimumTripValue.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblMinimumTripValue.setBounds(167, 701, 90, 14);
-		makkahFrame.getContentPane().add(lblMinimumTripValue);
 		
 		JLabel lblBusesArrivedInTheLastHour = new JLabel("Buses Arrived In The Last Hour:");
 		lblBusesArrivedInTheLastHour.setForeground(Color.WHITE);
 		lblBusesArrivedInTheLastHour.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblBusesArrivedInTheLastHour.setBounds(395, 605, 237, 14);
-		makkahFrame.getContentPane().add(lblBusesArrivedInTheLastHour);
 		
 		lblBusesArrivedInTheLastHourValue = new JLabel();
 		lblBusesArrivedInTheLastHourValue.setText("0");
 		lblBusesArrivedInTheLastHourValue.setForeground(Color.WHITE);
 		lblBusesArrivedInTheLastHourValue.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblBusesArrivedInTheLastHourValue.setBounds(628, 605, 90, 14);
-		makkahFrame.getContentPane().add(lblBusesArrivedInTheLastHourValue);
 		
 		JLabel lblAverageTripForLastHour = new JLabel("Average Trip For Last Hour:");
 		lblAverageTripForLastHour.setForeground(Color.WHITE);
 		lblAverageTripForLastHour.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblAverageTripForLastHour.setBackground(Color.BLACK);
 		lblAverageTripForLastHour.setBounds(287, 668, 208, 18);
-		makkahFrame.getContentPane().add(lblAverageTripForLastHour);
 		
 		lblAverageTripForLastHourValue = new JLabel("(No Arrivals) In Last Hour");
 		lblAverageTripForLastHourValue.setForeground(Color.WHITE);
 		lblAverageTripForLastHourValue.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblAverageTripForLastHourValue.setBounds(502, 668, 216, 18);
-		makkahFrame.getContentPane().add(lblAverageTripForLastHourValue);
 		
-		//window
+		JLabel lblAvgTime = new JLabel("Average Time For The Trip:");
+		lblAvgTime.setForeground(Color.WHITE);
+		lblAvgTime.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblAvgTime.setBounds(287, 694, 208, 29);
+		
+		JLabel lblAverageTimeForTheTrip = new JLabel("-:--");
+		lblAverageTimeForTheTrip.setForeground(Color.WHITE);
+		lblAverageTimeForTheTrip.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblAverageTimeForTheTrip.setBounds(512, 701, 101, 14);
+		
+		//Add Elements
+		makkahFrame.getContentPane().add(streetScroll);
+		makkahFrame.getContentPane().add(lblAverageTimeForTheTrip);
+		makkahFrame.getContentPane().add(lblAverageTripForLastHourValue);
+		makkahFrame.getContentPane().add(lblBusesArrivedInTheLastHourValue);
+		makkahFrame.getContentPane().add(lblStatus);
+		makkahFrame.getContentPane().add(lblDestination);
+		makkahFrame.getContentPane().add(lblBuses);
+		makkahFrame.getContentPane().add(lblNumOfBuses);
+		makkahFrame.getContentPane().add(lblBusesDone);
+		makkahFrame.getContentPane().add(lblNumOfDonebuses);
+		makkahFrame.getContentPane().add(btnExit);
+		makkahFrame.getContentPane().add(btnViewStreet);
+		makkahFrame.getContentPane().add(btnViewCampaigns);
+		makkahFrame.getContentPane().add(btnViewBuses);
+		makkahFrame.getContentPane().add(btnViewRoutes);
+		makkahFrame.getContentPane().add(lblAverageTripForLastHour);
+		makkahFrame.getContentPane().add(lblAvgTime);
+		makkahFrame.getContentPane().add(districtScroll);
+		makkahFrame.getContentPane().add(lblDistrict);
+		makkahFrame.getContentPane().add(lblStreets);
+		makkahFrame.getContentPane().add(lblTime);
+		makkahFrame.getContentPane().add(lblDate);
+		makkahFrame.getContentPane().add(lblBusesArrivedInTheLastHour);
+		makkahFrame.getContentPane().add(lblMaximumTripValue);
+		makkahFrame.getContentPane().add(lblMinimumTripValue);
+		makkahFrame.getContentPane().add(lblMaximumTrip);
+		makkahFrame.getContentPane().add(lblMinimumTrip);
+		
+		//Frame Settings
 		makkahFrame.getContentPane().setBackground(new Color(70, 70, 70));
 		makkahFrame.getContentPane().setForeground(new Color(0, 0, 0));
 		makkahFrame.setBounds(100,100,1404,777);
 		makkahFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		makkahFrame.getContentPane().setLayout(null);
 		makkahFrame.setLocationRelativeTo(null);
-		makkahFrame.getContentPane().add(streetScroll);
-		makkahFrame.getContentPane().add(districtScroll);
-		makkahFrame.getContentPane().add(lblDistrict);
-		makkahFrame.getContentPane().add(lblStreets);
+		makkahFrame.revalidate();
+		makkahFrame.setLocation(700, 200);
+		makkahFrame.setAutoRequestFocus(false);
 		makkahFrame.setVisible(true);
-		makkahFrame.getContentPane().add(lblTime);
-		makkahFrame.getContentPane().add(lblDate);
 		
-		JLabel lblAvgTime = new JLabel("Average Time For The Trip:");
-		lblAvgTime.setForeground(Color.WHITE);
-		lblAvgTime.setFont(new Font("Rockwell", Font.PLAIN, 16));
-		lblAvgTime.setBounds(287, 694, 208, 29);
-		makkahFrame.getContentPane().add(lblAvgTime);
-		
-		JLabel lblAverageTimeForTheTrip = new JLabel("-:--");
-		lblAverageTimeForTheTrip.setForeground(Color.WHITE);
-		lblAverageTimeForTheTrip.setFont(new Font("Rockwell", Font.PLAIN, 16));
-		lblAverageTimeForTheTrip.setBounds(512, 701, 101, 14);
-		makkahFrame.getContentPane().add(lblAverageTimeForTheTrip);
 		
 		//Set Routes for Campaigns
 		while(!firstDayTimeMan.isEnded()) {
