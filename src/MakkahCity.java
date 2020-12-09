@@ -42,6 +42,7 @@ public class MakkahCity {
 	private static JLabel lblNumOfBuses;
 	private static JLabel lblNumOfDonebuses;
 	private static JLabel lblMaximumTripValue;
+	private static JLabel lblMinimumTripValue;
 	
 
 	public static void main(String[] args) {
@@ -251,11 +252,24 @@ public class MakkahCity {
 		lblMaximumTrip.setBounds(383, 574, 112, 22);
 		makkahFrame.getContentPane().add(lblMaximumTrip);
 		
-		JLabel lblMaximumTripValue = new JLabel();
+		lblMaximumTripValue = new JLabel();
+		lblMaximumTripValue.setText("0:00");
 		lblMaximumTripValue.setForeground(new Color(255, 255, 255));
 		lblMaximumTripValue.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblMaximumTripValue.setBounds(506, 578, 46, 14);
 		makkahFrame.getContentPane().add(lblMaximumTripValue);
+		
+		JLabel lblMinimumTrip = new JLabel("MinimumTrip:");
+		lblMinimumTrip.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblMinimumTrip.setForeground(Color.WHITE);
+		lblMinimumTrip.setBounds(623, 576, 112, 18);
+		makkahFrame.getContentPane().add(lblMinimumTrip);
+		
+		lblMinimumTripValue = new JLabel("0:00");
+		lblMinimumTripValue.setForeground(Color.WHITE);
+		lblMinimumTripValue.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblMinimumTripValue.setBounds(734, 580, 90, 14);
+		makkahFrame.getContentPane().add(lblMinimumTripValue);
 		
 		//window
 		makkahFrame.getContentPane().setBackground(new Color(70, 70, 70));
@@ -1139,13 +1153,12 @@ public class MakkahCity {
 		String numOfdoneBuses = String.format("%d",getNumberOfArrivedBusses());
 		lblNumOfDonebuses.setText(numOfdoneBuses);
 		
-		//TODO Exception null why ????
-//		if (Vehicle.getMaxArrived() != null && Vehicle.getMinArrived() != null) {
-//			lblMaximumTripValue.setText(Vehicle.getMaxArrived().toString());
-//		}
+		if (Vehicle.getMaxArrived() != null && Vehicle.getMinArrived() != null) {
+			lblMaximumTripValue.setText(Vehicle.getMaxArrived().getTripTime().toString());
+			lblMinimumTripValue.setText(Vehicle.getMinArrived().getTripTime().toString());
+		}
 			
 		
 	}
-	 
 }
 
