@@ -45,79 +45,55 @@ public class GUI_ViewBuses {
 	}
 
 	public GUI_ViewBuses() {
-		//makeFrame();
-	}
-
-	private void makeFrame() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 700, 1000);
-		GridBagLayout gridBagLayout = new GridBagLayout();
-//		JScrollPane scrollPane = new JScrollPane();
-		gridBagLayout.columnWidths = new int[]{0, 0};
-		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0};
-//		gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-//		gridBagLayout.rowWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
-		frame.getContentPane().setLayout(gridBagLayout);
-
-		JLabel lblNewLabel = new JLabel("New label");
-		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 0);
-		gbc_lblNewLabel.gridx = 0;
-		gbc_lblNewLabel.gridy = 0;
-		
-
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		for (int i = 0; i<100 ; i++) {
-			JButton btnNewButton = new JButton(vehicles.get(i).getUID());
-			gbc_btnNewButton.insets = new Insets(0, 0, 5, 0);
-			gbc_btnNewButton.gridx = i%5;
-			gbc_btnNewButton.gridy = i/5 +1;
-			frame.getContentPane().add(btnNewButton, gbc_btnNewButton);
-			frame.getContentPane().add(lblNewLabel, gbc_lblNewLabel);
-			}
-
-//		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
-//		gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
-//		gbc_scrollPane.fill = GridBagConstraints.BOTH;
-//		gbc_scrollPane.gridx = 0;
-//		gbc_scrollPane.gridy = 1;
-		//scrollPane.setViewportView(gbc_scrollPane);
-		//frame.getContentPane().add(scrollPane, gbc_scrollPane);
-		frame.setVisible(true);
-	}
-	
-	public void  setData(ArrayList<Campaign> campaign) {
-		for (Campaign camp : campaign)
-			vehicles.add(camp.getVehicles().get(0));
 		makeFrame();
 	}
+	private void makeFrame() {
+		frame = new JFrame("Buses");
+		Object[][] busData = new Object[vehicles.size()][5];
+		String[] busColNames = {"ID", "trip time", "location", "Street", "district"
+				};
+		
+		table = new JTable(busData,busColNames);
+		DefaultTableModel model = new DefaultTableModel();
+		model.setColumnIdentifiers(busColNames);
+		table.getTableHeader().setBackground(new Color(17,17,17));
+		table.getTableHeader().setFont(new Font("Rockwell", Font.PLAIN, 18));
+		table.getTableHeader().setForeground(Color.WHITE);
+		table.setModel(model);
+		table.setBackground(new Color(17,17,17));
+		table.setForeground(Color.WHITE);
+		table.setGridColor(new Color(102, 102, 102));
+		table.setFont(new Font("Rockwell", Font.PLAIN, 18));
+		table.setRowHeight(25);
+		table.setAutoCreateRowSorter(true);
+		table.revalidate();
+		
+		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane.setEnabled(false);
+		scrollPane.setBounds(20, 24, 668, 236);
+		
+		frame.getContentPane().add(scrollPane);
+		frame.getContentPane().setBackground(new Color(70, 70, 70));
+		frame.getContentPane().setForeground(new Color(0, 0, 0));
+		frame.setBounds(100,100,814,454);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		frame.setLocationRelativeTo(null);
+		frame.getContentPane().add(scrollPane);
+		
+		JButton btnNewButton = new JButton("New button");
+		btnNewButton.setBounds(89, 306, 89, 23);
+		frame.getContentPane().add(btnNewButton);
+		
+		JButton btnNewButton_1 = new JButton("New button");
+		btnNewButton_1.setBounds(222, 306, 89, 23);
+		frame.getContentPane().add(btnNewButton_1);
+		
+		JButton btnNewButton_2 = new JButton("New button");
+		btnNewButton_2.setBounds(341, 306, 89, 23);
+		frame.getContentPane().add(btnNewButton_2);
+		frame.setVisible(true);
+		
 
-	/**
-	 * Object[][] vehicleData = new Object[50][4]; String[] vehicleColNames =
-	 * {"ID","Street", "Location", "Distance covered"};
-	 * 
-	 * for (int i = 0; i < 50 ; i++) { vehicleData[i][0] = vehicles.get(i).getUID();
-	 * vehicleData[i][1] = vehicles.get(i).getCurrentStreet(); vehicleData[i][2] =
-	 * vehicles.get(i).getCurrentLocation(); vehicleData[i][3] =
-	 * vehicles.get(i).getTotalDistanceTraveled(); //vehicleData[i][4] =
-	 * vehicles.get(i).getTimeOfArrival(); }
-	 * 
-	 * table = new JTable(vehicleData,vehicleColNames);
-	 * frame.getContentPane().add(table, BorderLayout.CENTER);
-	 * table.setEnabled(false); DefaultTableModel model = new DefaultTableModel();
-	 * model.setColumnIdentifiers(vehicleData);
-	 * table.getTableHeader().setBackground(new Color(17,17,17));
-	 * table.getTableHeader().setForeground(Color.WHITE);
-	 * table.getTableHeader().setFont(new Font("Rockwell", Font.PLAIN, 18));
-	 * table.setBackground(new Color(17,17,17)); table.setForeground(Color.white);
-	 * table.setSelectionBackground(Color.RED); table.setGridColor(new Color(102,
-	 * 102, 102)); table.setSelectionForeground(Color.white); table.setFont(new
-	 * Font("Rockwell", Font.PLAIN, 18)); table.setRowHeight(25);
-	 * table.setLocation(700, 200); table.revalidate();
-	 */
-	/**
-	 * @wbp.parser.entryPoint
-	 */
-
-
+			}
 }

@@ -106,6 +106,7 @@ public class MakkahCity {
 			districtData[i][6] = getShortestRoute(campPerDistrict[i].get(0), Mashier.MINA).getFastestTimeOfTravel(new Bus());
 			
 		}
+		
 				
 		//tables
 		
@@ -130,6 +131,7 @@ public class MakkahCity {
 		
 		//District table
 		districtTable = new JTable(districtData,districtColNames);
+		districtTable.setEnabled(false);
 		districtTable.setForeground(new Color(255, 255, 255));
 		districtTable.getTableHeader().setFont(new Font("Rockwell", Font.PLAIN, 18));
 		districtTable.getTableHeader().setBackground(new Color(17,17,17));
@@ -141,6 +143,7 @@ public class MakkahCity {
 		districtTable.setFont(new Font("Rockwell", Font.PLAIN, 18));
 		districtTable.setGridColor(new Color(102, 102, 102));
 		JScrollPane districtScroll = new JScrollPane(districtTable);
+		districtScroll.setEnabled(false);
 		districtTable.setAutoCreateRowSorter(true);
 		districtTable.setRowHeight(25);
 		districtTable.revalidate();
@@ -156,16 +159,15 @@ public class MakkahCity {
 			EventControll t =  new EventControll();
 			t.setData(stdRoutes[0]);
 		});
-		
 		JButton btnViewBuses = new JButton("View Buses");
 		btnViewBuses.setBounds(1307, 76, 166, 29);
 		btnViewBuses.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		btnViewBuses.setBackground(new Color(9,9,9));
 		btnViewBuses.setForeground(Color.white);
-		btnViewBuses.addActionListener(e -> {
-			GUI_ViewBuses t =  new GUI_ViewBuses();
-			t.setData(listOfCampaigns);
-		});
+//		btnViewBuses.addActionListener(e -> {
+//			GUI_ViewBuses t =  new GUI_ViewBuses();
+//			t.setData(listOfCampaigns);
+//		});
 		
 		JButton btnViewCampaigns = new JButton("View Campaigns");
 		btnViewCampaigns.setBounds(1307, 119, 166, 29);
