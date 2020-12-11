@@ -33,6 +33,7 @@ public class MakkahCity {
 	private static boolean isAllRoutSet;
 	//GUI
 	private static boolean exit_flag;
+	private static boolean pause_flag;
 	private static Checkbox autoModeCheckBox;
 	private static JFrame makkahFrame;
 	private static JTable streetTable;
@@ -187,6 +188,22 @@ public class MakkahCity {
 		btnExit.setForeground(Color.white);
 		btnExit.setBounds(1307, 623, 166, 29);
 		btnExit.addActionListener(actionEvent -> exit_flag = true);
+
+		JButton btnPause = new JButton("Pause");
+		btnPause.setBackground(new Color(9,9,9));
+		btnPause.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		btnPause.setForeground(Color.white);
+		btnPause.setBounds(1307, 240, 166, 29);
+		btnPause.addActionListener(actionEvent -> {
+			if (!pause_flag) {
+				pause_flag = true;
+				btnPause.setText("Unpause");
+			}
+			else {
+				pause_flag = false;
+				btnPause.setText("Pause");
+			}
+		});
 		
 		JButton btnBrowseHistory = new JButton("Browse History");
 		btnBrowseHistory.setBounds(1307, 199, 166, 29);
@@ -331,6 +348,7 @@ public class MakkahCity {
 		makkahFrame.getContentPane().add(lblMaximumTrip);
 		makkahFrame.getContentPane().add(lblMinimumTrip);
 		makkahFrame.getContentPane().add(btnBrowseHistory);
+		makkahFrame.getContentPane().add(btnPause);
 		
 		//Frame Settings
 		makkahFrame.getContentPane().setBackground(new Color(70, 70, 70));
@@ -471,6 +489,15 @@ public class MakkahCity {
 	private static void checkInput() {
 		String input = "";
 		if (exit_flag) System.exit(0);
+		if (pause_flag) {
+			while (pause_flag) {
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 		if (inputListener.hasNew()){
 			input = inputListener.getInput();
 			if (input.equals("m")){
