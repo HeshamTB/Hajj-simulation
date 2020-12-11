@@ -165,8 +165,7 @@ public class MakkahCity {
 		btnViewBuses.setBackground(new Color(9,9,9));
 		btnViewBuses.setForeground(Color.white);
 		btnViewBuses.addActionListener(e -> {
-			GUI_ViewBuses t =  new GUI_ViewBuses();
-			t.setData(listOfCampaigns , currenttimeManager);
+			GUI_ViewBuses t =  new GUI_ViewBuses(listOfCampaigns , currenttimeManager);
 		});
 		
 		JButton btnViewCampaigns = new JButton("View Campaigns");
@@ -180,6 +179,9 @@ public class MakkahCity {
 		btnViewStreet.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		btnViewStreet.setBackground(new Color(9,9,9));
 		btnViewStreet.setForeground(Color.white);
+		btnViewStreet.addActionListener(e -> {
+			GUI_ViewStreet t =  new GUI_ViewStreet(stdStreet , currenttimeManager);
+		});
 
 		JButton btnExit = new JButton("Exit");
 		btnExit.setBackground(new Color(9,9,9));

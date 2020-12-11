@@ -31,29 +31,32 @@ public class GUI_ViewBuses {
 	private JLabel lblDistrict;
 	private JLabel lblDistrictValue;
 	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GUI_ViewBuses window = new GUI_ViewBuses();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+	
+	public GUI_ViewBuses(ArrayList<Campaign> campaign , PDate currenttimeManager) {
+		for (Campaign camp : campaign) {
+			switch (camp.getHotelDistrict()) {
+			case ALAZIZIYA:
+				vehiclesAlazizya.add(camp.getVehicles().get(0));
+				break;
+			case ALHIJRA:
+				vehiclesAlhijra.add(camp.getVehicles().get(0));
+				break;
+			case ALMANSOOR:
+				vehiclesAlmansoor.add(camp.getVehicles().get(0));
+				break;
+			default:
+				break;
 			}
-			
-		});
-		
+		}
+		this.currenttimeManager = currenttimeManager;
+		makeFrame();
 	}
-
-	public GUI_ViewBuses() {
-		//makeFrame();
-	}
+	
+	
 	private void makeFrame() {
 		frame = new JFrame("Buses");
 		busData = new Object[vehicles.size()][6];
 		
-	
 		for (int i = 0; i < vehicles.size(); i++) {
 			busData[i][0] = vehicles.get(i).getUID();
 			if (vehicles.get(i).isMoving())
@@ -158,30 +161,9 @@ public class GUI_ViewBuses {
 		lblDistrictValue.setBounds(247, 371, 90, 12);
 		frame.getContentPane().add(lblDistrictValue);
 		
-		
-		
 		frame.setVisible(true);
 	}
 	
-	public void setData(ArrayList<Campaign> campaign , PDate currenttimeManager) {
-		for (Campaign camp : campaign) {
-			switch (camp.getHotelDistrict()) {
-			case ALAZIZIYA:
-				vehiclesAlazizya.add(camp.getVehicles().get(0));
-				break;
-			case ALHIJRA:
-				vehiclesAlhijra.add(camp.getVehicles().get(0));
-				break;
-			case ALMANSOOR:
-				vehiclesAlmansoor.add(camp.getVehicles().get(0));
-				break;
-			default:
-				break;
-			}
-		}
-		this.currenttimeManager = currenttimeManager;
-		makeFrame();
-	}
 	
 	public void updateTable() {
 		busData = new Object[vehicles.size()][6];
@@ -199,6 +181,7 @@ public class GUI_ViewBuses {
 		}
 		table.setModel(new DefaultTableModel(busData ,busColNames));
 	}
+	
 	
 	public void updateVehicles(ArrayList<Vehicle> vehiclesDistrict) {
 		vehicles.clear();
