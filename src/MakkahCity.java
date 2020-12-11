@@ -164,10 +164,10 @@ public class MakkahCity {
 		btnViewBuses.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		btnViewBuses.setBackground(new Color(9,9,9));
 		btnViewBuses.setForeground(Color.white);
-//		btnViewBuses.addActionListener(e -> {
-//			GUI_ViewBuses t =  new GUI_ViewBuses();
-//			t.setData(listOfCampaigns);
-//		});
+		btnViewBuses.addActionListener(e -> {
+			GUI_ViewBuses t =  new GUI_ViewBuses();
+			t.setData(listOfCampaigns , currenttimeManager);
+		});
 		
 		JButton btnViewCampaigns = new JButton("View Campaigns");
 		btnViewCampaigns.setBounds(1307, 119, 166, 29);
