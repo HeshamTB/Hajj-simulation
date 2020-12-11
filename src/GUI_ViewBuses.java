@@ -90,7 +90,6 @@ public class GUI_ViewBuses {
 		frame.getContentPane().setBackground(new Color(70, 70, 70));
 		frame.getContentPane().setForeground(new Color(0, 0, 0));
 		frame.setBounds(100,100,814,454);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setLocationRelativeTo(null);
 		frame.getContentPane().add(scrollPane);
