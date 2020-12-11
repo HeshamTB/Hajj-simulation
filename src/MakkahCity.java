@@ -104,10 +104,8 @@ public class MakkahCity {
 			districtData[i][4] = getAvgTimeOfTrip(District.values()[i]);
 			districtData[i][5] = getShortestRoute(campPerDistrict[i].get(0), Mashier.ARAFAT).getFastestTimeOfTravel(new Bus());
 			districtData[i][6] = getShortestRoute(campPerDistrict[i].get(0), Mashier.MINA).getFastestTimeOfTravel(new Bus());
-			
 		}
 		
-				
 		//tables
 		
 		//Street table

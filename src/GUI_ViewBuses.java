@@ -47,7 +47,7 @@ public class GUI_ViewBuses {
 	}
 
 	public GUI_ViewBuses() {
-		//makeFrame();
+//		makeFrame();
 	}
 	private void makeFrame() {
 		frame = new JFrame("Buses");
@@ -85,31 +85,42 @@ public class GUI_ViewBuses {
 		table.revalidate();
 		
 		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setBounds(20, 24, 754, 236);
+		scrollPane.getVerticalScrollBar().setBackground(new Color(17,17,17));
+		scrollPane.setBounds(20, 24, 887, 236);
 		
 		frame.getContentPane().setBackground(new Color(70, 70, 70));
 		frame.getContentPane().setForeground(new Color(0, 0, 0));
-		frame.setBounds(100,100,814,454);
+		frame.setBounds(100,100,972,454);
 		frame.getContentPane().setLayout(null);
 		frame.setLocationRelativeTo(null);
 		frame.getContentPane().add(scrollPane);
 		
 		Alazizya = new JButton("Alazizya");
-		Alazizya.setBounds(30, 271, 99, 23);
+		Alazizya.setBackground(new Color(9,9,9));
+		Alazizya.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		Alazizya.setForeground(Color.white);
+		Alazizya.setBounds(20, 366, 116, 23);
 		Alazizya.addActionListener(e -> {
 			updateVehicles(vehiclesAlazizya);
 		});
 		frame.getContentPane().add(Alazizya);
 		
 		Alhijra = new JButton("Alhijra");
-		Alhijra.setBounds(30, 317, 99, 23);
+		
+		Alhijra.setBackground(new Color(9,9,9));
+		Alhijra.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		Alhijra.setForeground(Color.white);
+		Alhijra.setBounds(20, 269, 116, 23);
 		Alhijra.addActionListener(e -> {
 			updateVehicles(vehiclesAlhijra);
 		});
 		frame.getContentPane().add(Alhijra);
 		
 		Almansoor = new JButton("Almansoor");
-		Almansoor.setBounds(30, 366, 99, 23);
+		Almansoor.setBackground(new Color(9,9,9));
+		Almansoor.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		Almansoor.setForeground(Color.white);
+		Almansoor.setBounds(20, 316, 116, 23);
 		Almansoor.addActionListener(e -> {
 			updateVehicles(vehiclesAlmansoor);
 		});
@@ -150,11 +161,10 @@ public class GUI_ViewBuses {
 		frame.getContentPane().add(lblDistrict);
 		
 		lblDistrictValue = new JLabel();
-		lblDistrictValue.setText("0");
 		lblDistrictValue.setForeground(Color.WHITE);
 		lblDistrictValue.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblDistrictValue.setBackground(Color.BLACK);
-		lblDistrictValue.setBounds(247, 371, 90, 12);
+		lblDistrictValue.setBounds(247, 371, 129, 12);
 		frame.getContentPane().add(lblDistrictValue);
 		
 		
