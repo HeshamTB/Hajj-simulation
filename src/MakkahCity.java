@@ -164,7 +164,7 @@ public class MakkahCity {
 		btnViewBuses.setForeground(Color.white);
 		btnViewBuses.addActionListener(e -> {
 			GUI_ViewBuses t =  new GUI_ViewBuses(listOfCampaigns , currenttimeManager);
-		});
+		});// TODO: the list is update every MINUTE, we don't need it.
 		
 		JButton btnViewCampaigns = new JButton("View Campaigns");
 		btnViewCampaigns.setBounds(1307, 119, 166, 29);
@@ -178,7 +178,7 @@ public class MakkahCity {
 		btnViewStreet.setBackground(new Color(9,9,9));
 		btnViewStreet.setForeground(Color.white);
 		btnViewStreet.addActionListener(e -> {
-			GUI_ViewStreet t =  new GUI_ViewStreet(stdStreet , currenttimeManager);
+			GUI_ViewStreet t =  new GUI_ViewStreet(stdStreet,currenttimeManager);
 		});
 
 		JButton btnExit = new JButton("Exit");

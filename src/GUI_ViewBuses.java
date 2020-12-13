@@ -109,7 +109,6 @@ public class GUI_ViewBuses {
 		frame.getContentPane().add(Alazizya);
 		
 		Alhijra = new JButton("Alhijra");
-		
 		Alhijra.setBackground(new Color(9,9,9));
 		Alhijra.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		Alhijra.setForeground(Color.white);
@@ -182,7 +181,9 @@ public class GUI_ViewBuses {
 				busData[i][1] = vehicles.get(i).getCurrentStreet().getName();
 			else busData[i][1] = "Not Moving";
 			busData[i][2] = vehicles.get(i).getCurrentLocation();
-			busData[i][3] = vehicles.get(i).getProgress();
+			if (vehicles.get(i).getProgress() != null)
+				busData[i][3] = vehicles.get(i).getProgress();
+			else busData[i][3] = "%0";
 			busData[i][4] = vehicles.get(i).getTripTime();
 			if (vehicles.get(i).isArrivedToDest())
 				busData[i][5] = vehicles.get(i).getTimeOfArrival().toString();//Formula of time
@@ -196,6 +197,7 @@ public class GUI_ViewBuses {
 		vehicles.clear();
 		vehicles.addAll(vehiclesDistrict);
 		lblDistrictValue.setText(((Bus)vehiclesDistrict.get(0)).getCampaign().getHotelDistrict().name());
+		lblDate.setText(currenttimeManager.getCurrentTime().toString());
 		updateTable();
 	}
 }
