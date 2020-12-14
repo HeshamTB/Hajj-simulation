@@ -209,12 +209,12 @@ public class MakkahCity {
 		btnBrowseHistory.setForeground(Color.white);
 		
 		//Label 
-		JLabel lblStreets = new JLabel("Streets History");
+		JLabel lblStreets = new JLabel("Streets");
 		lblStreets.setFont(new Font("Rockwell", Font.PLAIN, 24));
 		lblStreets.setForeground(new Color(255, 255, 255));
 		lblStreets.setBounds(49, 59, 208, 30);
 		
-		JLabel lblDistrict = new JLabel("District History");
+		JLabel lblDistrict = new JLabel("District");
 		lblDistrict.setFont(new Font("Rockwell", Font.PLAIN, 24));
 		lblDistrict.setForeground(new Color(255, 255, 255));
 		lblDistrict.setBounds(49, 438, 166, 29);
@@ -470,17 +470,6 @@ public class MakkahCity {
 		//When done show menu to analyze. Exit from menu too.
 		inputListener.pause();
 		startMenu();
-	}
-	
-	private  static Vehicle traceCar() {
-		
-		for(int x = 20000; x < listOfVehicles.size(); x++) {
-			if(listOfVehicles.get(x) instanceof Bus)
-				if(((Bus)listOfVehicles.get(x)).getCampaign().getHotelDistrict() == District.ALAZIZIYA) {
-					return listOfVehicles.get(x);
-				}
-		}
-		return null;
 	}
 
 	private static void checkInput() {
@@ -1175,6 +1164,7 @@ public class MakkahCity {
 				allArrivedToHotelsTime);
 		DataManeger dataManeger = new DataManeger();
 		dataManeger.saveState(s, currenttimeManager.getCurrentTime());
+		System.out.println(Arrays.toString(dataManeger.savedStatesTimes())); //TODO FOR DEBUG REMOVE
 
 		boolean result = dataManeger.saveState(s, currenttimeManager.getCurrentTime());
 		if (!result) System.out.println("Could not save state "+currenttimeManager.getCurrentTime().getTime());

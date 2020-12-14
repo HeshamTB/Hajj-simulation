@@ -6,19 +6,10 @@ import java.util.Date;
 
 public class DataManeger {
 
-    private Path workingDir;
+    private File workingDir;
 
-//    public DataManeger(Path path) {
-//        this.seperator = File.separatorChar;
-//        this.workingDir = path;
-//    }
-
-    public DataManeger(State state, Date time){
-        Path dir = Paths.get("");
-    }
-
-    public DataManeger() {
-        this(null, null);
+    public DataManeger(){
+        workingDir = new File(".");
     }
 
     public boolean stateAvailable(Date time) {
@@ -31,7 +22,7 @@ public class DataManeger {
         if (stateAvailable(time)){
             try {
                 ObjectInputStream objectInputStream = new ObjectInputStream(
-                        new FileInputStream(String.format("0x%016X.bin", time.getTime())));
+                        new FileInputStream(String.format("%016X.bin", time.getTime())));
                 state = (State)objectInputStream.readObject();
                 objectInputStream.close();
             } catch (IOException | ClassNotFoundException e) {
@@ -43,7 +34,7 @@ public class DataManeger {
 
     public boolean saveState(State state, Date time){
         try {
-            FileOutputStream fs = new FileOutputStream(String.format("0x%016X.bin", time.getTime()));
+            FileOutputStream fs = new FileOutputStream(String.format("%016X.bin", time.getTime()));
             BufferedOutputStream bfs = new BufferedOutputStream(fs);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(bfs);
             objectOutputStream.writeObject(state);
@@ -53,6 +44,26 @@ public class DataManeger {
             return false;
         }
         return true;
+    }
+
+    public File[] savedStateFiles() {
+        return workingDir.listFiles();
+    }
+
+    public Date[] savedStatesTimes() {
+        File[] files = savedStateFiles();
+        ArrayList<Date> timesList = new ArrayList<>();
+        for (File file : files){
+            if (file.getName().contains(".bin")){
+                String timeInName = file.getName().replaceAll(".bin", "").trim();
+                if ("".equals(timeInName)) continue;
+                long time = Long.parseLong(timeInName, 16);
+                timesList.add(new HijriDate(time));
+            }
+        }
+        Date[] times = new Date[timesList.size()];
+        times = timesList.toArray(times);
+        return times;
     }
 }
 
