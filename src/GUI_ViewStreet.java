@@ -1,49 +1,68 @@
 import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+
+import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory.Default;
+
 import javax.swing.JList;
 import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
+import javax.swing.JTextField;
+import javax.swing.JProgressBar;
+import javax.swing.JLabel;
 
 public class GUI_ViewStreet {
-	private static JFrame frame;
-	private static Street street;
-	private static Street[] stdStreet = new Street[StreetNames.values().length];
-	private static PDate currenttimeManager;
-	private static Object[][] busData;
-	private static String[] busColNames = {"ID", "District", "location","Progress", "trip time"};
-	private static JTable table;
+	private JFrame frame;
+	private Street street;
+	private ArrayList<Vehicle> vehicles = new ArrayList<>();
+	private Street[] stdStreet = new Street[StreetNames.values().length];
+	private PDate currenttimeManager;
+	private Object[][] busData;
+	private String[] busColNames = {"ID", "District", "location","Progress", "trip time"};
+	private JTable table;
+	private JLabel lblCapcityValue; 
+	private JLabel lblDate;
+	private JLabel lblLanesValue;
+	private JLabel lblNumVehicles;
+	private JLabel lblLengthValue;
+	private JTextField txtLow;
+	private JTextField[] textFieldArray = new JTextField[20];
+	private JTextField txtHigh;
 	
 	public GUI_ViewStreet(Street[] streets, PDate currenttimeManager) {
-		this.stdStreet = streets;
-		this.currenttimeManager = currenttimeManager;
+		stdStreet = streets.clone();
+		this.currenttimeManager = (PDate) currenttimeManager.clone();
 		makeFrame();
 	}
 	
 	private void makeFrame() {
-		street = stdStreet[0];
+		//street = stdStreet[0];
 		frame = new JFrame("Streets");
 		frame.getContentPane().setBackground(new Color(70, 70, 70));
 		frame.getContentPane().setForeground(new Color(0, 0, 0));
-		frame.setBounds(100,100,814,454);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setBounds(100,100,815,480);
 		frame.getContentPane().setLayout(null);
 		frame.setLocationRelativeTo(null);
 		
-busData = new Object[street.getVehicles().size()][6];
 		
-		for (int i = 0; i < street.getVehicles().size(); i++) {
-			busData[i][0] = street.getVehicles().get(i).getUID();
-			if (street.getVehicles().get(i) instanceof Bus)
-				busData[i][1] = ((Bus)street.getVehicles().get(i)).getCampaign().getHotelDistrict().name();
+		
+		busData = new Object[vehicles.size()][6];
+		for (int i = 0; i < vehicles.size(); i++) {
+			busData[i][0] = vehicles.get(i).getUID();
+			if (vehicles.get(i) instanceof Bus)
+				busData[i][1] = ((Bus)vehicles.get(i)).getCampaign().getHotelDistrict().name();
 			else busData[i][1] = "Local Vehicle";
-			busData[i][2] = street.getVehicles().get(i).getCurrentLocation();
-			busData[i][3] = street.getVehicles().get(i).getProgress();
-			busData[i][4] = street.getVehicles().get(i).getTripTime();
+			busData[i][2] = vehicles.get(i).getCurrentLocation();
+			busData[i][3] = vehicles.get(i).getProgress();
+			busData[i][4] = vehicles.get(i).getTripTime();
 			
 		}
 		
@@ -65,10 +84,12 @@ busData = new Object[street.getVehicles().size()][6];
 		table.revalidate();
 		
 		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setBounds(10, 168, 754, 236);
+		scrollPane.setBounds(10, 194, 755, 236);
 		frame.getContentPane().add(scrollPane);
 		
 		JList list = new JList();
+		list.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		list.setBackground(Color.GRAY);
 		list.setModel(new AbstractListModel() {
 			Street[] streets = stdStreet;
 			public int getSize() {
@@ -78,11 +99,177 @@ busData = new Object[street.getVehicles().size()][6];
 				return streets[index].getName().name();
 			}
 		});
+		list.addListSelectionListener(
+				new ListSelectionListener() {
+					public void valueChanged(ListSelectionEvent e) {
+						street = stdStreet[list.getSelectedIndex()];
+						vehicles = street.getVehicles();
+						updateTable();
+						for (int i = 0; i < textFieldArray.length; i++) {
+							int colorFactor = (int)((1-capcityPoint(i))*255); 
+							textFieldArray[i].setBackground(new Color(255,colorFactor,0));
+						}
+						lblCapcityValue.setText(String.format("%%%d", street.getPercentRemainingCapacity()));
+						lblDate.setText(currenttimeManager.getCurrentTime().toString());
+						lblNumVehicles.setText(String.format("%d", street.getVehicles().size()));
+						lblLengthValue.setText(String.format("%.2f", street.getLength()));
+						lblLanesValue.setText(String.format("%d", street.getNumberOfLanes()));
+					}
+				});
 		list.setBounds(10, 11, 118, 146);
-		JScrollPane scrollList = new JScrollPane(table);
-		scrollList.setBounds(10, 11, 118, 146);
+		JScrollPane scrollList = new JScrollPane(list);
+		scrollList.setBounds(10, 11, 173, 172);
 		frame.getContentPane().add(scrollList);
 		
+		txtLow = new JTextField("Low");
+		txtLow.setFont(new Font("Rockwell", Font.BOLD, 13));
+		txtLow.setDisabledTextColor(Color.BLACK);
+		txtLow.setEnabled(false);
+		txtLow.setEditable(false);
+		txtLow.setBackground(Color.YELLOW);
+		txtLow.setBounds(710, 105, 40, 20);
+		frame.getContentPane().add(txtLow);
+		
+		txtHigh = new JTextField("High");
+		txtHigh.setFont(new Font("Rockwell", Font.BOLD, 13));
+		txtHigh.setDisabledTextColor(Color.BLACK);
+		txtHigh.setEnabled(false);
+		txtHigh.setEditable(false);
+		txtHigh.setColumns(0);
+		txtHigh.setBackground(Color.RED);
+		txtHigh.setBounds(710, 80, 40, 20);
+		frame.getContentPane().add(txtHigh);
+		
+		JLabel lblTime = new JLabel("Time:");
+		lblTime.setForeground(Color.WHITE);
+		lblTime.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblTime.setBounds(193, 11, 72, 20);
+		frame.getContentPane().add(lblTime);
+		
+		lblDate = new JLabel(currenttimeManager.getCurrentTime().toString());
+		lblDate.setForeground(Color.WHITE);
+		lblDate.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblDate.setBounds(243, 11, 326, 20);
+		frame.getContentPane().add(lblDate);
+		
+		JLabel lblStatus = new JLabel("Status:");
+		lblStatus.setForeground(Color.WHITE);
+		lblStatus.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblStatus.setBounds(511, 11, 72, 20);
+		frame.getContentPane().add(lblStatus);
+		
+		JLabel lblDestination = new JLabel();
+		lblDestination.setForeground(Color.WHITE);
+		lblDestination.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblDestination.setBounds(568, 11, 184, 20);
+		if (currenttimeManager.getCurrentCalendar().get(Calendar.DAY_OF_MONTH) == 9) 
+			 lblDestination.setText("Heading to Arafat");
+		else lblDestination.setText("Heading to Hotels");
+		frame.getContentPane().add(lblDestination);
+		
+		JLabel lblCapcity = new JLabel("Capcity:");
+		lblCapcity.setForeground(Color.WHITE);
+		lblCapcity.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblCapcity.setBounds(193, 45, 72, 20);
+		frame.getContentPane().add(lblCapcity);
+		
+		lblCapcityValue = new JLabel();
+		lblCapcityValue.setForeground(Color.WHITE);
+		lblCapcityValue.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblCapcityValue.setBounds(258, 45, 48, 20);
+		frame.getContentPane().add(lblCapcityValue);
+		
+		JLabel lblVehicles = new JLabel("Vehicles: ");
+		lblVehicles.setForeground(Color.WHITE);
+		lblVehicles.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblVehicles.setBounds(370, 45, 72, 20);
+		frame.getContentPane().add(lblVehicles);
+		
+		lblNumVehicles = new JLabel();
+		lblNumVehicles.setForeground(Color.WHITE);
+		lblNumVehicles.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblNumVehicles.setBounds(441, 45, 61, 20);
+		frame.getContentPane().add(lblNumVehicles);
+		
+		JLabel lblLength = new JLabel("Length:");
+		lblLength.setForeground(Color.WHITE);
+		lblLength.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblLength.setBounds(193, 85, 61, 20);
+		frame.getContentPane().add(lblLength);
+		
+		lblLengthValue = new JLabel();
+		lblLengthValue.setForeground(Color.WHITE);
+		lblLengthValue.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblLengthValue.setBounds(253, 85, 93, 20);
+		frame.getContentPane().add(lblLengthValue);
+		
+		JLabel lblLanes = new JLabel("Lanes");
+		lblLanes.setForeground(Color.WHITE);
+		lblLanes.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblLanes.setBounds(370, 85, 61, 20);
+		frame.getContentPane().add(lblLanes);
+		
+		lblLanesValue = new JLabel();
+		lblLanesValue.setForeground(Color.WHITE);
+		lblLanesValue.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblLanesValue.setBounds(431, 85, 26, 20);
+		frame.getContentPane().add(lblLanesValue);
+		
+		JLabel lbl100 = new JLabel();
+		lbl100.setText("%100");
+		lbl100.setForeground(Color.WHITE);
+		lbl100.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lbl100.setBounds(715, 170, 45, 15);
+		frame.getContentPane().add(lbl100);
+		
+		JLabel lbl0 = new JLabel();
+		lbl0.setText("%0");
+		lbl0.setForeground(Color.WHITE);
+		lbl0.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lbl0.setBounds(193, 170, 25, 15);
+		frame.getContentPane().add(lbl0);
+		
+		JLabel lblCapcityPoint = new JLabel("CapcityPoint:");
+		lblCapcityPoint.setForeground(Color.WHITE);
+		lblCapcityPoint.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblCapcityPoint.setBounds(193, 120, 101, 20);
+		frame.getContentPane().add(lblCapcityPoint);
+		
+		
+		for (int i = 0; i < textFieldArray.length; i++) {
+			textFieldArray[i] = new JTextField();
+			textFieldArray[i].setEnabled(false);
+			textFieldArray[i].setEditable(false);
+			textFieldArray[i].setBackground(new Color(70, 70, 70));
+			textFieldArray[i].setBounds(190+i*28, 142, 28, 20);
+			frame.getContentPane().add(textFieldArray[i]);
+			textFieldArray[i].setColumns(0);
+		}
+		
 		frame.setVisible(true);
+		
+	}
+	
+	public void updateTable() {
+		if (vehicles.isEmpty()) return;
+		busData = new Object[vehicles.size()][6];
+		for (int i = 0; i < vehicles.size(); i++) {
+			busData[i][0] = vehicles.get(i).getUID();// TODO: There is an Exception error here;
+			if (vehicles.get(i) instanceof Bus)
+				busData[i][1] = ((Bus)vehicles.get(i)).getCampaign().getHotelDistrict().name();
+			else busData[i][1] = "Local Vehicle";
+			busData[i][2] = vehicles.get(i).getCurrentLocation();
+			busData[i][3] = vehicles.get(i).getProgress();
+			busData[i][4] = vehicles.get(i).getTripTime();
+			
+		}
+		table.setModel(new DefaultTableModel(busData ,busColNames));
+	}
+	
+	public double capcityPoint(int x) {
+		double part = street.getLength()/20;
+		double capcity = street.capcityPoint(x*part, (x+1)*part);
+		
+		return capcity;
 	}
 }
