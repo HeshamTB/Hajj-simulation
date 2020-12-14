@@ -68,10 +68,7 @@ public class MakkahCity {
 		addCivilVehicleNoise();
 
 		makeRoutes();
-		
-//		 Vehicle car = traceCar();
-		
-		//TODO Arrival Time for Each Day
+
 		//GUI
 		autoModeCheckBox = new Checkbox();
 		makkahFrame = new JFrame("Hajj Simulation");
@@ -165,7 +162,7 @@ public class MakkahCity {
 		btnViewBuses.setForeground(Color.white);
 		btnViewBuses.addActionListener(e -> {
 			GUI_ViewBuses t =  new GUI_ViewBuses(listOfCampaigns , currenttimeManager);
-		});// TODO: the list is update every MINUTE, we don't need it.
+		});
 		
 		JButton btnViewCampaigns = new JButton("View Campaigns");
 		btnViewCampaigns.setBounds(1307, 119, 166, 29);
@@ -369,6 +366,7 @@ public class MakkahCity {
 			//Start of Every hour
 			if (firstDayTimeMan.getCurrentCalendar().get(Calendar.MINUTE) == 0){
 				System.out.println("\n\n" + getStreetsReport());
+				updateStreetFrame();
 				saveState();
 			}
 			else System.out.print(".");
@@ -407,9 +405,7 @@ public class MakkahCity {
 				}
 			}
 			if (isAllArrived() && allArrivedToArafatTime == null) allArrivedToArafatTime = (Date)currenttimeManager.getCurrentTime().clone();
-			updateStreetFrame();
 			firstDayTimeMan.step(Calendar.MINUTE, 1);
-//			System.out.println(car);
 		}
 		
 		currenttimeManager = lastDayTimeMan;
@@ -430,6 +426,8 @@ public class MakkahCity {
 			//Start of Every hour
 			if (lastDayTimeMan.getCurrentCalendar().get(Calendar.MINUTE) == 0){
 				System.out.println("\n\n" + getStreetsReport());
+				updateStreetFrame();
+				saveState();
 			}
 			else System.out.print(".");
 			
@@ -467,7 +465,6 @@ public class MakkahCity {
 				}
 			}
 			if (isAllArrived() && allArrivedToHotelsTime == null) allArrivedToHotelsTime = (Date)currenttimeManager.getCurrentTime().clone();
-			updateStreetFrame();
 			lastDayTimeMan.step(Calendar.MINUTE, 1);
 		}
 		//When done show menu to analyze. Exit from menu too.
