@@ -9,20 +9,22 @@ public class DataManeger {
     private File workingDir;
 
     public DataManeger(){
-        workingDir = new File(".");
+        workingDir = new File("./data/");
+        workingDir.mkdir();
+        clearData();
     }
 
     public boolean stateAvailable(Date time) {
-        File f = new File(String.format("0x%016X.bin", time.getTime()));
+        File f = new File(String.format("./data/%s.bin", time.getTime()));
         return f.exists();
     }
 
-    public  State loadState(Date time){
+    public State loadState(Date time){
         State state = null;
         if (stateAvailable(time)){
             try {
                 ObjectInputStream objectInputStream = new ObjectInputStream(
-                        new FileInputStream(String.format("%016X.bin", time.getTime())));
+                        new FileInputStream(String.format("./data/%s.bin", time.getTime())));
                 state = (State)objectInputStream.readObject();
                 objectInputStream.close();
             } catch (IOException | ClassNotFoundException e) {
@@ -34,7 +36,7 @@ public class DataManeger {
 
     public boolean saveState(State state, Date time){
         try {
-            FileOutputStream fs = new FileOutputStream(String.format("%016X.bin", time.getTime()));
+            FileOutputStream fs = new FileOutputStream(String.format("./data/%s.bin", time.getTime()));
             BufferedOutputStream bfs = new BufferedOutputStream(fs);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(bfs);
             objectOutputStream.writeObject(state);
@@ -57,13 +59,21 @@ public class DataManeger {
             if (file.getName().contains(".bin")){
                 String timeInName = file.getName().replaceAll(".bin", "").trim();
                 if ("".equals(timeInName)) continue;
-                long time = Long.parseLong(timeInName, 16);
+                long time = Long.parseLong(timeInName);
                 timesList.add(new HijriDate(time));
             }
         }
         Date[] times = new Date[timesList.size()];
         times = timesList.toArray(times);
         return times;
+    }
+
+    private void clearData() {
+        for (File file : savedStateFiles()) {
+            if (file.getName().contains(".bin")){
+                file.delete();
+            }
+        }
     }
 }
 

@@ -31,6 +31,7 @@ public class MakkahCity {
 	private static final InputListener inputListener = new InputListener();
 	private static final Thread t = new Thread(inputListener,"InputThread-Makkah");
 	private static boolean isAllRoutSet;
+	private static final DataManeger dataManeger = new DataManeger();
 	//GUI
 	private static boolean exit_flag;
 	private static boolean pause_flag;
@@ -1162,17 +1163,11 @@ public class MakkahCity {
 				stdStreet,
 				allArrivedToArafatTime,
 				allArrivedToHotelsTime);
-		DataManeger dataManeger = new DataManeger();
 		dataManeger.saveState(s, currenttimeManager.getCurrentTime());
 		System.out.println(Arrays.toString(dataManeger.savedStatesTimes())); //TODO FOR DEBUG REMOVE
 
 		boolean result = dataManeger.saveState(s, currenttimeManager.getCurrentTime());
 		if (!result) System.out.println("Could not save state "+currenttimeManager.getCurrentTime().getTime());
-	}
-
-	private static State loadState(Date time){
-		DataManeger dataManeger = new DataManeger();
-		return dataManeger.loadState(time);
 	}
 
 	 private static void updateStreetFrame() {
