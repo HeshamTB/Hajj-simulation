@@ -16,8 +16,8 @@ import javax.swing.JScrollBar;
 
 public class GUI_ViewRoute {
 	JFrame frame;
-	private String[] vehicleColNames = {"Num", "Status", "Length","Capacity", "Best Time", "Used By"};
-	private Object[][] vehicleData;
+	private String[] routeColNames = {"Num", "Status", "Length","Capacity", "Best Time", "Used By"};
+	private Object[][] routeData;
 	private JTable table;
 	private Route[] stdRoute;
 	private PDate currenttimeManager;
@@ -41,24 +41,24 @@ public class GUI_ViewRoute {
 		frame.getContentPane().setLayout(null);
 		frame.setLocationRelativeTo(null);
 		
-		vehicleData = new Object[stdRoute.length][6];
+		routeData = new Object[stdRoute.length][6];
 		for (int i = 0; i < stdRoute.length; i++) {
-			vehicleData[i][0] = i;
-			vehicleData[i][1] = String.format("%s : %s",stdRoute[i].getHotelArea(),stdRoute[i].getMashier());
-			vehicleData[i][2] = stdRoute[i].getTotalLength();
-			vehicleData[i][3] = String.format("%.2f",stdRoute[i].capcity());
-			vehicleData[i][4] = stdRoute[i].getFastestTimeOfTravel(new Bus());
+			routeData[i][0] = i;
+			routeData[i][1] = String.format("%s : %s",stdRoute[i].getHotelArea(),stdRoute[i].getMashier());
+			routeData[i][2] = stdRoute[i].getTotalLength();
+			routeData[i][3] = String.format("%.2f",stdRoute[i].capcity());
+			routeData[i][4] = stdRoute[i].getFastestTimeOfTravel(new Bus());
 			int count = 0;
 			for (Campaign campaign : listOfCampaigns)
 				if (campaign.getRoute() == stdRoute[i])
 					count += campaign.getVehicles().size();
 			
-			vehicleData[i][5] = String.format("%d buses", count);
+			routeData[i][5] = String.format("%d buses", count);
 		}
 		
 		
-		table = new JTable(vehicleData,vehicleColNames);
-		table.setModel(new DefaultTableModel(vehicleData,vehicleColNames));
+		table = new JTable(routeData,routeColNames);
+		table.setModel(new DefaultTableModel(routeData,routeColNames));
 		table.getColumnModel().getColumn(0).setPreferredWidth(30);
 		table.getColumnModel().getColumn(1).setPreferredWidth(190);
 		table.getColumnModel().getColumn(2).setPreferredWidth(55);
@@ -67,7 +67,7 @@ public class GUI_ViewRoute {
 		table.setColumnSelectionAllowed(true);
 		table.setCellSelectionEnabled(true);
 		DefaultTableModel model = new DefaultTableModel();
-		model.setColumnIdentifiers(vehicleColNames);
+		model.setColumnIdentifiers(routeColNames);
 		ListSelectionModel model2 = table.getSelectionModel();
 		model2.addListSelectionListener(e -> {
 			int row = model2.getMinSelectionIndex();

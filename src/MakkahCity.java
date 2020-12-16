@@ -47,6 +47,7 @@ public class MakkahCity {
 	private static JLabel lblMinimumTripValue;
     private static JLabel lblBusesArrivedInTheLastHourValue;
     private static JLabel lblAverageTripForLastHourValue;
+    private static JButton btnPause;
 	
 
 	public static void main(String[] args) {
@@ -79,8 +80,7 @@ public class MakkahCity {
 		//Street data
 		Object[][] streetData = new Object[stdStreet.length][6];
 		String[] streetColNames = {"Street Name", "Street Load %", "Total", "Buses",
-				"Local Vehicles",
-				"Avg. Time"};
+				"Local Vehicles","Avg. Time"};
 
 		for (int i = 0; i < stdStreet.length; i++) {
 			streetData[i][0] = stdStreet[i].getName().name();
@@ -153,8 +153,9 @@ public class MakkahCity {
 		btnViewRoutes.setBackground(new Color(9,9,9));
 		btnViewRoutes.setForeground(Color.white);
 		btnViewRoutes.addActionListener(e -> {
-			EventControll t =  new EventControll();
-			t.setData(stdRoutes[0]);
+			GUI_ViewRoute r = new GUI_ViewRoute(stdRoutes ,listOfCampaigns, currenttimeManager);
+			pause_flag = true;
+			btnPause.setText("Unpause");
 		});
 		JButton btnViewBuses = new JButton("View Buses");
 		btnViewBuses.setBounds(1307, 76, 166, 29);
@@ -163,6 +164,8 @@ public class MakkahCity {
 		btnViewBuses.setForeground(Color.white);
 		btnViewBuses.addActionListener(e -> {
 			GUI_ViewBuses t =  new GUI_ViewBuses(listOfCampaigns , currenttimeManager);
+			pause_flag = true;
+			btnPause.setText("Unpause");
 		});
 		
 		JButton btnViewCampaigns = new JButton("View Campaigns");
@@ -178,6 +181,8 @@ public class MakkahCity {
 		btnViewStreet.setForeground(Color.white);
 		btnViewStreet.addActionListener(e -> {
 			GUI_ViewStreet t =  new GUI_ViewStreet(stdStreet,currenttimeManager);
+			pause_flag = true;
+			btnPause.setText("Unpause");
 		});
 
 		JButton btnExit = new JButton("Exit");
@@ -187,7 +192,7 @@ public class MakkahCity {
 		btnExit.setBounds(1307, 623, 166, 29);
 		btnExit.addActionListener(actionEvent -> exit_flag = true);
 
-		JButton btnPause = new JButton("Pause");
+		btnPause = new JButton("Pause");
 		btnPause.setBackground(new Color(9,9,9));
 		btnPause.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		btnPause.setForeground(Color.white);
@@ -410,6 +415,7 @@ public class MakkahCity {
 			}
 			if (isAllArrived() && allArrivedToArafatTime == null) allArrivedToArafatTime = (Date)currenttimeManager.getCurrentTime().clone();
 			firstDayTimeMan.step(Calendar.MINUTE, 1);
+			lblDate.setText(currenttimeManager.getCurrentTime().toString());
 		}
 		
 		currenttimeManager = lastDayTimeMan;
@@ -470,6 +476,7 @@ public class MakkahCity {
 			}
 			if (isAllArrived() && allArrivedToHotelsTime == null) allArrivedToHotelsTime = (Date)currenttimeManager.getCurrentTime().clone();
 			lastDayTimeMan.step(Calendar.MINUTE, 1);
+			lblDate.setText(currenttimeManager.getCurrentTime().toString());
 		}
 		//When done show menu to analyze. Exit from menu too.
 		inputListener.pause();
