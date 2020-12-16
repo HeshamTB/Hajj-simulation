@@ -1,37 +1,29 @@
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class DataManeger {
 
-    private Path workingDir;
+    private File workingDir;
 
-//    public DataManeger(Path path) {
-//        this.seperator = File.separatorChar;
-//        this.workingDir = path;
-//    }
-
-    public DataManeger(State state, Date time){
-        Path dir = Paths.get("");
-    }
-
-    public DataManeger() {
-        this(null, null);
+    public DataManeger(){
+        workingDir = new File("./data/");
+        workingDir.mkdir();
+        clearData();
     }
 
     public boolean stateAvailable(Date time) {
-        File f = new File(String.format("0x%016X.bin", time.getTime()));
+        File f = new File(String.format("./data/%s.bin", time.getTime()));
         return f.exists();
     }
 
-    public  State loadState(Date time){
+    public State loadState(Date time){
         State state = null;
         if (stateAvailable(time)){
             try {
                 ObjectInputStream objectInputStream = new ObjectInputStream(
-                        new FileInputStream(String.format("0x%016X.bin", time.getTime())));
+                        new FileInputStream(String.format("./data/%s.bin", time.getTime())));
                 state = (State)objectInputStream.readObject();
                 objectInputStream.close();
             } catch (IOException | ClassNotFoundException e) {
@@ -43,7 +35,7 @@ public class DataManeger {
 
     public boolean saveState(State state, Date time){
         try {
-            FileOutputStream fs = new FileOutputStream(String.format("0x%016X.bin", time.getTime()));
+            FileOutputStream fs = new FileOutputStream(String.format("./data/%s.bin", time.getTime()));
             BufferedOutputStream bfs = new BufferedOutputStream(fs);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(bfs);
             objectOutputStream.writeObject(state);
@@ -53,6 +45,52 @@ public class DataManeger {
             return false;
         }
         return true;
+    }
+
+    public File[] savedStateFiles() {
+        return workingDir.listFiles();
+    }
+
+    public Date[] savedStatesTimes() {
+        File[] files = savedStateFiles();
+        ArrayList<Date> timesList = new ArrayList<>();
+        for (File file : files){
+            if (file.getName().contains(".bin")){
+                String timeInName = file.getName().replaceAll(".bin", "").trim();
+                if ("".equals(timeInName)) continue;
+                long time = Long.parseLong(timeInName);
+                timesList.add(new HijriDate(time));
+            }
+        }
+        Date[] times = new Date[timesList.size()];
+        times = timesList.toArray(times);
+        return times;
+    }
+
+    public List<State> getStates(){
+        List<State> list = new ArrayList<>();
+        for (File file : workingDir.listFiles()) {
+            if (file.getName().contains(".bin")){
+                try {
+                    FileInputStream fileInputStream = new FileInputStream(file);
+                    BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
+                    ObjectInputStream objectInputStream = new ObjectInputStream(bufferedInputStream);
+                    State state = (State) objectInputStream.readObject();
+                    list.add(state);
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return list;
+    }
+
+    private void clearData() {
+        for (File file : savedStateFiles()) {
+            if (file.getName().contains(".bin")){
+                file.delete();
+            }
+        }
     }
 }
 
@@ -66,8 +104,15 @@ class State implements Serializable {
     private Street[] stdStreet;
     private Date allArrivedToArafatTime;
     private Date allArrivedToHotelsTime;
+    private Date stateTime;
 
-    public State(ArrayList<Campaign> listOfCampaigns, ArrayList<Vehicle> listOfVehicles, Route[] stdRoutes, Street[] stdStreet, Date allArrivedToArafatTime, Date allArrivedToHotelsTime) {
+    public State(ArrayList<Campaign> listOfCampaigns,
+                 ArrayList<Vehicle> listOfVehicles,
+                 Route[] stdRoutes,
+                 Street[] stdStreet,
+                 Date allArrivedToArafatTime,
+                 Date allArrivedToHotelsTime,
+                 Date stateTime) {
         //Make clones since values may change if this is running on a thread.
         this.listOfCampaigns = (ArrayList<Campaign>) listOfCampaigns.clone();
         this.listOfVehicles = (ArrayList<Vehicle>) listOfVehicles.clone();
@@ -79,6 +124,7 @@ class State implements Serializable {
         if (allArrivedToHotelsTime != null) {
             this.allArrivedToHotelsTime = (Date) allArrivedToHotelsTime.clone();
         }
+        this.stateTime = stateTime;
     }
 
     public ArrayList<Campaign> getListOfCampaigns() {
@@ -104,4 +150,9 @@ class State implements Serializable {
     public Date getAllArrivedToHotelsTime() {
         return allArrivedToHotelsTime;
     }
+
+	public Date getStateTime() {
+		return stateTime;
+	}
+    
 }
