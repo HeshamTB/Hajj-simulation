@@ -36,6 +36,7 @@ public class GUI_History {
 		frame.setLocationRelativeTo(null);
 		frame.revalidate();
 		frame.setLocation(200,150);
+		frame.setBounds(200, 150, 1400, 720);
 		frame.setAutoRequestFocus(false);
 		frame.setVisible(true);
 	}
