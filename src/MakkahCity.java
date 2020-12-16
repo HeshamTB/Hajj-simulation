@@ -1162,9 +1162,9 @@ public class MakkahCity {
 				stdRoutes,
 				stdStreet,
 				allArrivedToArafatTime,
-				allArrivedToHotelsTime);
+				allArrivedToHotelsTime,
+				currenttimeManager.getCurrentTime());
 		dataManeger.saveState(s, currenttimeManager.getCurrentTime());
-		System.out.println(Arrays.toString(dataManeger.savedStatesTimes())); //TODO FOR DEBUG REMOVE
 
 		boolean result = dataManeger.saveState(s, currenttimeManager.getCurrentTime());
 		if (!result) System.out.println("Could not save state "+currenttimeManager.getCurrentTime().getTime());

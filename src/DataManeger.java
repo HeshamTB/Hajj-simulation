@@ -1,8 +1,7 @@
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class DataManeger {
 
@@ -68,6 +67,24 @@ public class DataManeger {
         return times;
     }
 
+    public List<State> getStates(){
+        List<State> list = new ArrayList<>();
+        for (File file : workingDir.listFiles()) {
+            if (file.getName().contains(".bin")){
+                try {
+                    FileInputStream fileInputStream = new FileInputStream(file);
+                    BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
+                    ObjectInputStream objectInputStream = new ObjectInputStream(bufferedInputStream);
+                    State state = (State) objectInputStream.readObject();
+                    list.add(state);
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return list;
+    }
+
     private void clearData() {
         for (File file : savedStateFiles()) {
             if (file.getName().contains(".bin")){
@@ -87,8 +104,15 @@ class State implements Serializable {
     private Street[] stdStreet;
     private Date allArrivedToArafatTime;
     private Date allArrivedToHotelsTime;
+    private Date stateTime;
 
-    public State(ArrayList<Campaign> listOfCampaigns, ArrayList<Vehicle> listOfVehicles, Route[] stdRoutes, Street[] stdStreet, Date allArrivedToArafatTime, Date allArrivedToHotelsTime) {
+    public State(ArrayList<Campaign> listOfCampaigns,
+                 ArrayList<Vehicle> listOfVehicles,
+                 Route[] stdRoutes,
+                 Street[] stdStreet,
+                 Date allArrivedToArafatTime,
+                 Date allArrivedToHotelsTime,
+                 Date stateTime) {
         //Make clones since values may change if this is running on a thread.
         this.listOfCampaigns = (ArrayList<Campaign>) listOfCampaigns.clone();
         this.listOfVehicles = (ArrayList<Vehicle>) listOfVehicles.clone();
@@ -100,6 +124,7 @@ class State implements Serializable {
         if (allArrivedToHotelsTime != null) {
             this.allArrivedToHotelsTime = (Date) allArrivedToHotelsTime.clone();
         }
+        this.stateTime = stateTime;
     }
 
     public ArrayList<Campaign> getListOfCampaigns() {
