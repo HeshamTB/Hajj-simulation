@@ -21,8 +21,8 @@ public class GUI_ViewStreet {
 	private ArrayList<Vehicle> vehicles = new ArrayList<>();
 	private Street[] stdStreet = new Street[StreetNames.values().length];
 	private PDate currenttimeManager;
-	private Object[][] busData;
-	private String[] busColNames = {"ID", "District", "location","Progress", "trip time"};
+	private Object[][] vehicleData;
+	private String[] vehicleColNames = {"ID", "District", "location","Progress", "trip time"};
 	private JTable table;
 	private JLabel lblCapcityValue; 
 	private JLabel lblDate;
@@ -50,27 +50,27 @@ public class GUI_ViewStreet {
 		
 		
 		
-		busData = new Object[vehicles.size()][6];
+		vehicleData = new Object[vehicles.size()][6];
 		for (int i = 0; i < vehicles.size(); i++) {
-			busData[i][0] = vehicles.get(i).getUID();
+			vehicleData[i][0] = vehicles.get(i).getUID();
 			if (vehicles.get(i) instanceof Bus)
-				busData[i][1] = ((Bus)vehicles.get(i)).getCampaign().getHotelDistrict().name();
-			else busData[i][1] = "Local Vehicle";
-			busData[i][2] = vehicles.get(i).getCurrentLocation();
-			busData[i][3] = vehicles.get(i).getProgress();
-			busData[i][4] = vehicles.get(i).getTripTime();
+				vehicleData[i][1] = ((Bus)vehicles.get(i)).getCampaign().getHotelDistrict().name();
+			else vehicleData[i][1] = "Local Vehicle";
+			vehicleData[i][2] = vehicles.get(i).getCurrentLocation();
+			vehicleData[i][3] = vehicles.get(i).getProgress();
+			vehicleData[i][4] = vehicles.get(i).getTripTime();
 			
 		}
 		
-		table = new JTable(busData,busColNames);
+		table = new JTable(vehicleData,vehicleColNames);
 		table.setColumnSelectionAllowed(true);
 		table.setCellSelectionEnabled(true);
 		DefaultTableModel model = new DefaultTableModel();
-		model.setColumnIdentifiers(busColNames);
+		model.setColumnIdentifiers(vehicleColNames);
 		table.getTableHeader().setBackground(new Color(17,17,17));
 		table.getTableHeader().setFont(new Font("Rockwell", Font.PLAIN, 18));
 		table.getTableHeader().setForeground(Color.WHITE);
-		table.setModel(new DefaultTableModel(busData ,busColNames));
+		table.setModel(new DefaultTableModel(vehicleData ,vehicleColNames));
 		table.setBackground(new Color(17,17,17));
 		table.setForeground(Color.WHITE);
 		table.setGridColor(new Color(102, 102, 102));
@@ -248,18 +248,18 @@ public class GUI_ViewStreet {
 	
 	public void updateTable() {
 		if (vehicles.isEmpty()) return;
-		busData = new Object[vehicles.size()][6];
+		vehicleData = new Object[vehicles.size()][6];
 		for (int i = 0; i < vehicles.size(); i++) {
-			busData[i][0] = vehicles.get(i).getUID();// TODO: There is an Exception error here;
+			vehicleData[i][0] = vehicles.get(i).getUID();// TODO: There is an Exception error here;
 			if (vehicles.get(i) instanceof Bus)
-				busData[i][1] = ((Bus)vehicles.get(i)).getCampaign().getHotelDistrict().name();
-			else busData[i][1] = "Local Vehicle";
-			busData[i][2] = vehicles.get(i).getCurrentLocation();
-			busData[i][3] = vehicles.get(i).getProgress();
-			busData[i][4] = vehicles.get(i).getTripTime();
+				vehicleData[i][1] = ((Bus)vehicles.get(i)).getCampaign().getHotelDistrict().name();
+			else vehicleData[i][1] = "Local Vehicle";
+			vehicleData[i][2] = vehicles.get(i).getCurrentLocation();
+			vehicleData[i][3] = vehicles.get(i).getProgress();
+			vehicleData[i][4] = vehicles.get(i).getTripTime();
 			
 		}
-		table.setModel(new DefaultTableModel(busData ,busColNames));
+		table.setModel(new DefaultTableModel(vehicleData ,vehicleColNames));
 	}
 	
 	public double capcityPoint(int x) {

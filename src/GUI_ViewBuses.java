@@ -9,6 +9,10 @@ import javax.swing.JButton;
 import java.awt.Color;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.JTextField;
+import javax.swing.DropMode;
+import javax.swing.JTextPane;
 
 public class GUI_ViewBuses {
 
@@ -26,10 +30,11 @@ public class GUI_ViewBuses {
 	private static JButton Almansoor;
 	private static JLabel lblTime;
 	private static JLabel lblDate;
-	JLabel lblStatus;
+	private JLabel lblStatus;
 	private JLabel lblDestination;
 	private JLabel lblDistrict;
 	private JLabel lblDistrictValue;
+	private JTextPane textPane;
 	
 	
 	public GUI_ViewBuses(ArrayList<Campaign> campaign , PDate currenttimeManager) {
@@ -75,6 +80,13 @@ public class GUI_ViewBuses {
 		table.setCellSelectionEnabled(true);
 		DefaultTableModel model = new DefaultTableModel();
 		model.setColumnIdentifiers(busColNames);
+		ListSelectionModel model2 = table.getSelectionModel();
+		model2.addListSelectionListener(e -> {
+				if (!model2.isSelectionEmpty()) {
+				int row = model2.getMinSelectionIndex();
+				textPane.setText(((Bus)vehicles.get(row)).toString());
+			}
+			});
 		table.getTableHeader().setBackground(new Color(17,17,17));
 		table.getTableHeader().setFont(new Font("Rockwell", Font.PLAIN, 18));
 		table.getTableHeader().setForeground(Color.WHITE);
@@ -168,6 +180,16 @@ public class GUI_ViewBuses {
 		lblDistrictValue.setBackground(Color.BLACK);
 		lblDistrictValue.setBounds(247, 371, 129, 12);
 		frame.getContentPane().add(lblDistrictValue);
+		
+		textPane = new JTextPane();
+		textPane.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		textPane.setForeground(Color.WHITE);
+		textPane.setBackground(Color.BLACK);
+		
+		JScrollPane scrolltext = new JScrollPane(textPane);
+		scrolltext.setBounds(523, 271, 384, 133);
+		frame.getContentPane().add(scrolltext);
+
 		
 		frame.setVisible(true);
 	}

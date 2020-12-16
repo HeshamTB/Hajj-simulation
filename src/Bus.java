@@ -33,7 +33,7 @@ public class Bus extends CivilVehicle {
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
-        s.append(String.format("\nID: %s, Campaign ID: %s\n",this.getUID() , getCampaign().getUID()));
+        s.append(String.format("ID: %s, Campaign ID: %s\n",this.getUID() , getCampaign().getUID()));
         s.append(super.toString());
         return s.toString();
     }
