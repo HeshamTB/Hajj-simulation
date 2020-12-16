@@ -208,6 +208,9 @@ public class MakkahCity {
 		btnBrowseHistory.setBackground(new Color(9,9,9));
 		btnBrowseHistory.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		btnBrowseHistory.setForeground(Color.white);
+		btnBrowseHistory.addActionListener(e -> {
+			GUI_History hist = new GUI_History(dataManeger.getStates());
+		});
 		
 		//Label 
 		JLabel lblStreets = new JLabel("Streets");

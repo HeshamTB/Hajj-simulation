@@ -150,4 +150,9 @@ class State implements Serializable {
     public Date getAllArrivedToHotelsTime() {
         return allArrivedToHotelsTime;
     }
+
+	public Date getStateTime() {
+		return stateTime;
+	}
+    
 }
