@@ -18,20 +18,20 @@ import javax.swing.JTextPane;
 
 public class GUI_ViewBuses {
 
-	private static JFrame frame;
-	private static ArrayList<Vehicle> vehicles = new ArrayList<>();
-	private static ArrayList<Vehicle> vehiclesAlazizya = new ArrayList<>();
-	private static ArrayList<Vehicle> vehiclesAlhijra = new ArrayList<>();
-	private static ArrayList<Vehicle> vehiclesAlmansoor = new ArrayList<>();
-	private static PDate currenttimeManager;
-	private static JTable table;
-	private static Object[][] busData;
-	private static String[] busColNames = {"ID", "Street", "location","Progress", "trip time",  "Arrive Time"};
-	private static JButton Alazizya;
-	private static JButton Alhijra;
-	private static JButton Almansoor;
-	private static JLabel lblTime;
-	private static JLabel lblDate;
+	private JFrame frame;
+	private ArrayList<Vehicle> vehicles = new ArrayList<>();
+	private ArrayList<Vehicle> vehiclesAlazizya = new ArrayList<>();
+	private ArrayList<Vehicle> vehiclesAlhijra = new ArrayList<>();
+	private ArrayList<Vehicle> vehiclesAlmansoor = new ArrayList<>();
+	private Date currenttimeManager;
+	private JTable table;
+	private Object[][] busData;
+	private String[] busColNames = {"ID", "Street", "location","Progress", "trip time",  "Arrive Time"};
+	private JButton Alazizya;
+	private JButton Alhijra;
+	private JButton Almansoor;
+	private JLabel lblTime;
+	private JLabel lblDate;
 	private JLabel lblStatus;
 	private JLabel lblDestination;
 	private JLabel lblDistrict;
@@ -39,7 +39,7 @@ public class GUI_ViewBuses {
 	private JTextPane textPane;
 	
 	
-	public GUI_ViewBuses(ArrayList<Campaign> campaign , PDate currenttimeManager) {
+	public GUI_ViewBuses(ArrayList<Campaign> campaign , Date currenttimeManager) {
 		for (Campaign camp : campaign) {
 			switch (camp.getHotelDistrict()) {
 			case ALAZIZIYA:
@@ -62,20 +62,6 @@ public class GUI_ViewBuses {
 	
 	private void makeFrame() {
 		frame = new JFrame("Buses");
-		busData = new Object[vehicles.size()][6];
-		
-		for (int i = 0; i < vehicles.size(); i++) {
-			busData[i][0] = vehicles.get(i).getUID();
-			if (vehicles.get(i).isMoving())
-				busData[i][1] = vehicles.get(i).getCurrentStreet().getName();
-			else busData[i][1] = "Not Moving";
-			busData[i][2] = vehicles.get(i).getCurrentLocation();
-			busData[i][3] = vehicles.get(i).getProgress();
-			busData[i][4] = vehicles.get(i).getTripTime();
-			if (vehicles.get(i).isArrivedToDest())
-				busData[i][5] = vehicles.get(i).getTimeOfArrival();//Formula of time
-			else busData[i][5] = "NOT Arrived";
-		}
 		
 		table = new JTable(busData,busColNames);
 		table.setColumnSelectionAllowed(true);
@@ -118,6 +104,7 @@ public class GUI_ViewBuses {
 		Alazizya.setForeground(Color.white);
 		Alazizya.setBounds(20, 366, 116, 23);
 		Alazizya.addActionListener(e -> {
+			if (vehiclesAlazizya.get(0).getRoute() != null)
 			updateVehicles(vehiclesAlazizya);
 		});
 		frame.getContentPane().add(Alazizya);
@@ -128,6 +115,7 @@ public class GUI_ViewBuses {
 		Alhijra.setForeground(Color.white);
 		Alhijra.setBounds(20, 269, 116, 23);
 		Alhijra.addActionListener(e -> {
+			if (vehiclesAlhijra.get(0).getRoute() != null)
 			updateVehicles(vehiclesAlhijra);
 		});
 		frame.getContentPane().add(Alhijra);
@@ -138,6 +126,7 @@ public class GUI_ViewBuses {
 		Almansoor.setForeground(Color.white);
 		Almansoor.setBounds(20, 316, 116, 23);
 		Almansoor.addActionListener(e -> {
+			if (vehiclesAlmansoor.get(0).getRoute() != null)
 			updateVehicles(vehiclesAlmansoor);
 		});
 		frame.getContentPane().add(Almansoor);
@@ -154,7 +143,7 @@ public class GUI_ViewBuses {
 		lblStatus.setBounds(180, 317, 72, 18);
 		frame.getContentPane().add(lblStatus);
 
-		lblDate = new JLabel(currenttimeManager.getCurrentTime().toString());
+		lblDate = new JLabel(currenttimeManager.toString());
 		lblDate.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblDate.setForeground(Color.WHITE);
 		lblDate.setBounds(235, 270, 326, 21);
@@ -165,7 +154,7 @@ public class GUI_ViewBuses {
 		lblDestination.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblDestination.setBounds(235, 317, 184, 18);
 		frame.getContentPane().add(lblDestination);
-    	if (currenttimeManager.getCurrentCalendar().get(Calendar.DAY_OF_MONTH) == 9) 
+    	if (currenttimeManager.getMonth() == 9) 
 			 lblDestination.setText("Heading to Arafat");
 		else lblDestination.setText("Heading to Hotels");
     	
@@ -221,7 +210,7 @@ public class GUI_ViewBuses {
 		vehicles.clear();
 		vehicles.addAll(vehiclesDistrict);
 		lblDistrictValue.setText(((Bus)vehiclesDistrict.get(0)).getCampaign().getHotelDistrict().name());
-		lblDate.setText(currenttimeManager.getCurrentTime().toString());
+		lblDate.setText(currenttimeManager.toString());
 		updateTable();
 	}
 

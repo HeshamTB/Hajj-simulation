@@ -1,8 +1,7 @@
 import java.awt.Color;
 import java.awt.Font;
+import java.util.Date;
 import java.util.ArrayList;
-import java.util.Calendar;
-
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -20,7 +19,7 @@ public class GUI_ViewStreet {
 	private Street street;
 	private ArrayList<Vehicle> vehicles = new ArrayList<>();
 	private Street[] stdStreet = new Street[StreetNames.values().length];
-	private PDate currenttimeManager;
+	private Date currenttimeManager;
 	private Object[][] vehicleData;
 	private String[] vehicleColNames = {"ID", "District", "location","Progress", "trip time"};
 	private JTable table;
@@ -33,9 +32,9 @@ public class GUI_ViewStreet {
 	private JTextField[] textFieldArray = new JTextField[20];
 	private JTextField txtHigh;
 	
-	public GUI_ViewStreet(Street[] streets, PDate currenttimeManager) {
+	public GUI_ViewStreet(Street[] streets, Date currenttimeManager) {
 		stdStreet = streets.clone();
-		this.currenttimeManager = (PDate) currenttimeManager.clone();
+		this.currenttimeManager = (Date) currenttimeManager.clone();
 		makeFrame();
 	}
 	
@@ -106,7 +105,7 @@ public class GUI_ViewStreet {
 							textFieldArray[i].setBackground(new Color(255,colorFactor,0));
 						}
 						lblCapcityValue.setText(String.format("%%%d", street.getPercentRemainingCapacity()));
-						lblDate.setText(currenttimeManager.getCurrentTime().toString());
+						lblDate.setText(currenttimeManager.toString());
 						lblNumVehicles.setText(String.format("%d", street.getVehicles().size()));
 						lblLengthValue.setText(String.format("%.2f", street.getLength()));
 						lblLanesValue.setText(String.format("%d", street.getNumberOfLanes()));
@@ -142,7 +141,7 @@ public class GUI_ViewStreet {
 		lblTime.setBounds(193, 11, 72, 20);
 		frame.getContentPane().add(lblTime);
 		
-		lblDate = new JLabel(currenttimeManager.getCurrentTime().toString());
+		lblDate = new JLabel(currenttimeManager.toString());
 		lblDate.setForeground(Color.WHITE);
 		lblDate.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblDate.setBounds(243, 11, 326, 20);
@@ -158,7 +157,7 @@ public class GUI_ViewStreet {
 		lblDestination.setForeground(Color.WHITE);
 		lblDestination.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblDestination.setBounds(568, 11, 184, 20);
-		if (currenttimeManager.getCurrentCalendar().get(Calendar.DAY_OF_MONTH) == 9) 
+		if (currenttimeManager.getMonth() == 9) 
 			 lblDestination.setText("Heading to Arafat");
 		else lblDestination.setText("Heading to Hotels");
 		frame.getContentPane().add(lblDestination);

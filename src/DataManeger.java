@@ -100,6 +100,7 @@ class State implements Serializable {
 
     private ArrayList<Campaign> listOfCampaigns;
     private ArrayList<Vehicle> listOfVehicles;
+    private ArrayList<Campaign>[] campPerDistrict;
     private Route[] stdRoutes;
     private Street[] stdStreet;
     private Date allArrivedToArafatTime;
@@ -108,6 +109,7 @@ class State implements Serializable {
 
     public State(ArrayList<Campaign> listOfCampaigns,
                  ArrayList<Vehicle> listOfVehicles,
+                 ArrayList<Campaign>[] campPerDistrict,
                  Route[] stdRoutes,
                  Street[] stdStreet,
                  Date allArrivedToArafatTime,
@@ -116,6 +118,7 @@ class State implements Serializable {
         //Make clones since values may change if this is running on a thread.
         this.listOfCampaigns = (ArrayList<Campaign>) listOfCampaigns.clone();
         this.listOfVehicles = (ArrayList<Vehicle>) listOfVehicles.clone();
+        this.campPerDistrict = (ArrayList<Campaign>[])campPerDistrict.clone();
         this.stdRoutes = stdRoutes.clone();
         this.stdStreet = stdStreet.clone();
         if (allArrivedToArafatTime != null) {
@@ -134,8 +137,12 @@ class State implements Serializable {
     public ArrayList<Vehicle> getListOfVehicles() {
         return listOfVehicles;
     }
+    
+    public ArrayList<Campaign>[] getCampPerDistrict() {
+		return campPerDistrict;
+	}
 
-    public Route[] getStdRoutes() {
+	public Route[] getStdRoutes() {
         return stdRoutes;
     }
 
