@@ -57,7 +57,6 @@ public class MakkahCity {
 
 		//TODO: View camp >> View Report
 		//TODO: History view
-		//TODO: Arrival dates (Arafat, Mina)
 		//TODO: fix state errors
 		t.start();
 		//Gen Camp
@@ -175,11 +174,16 @@ public class MakkahCity {
 			btnPause.setText("Unpause");
 		});
 		
-		JButton btnViewCampaigns = new JButton("View Campaigns");
-		btnViewCampaigns.setBounds(1307, 119, 166, 29);
-		btnViewCampaigns.setFont(new Font("Rockwell", Font.PLAIN, 16));
-		btnViewCampaigns.setBackground(new Color(9,9,9));
-		btnViewCampaigns.setForeground(Color.white);
+		JButton btnViewReport = new JButton("View Report");
+		btnViewReport.setBounds(1307, 119, 166, 29);
+		btnViewReport.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		btnViewReport.setBackground(new Color(9,9,9));
+		btnViewReport.setForeground(Color.white);
+		btnViewReport.addActionListener(e -> {
+			GUI_Report r = new GUI_Report(listOfCampaigns, stdRoutes, stdStreet, campPerDistrict);
+			pause_flag = true;
+			btnPause.setText("Unpause");
+		});
 		
 		JButton btnViewStreet = new JButton("View Street");
 		btnViewStreet.setBounds(1307, 159, 166, 29);
@@ -368,7 +372,7 @@ public class MakkahCity {
 		makkahFrame.getContentPane().add(lblNumOfDonebuses);
 		makkahFrame.getContentPane().add(btnExit);
 		makkahFrame.getContentPane().add(btnViewStreet);
-		makkahFrame.getContentPane().add(btnViewCampaigns);
+		makkahFrame.getContentPane().add(btnViewReport);
 		makkahFrame.getContentPane().add(btnViewBuses);
 		makkahFrame.getContentPane().add(btnViewRoutes);
 		makkahFrame.getContentPane().add(lblAverageTripForLastHour);
