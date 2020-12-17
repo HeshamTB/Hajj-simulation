@@ -48,10 +48,15 @@ public class MakkahCity {
     private static JLabel lblBusesArrivedInTheLastHourValue;
     private static JLabel lblAverageTripForLastHourValue;
     private static JButton btnPause;
+	private static JLabel lblAverageTimeForTheTrip;
 	
 
 	public static void main(String[] args) {
 
+		//TODO: View camp >> View Report
+		//TODO: History view
+		//TODO: Arrival dates (Arafat, Mina)
+		//TODO: fix state errors
 		t.start();
 		//Gen Camp
 		campPerDistrict[District.ALMANSOOR.ordinal()] = new ArrayList<>();
@@ -320,7 +325,7 @@ public class MakkahCity {
 		lblAvgTime.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblAvgTime.setBounds(287, 694, 208, 29);
 		
-		JLabel lblAverageTimeForTheTrip = new JLabel("-:--");
+		lblAverageTimeForTheTrip = new JLabel("-:--");
 		lblAverageTimeForTheTrip.setForeground(Color.WHITE);
 		lblAverageTimeForTheTrip.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblAverageTimeForTheTrip.setBounds(512, 701, 101, 14);
@@ -1240,15 +1245,27 @@ public class MakkahCity {
 		lblBusesArrivedInTheLastHourValue.setText(NumberOfBussPerHour);
 		
 		lblAverageTripForLastHourValue.setText(avgTimeOfTrip());
-		
-	}
+		lblAverageTimeForTheTrip.setText(getAvgTripForAllDis());
+	 }
 	 
 	 //TODO Avg for All the Dist
-	 public static void getAvgTripForAllDis() {
-		 for (int i = 0; i < campPerDistrict.length; i++) {
-			 getAvgTimeOfTrip(District.values()[i]);
-		 }
-		 //lblAverageTripForLastHourValue.setText();
+	 public static String getAvgTripForAllDis() {
+		 int sum = 0;
+		 int counter = 1;
+		 for (Campaign campaign : listOfCampaigns) {
+			 for (Vehicle vehicle : campaign.getVehicles()) {
+				 if (vehicle.isArrivedToDest()) {
+					 long minutes = (vehicle.getTimeOfArrival().getTime() - vehicle.getTimeStartedMoving().getTime())/60000;
+					 sum+= minutes;
+					 counter++;
+				 }
+			 }
+		 }//Make the following a method since it is the same other method
+		 sum = sum /counter;
+		 int hours = sum / 60;
+		 int minutes = sum % 60;
+		 if (hours == 0 && minutes == 0) return " n/a";
+		 return String.format("%2d:%02d", hours,minutes);
 	 }
 }
 

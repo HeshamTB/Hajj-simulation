@@ -7,6 +7,8 @@ import java.util.Calendar;
 import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import java.awt.Color;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -208,7 +210,7 @@ public class GUI_ViewBuses {
 			else busData[i][3] = "%0";
 			busData[i][4] = vehicles.get(i).getTripTime();
 			if (vehicles.get(i).isArrivedToDest())
-				busData[i][5] = vehicles.get(i).getTimeOfArrival().toString();//Formula of time
+				busData[i][5] = getShortTime(vehicles.get(i).getTimeOfArrival());
 			else busData[i][5] = "NOT Arrived";
 		}
 		table.setModel(new DefaultTableModel(busData ,busColNames));
@@ -221,5 +223,11 @@ public class GUI_ViewBuses {
 		lblDistrictValue.setText(((Bus)vehiclesDistrict.get(0)).getCampaign().getHotelDistrict().name());
 		lblDate.setText(currenttimeManager.getCurrentTime().toString());
 		updateTable();
+	}
+
+	private String getShortTime(Date time) {
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(time);
+		return String.format("%02d:%02d", cal.get(Calendar.HOUR), cal.get(Calendar.MINUTE));
 	}
 }
