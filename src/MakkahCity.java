@@ -158,7 +158,7 @@ public class MakkahCity {
 		btnViewRoutes.setBackground(new Color(9,9,9));
 		btnViewRoutes.setForeground(Color.white);
 		btnViewRoutes.addActionListener(e -> {
-			GUI_ViewRoute r = new GUI_ViewRoute(stdRoutes ,listOfCampaigns, currenttimeManager);
+			GUI_ViewRoute r = new GUI_ViewRoute(stdRoutes ,listOfCampaigns,currenttimeManager.getCurrentTime());
 			pause_flag = true;
 			btnPause.setText("Unpause");
 		});
@@ -168,7 +168,7 @@ public class MakkahCity {
 		btnViewBuses.setBackground(new Color(9,9,9));
 		btnViewBuses.setForeground(Color.white);
 		btnViewBuses.addActionListener(e -> {
-			GUI_ViewBuses t =  new GUI_ViewBuses(listOfCampaigns , currenttimeManager);
+			GUI_ViewBuses t =  new GUI_ViewBuses(listOfCampaigns , currenttimeManager.getCurrentTime());
 			pause_flag = true;
 			btnPause.setText("Unpause");
 		});
@@ -185,7 +185,7 @@ public class MakkahCity {
 		btnViewStreet.setBackground(new Color(9,9,9));
 		btnViewStreet.setForeground(Color.white);
 		btnViewStreet.addActionListener(e -> {
-			GUI_ViewStreet t =  new GUI_ViewStreet(stdStreet,currenttimeManager);
+			GUI_ViewStreet t =  new GUI_ViewStreet(stdStreet,currenttimeManager.getCurrentTime());
 			pause_flag = true;
 			btnPause.setText("Unpause");
 		});
@@ -220,6 +220,8 @@ public class MakkahCity {
 		btnBrowseHistory.setForeground(Color.white);
 		btnBrowseHistory.addActionListener(e -> {
 			GUI_History hist = new GUI_History(dataManeger.getStates());
+			pause_flag = true;
+			btnPause.setText("Unpause");
 		});
 		
 		//Label 
@@ -948,7 +950,7 @@ public class MakkahCity {
 		return sortingRoute;
 	}
 	
-	private static Route getShortestRoute(Campaign campaign, Mashier mashier) {
+	public static Route getShortestRoute(Campaign campaign, Mashier mashier) {
 		Route[] routes = getRoutesToDistrict(campaign.getHotelDistrict());
 		Route route = null;
 		double min = Double.MAX_VALUE;
@@ -1039,7 +1041,7 @@ public class MakkahCity {
 	 * Calculate average trip time for last 10 minutes
 	 * @return "hh:mm"
 	 */
-	private static String avgTimeOfTrip() {
+	public static String avgTimeOfTrip() {
 		//TODO: does output diff value even after all have arrived.
 		Calendar now = currenttimeManager.getCurrentCalendar();
 		Calendar from = (GregorianCalendar)now.clone();
@@ -1063,7 +1065,7 @@ public class MakkahCity {
 		return String.format("%2d:%02d", hours, minutes);
 	}
 
-	private static int getPercentArrival(District district) {
+	public static int getPercentArrival(District district) {
 		int sum = 0;
 		for (Campaign campaign : campPerDistrict[district.ordinal()]) {
 			sum += campaign.getPercentArrived();
@@ -1071,7 +1073,7 @@ public class MakkahCity {
 		return sum/campPerDistrict[district.ordinal()].size();
 	}
 
-	private static String getAvgTimeOfTrip(District district){
+	public static String getAvgTimeOfTrip(District district){
 		int sum = 0;
 		int counter = 1;
 		for (Campaign campaign : campPerDistrict[district.ordinal()]) {
@@ -1090,7 +1092,7 @@ public class MakkahCity {
 		return String.format("%2d:%02d", hours,minutes);
 	}
 
-	private static int getNumberOfArrivedBusses() {
+	public static int getNumberOfArrivedBusses() {
 		int num = 0;
 		for (Campaign campaign : listOfCampaigns) {
 			for (Vehicle vehicle : campaign.getVehicles()){
@@ -1101,7 +1103,7 @@ public class MakkahCity {
 		return num;
 	}
 
-	private static int getNumberOfArrivedBussesPerHour() {
+	public static int getNumberOfArrivedBussesPerHour() {
 		Calendar now = currenttimeManager.getCurrentCalendar();
 		Calendar from = (GregorianCalendar)now.clone();
 		from.roll(Calendar.HOUR, -1);
@@ -1163,7 +1165,7 @@ public class MakkahCity {
 		return String.format("%02d:%02d", hours, minutes);
 	}
 
-	private static int busesInDistrict(District district){
+	public static int busesInDistrict(District district){
 		int buses = 0;
 		for (Campaign campaign : campPerDistrict[district.ordinal()]){
 			buses += campaign.getNumberOfBusses();
@@ -1174,6 +1176,7 @@ public class MakkahCity {
 	private static void saveState(){
 		State s = new State(listOfCampaigns,
 				listOfVehicles,
+				campPerDistrict,
 				stdRoutes,
 				stdStreet,
 				allArrivedToArafatTime,

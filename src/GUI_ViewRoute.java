@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Font;
+import java.util.Date;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -20,13 +21,13 @@ public class GUI_ViewRoute {
 	private Object[][] routeData;
 	private JTable table;
 	private Route[] stdRoute;
-	private PDate currenttimeManager;
+	private Date currenttimeManager;
 	private ArrayList<Campaign> listOfCampaigns;
 	private JTextField txtStreets;
 	private JLabel lblDate;
 	private JLabel lblTime;
 	
-	public GUI_ViewRoute(Route[] stdRoute, ArrayList<Campaign> listOfCampaigns, PDate currenttimeManager) {
+	public GUI_ViewRoute(Route[] stdRoute, ArrayList<Campaign> listOfCampaigns, Date currenttimeManager) {
 		this.stdRoute = stdRoute;
 		this.listOfCampaigns = listOfCampaigns;
 		this.currenttimeManager = currenttimeManager;
@@ -108,7 +109,7 @@ public class GUI_ViewRoute {
 		lblTime.setBounds(10, 11, 72, 20);
 		frame.getContentPane().add(lblTime);
 		
-		lblDate = new JLabel(currenttimeManager.getCurrentTime().toString());
+		lblDate = new JLabel(currenttimeManager.toString());
 		lblDate.setForeground(Color.WHITE);
 		lblDate.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblDate.setBounds(61, 11, 326, 20);
