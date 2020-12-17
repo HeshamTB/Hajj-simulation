@@ -49,6 +49,8 @@ public class MakkahCity {
     private static JLabel lblAverageTripForLastHourValue;
     private static JButton btnPause;
 	private static JLabel lblAverageTimeForTheTrip;
+	private static JLabel lblArrivedToArafatTime;
+	private static JLabel lblArrivedToHotelsTime;
 	
 
 	public static void main(String[] args) {
@@ -288,7 +290,7 @@ public class MakkahCity {
 		lblMaximumTripValue.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblMaximumTripValue.setBounds(169, 668, 46, 18);
 		
-		JLabel lblMinimumTrip = new JLabel("MinimumTrip:");
+		JLabel lblMinimumTrip = new JLabel("Minimum Trip:");
 		lblMinimumTrip.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblMinimumTrip.setForeground(Color.WHITE);
 		lblMinimumTrip.setBounds(49, 699, 112, 18);
@@ -328,7 +330,30 @@ public class MakkahCity {
 		lblAverageTimeForTheTrip = new JLabel("-:--");
 		lblAverageTimeForTheTrip.setForeground(Color.WHITE);
 		lblAverageTimeForTheTrip.setFont(new Font("Rockwell", Font.PLAIN, 16));
-		lblAverageTimeForTheTrip.setBounds(512, 701, 101, 14);
+		lblAverageTimeForTheTrip.setBounds(502, 701, 101, 14);
+		
+		JLabel lblArrivedToArafat = new JLabel("All Arrived To Arafat At:");
+		lblArrivedToArafat.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblArrivedToArafat.setForeground(Color.WHITE);
+		lblArrivedToArafat.setBounds(724, 670, 216, 14);
+		makkahFrame.getContentPane().add(lblArrivedToArafat);
+		
+		JLabel lblArrivedToHotels = new JLabel("All Arrived To Hotels At:");
+		lblArrivedToHotels.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblArrivedToHotels.setForeground(Color.WHITE);
+		lblArrivedToHotels.setBounds(724, 701, 184, 14);
+		makkahFrame.getContentPane().add(lblArrivedToHotels);
+		
+		lblArrivedToArafatTime = new JLabel("N/A");
+		lblArrivedToArafatTime.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblArrivedToArafatTime.setForeground(Color.WHITE);
+		lblArrivedToArafatTime.setBounds(908, 670, 358, 14);
+		makkahFrame.getContentPane().add(lblArrivedToArafatTime);
+		
+		lblArrivedToHotelsTime = new JLabel("N/A");
+		lblArrivedToHotelsTime.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblArrivedToHotelsTime.setForeground(Color.WHITE);
+		lblArrivedToHotelsTime.setBounds(908, 701, 358, 14);
 		
 		//Add Elements
 		makkahFrame.getContentPane().add(streetScroll);
@@ -367,12 +392,12 @@ public class MakkahCity {
 		makkahFrame.setBounds(100,100,1519,777);
 		makkahFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		makkahFrame.getContentPane().setLayout(null);
+		makkahFrame.getContentPane().add(lblArrivedToHotelsTime);
 		makkahFrame.setLocationRelativeTo(null);
 		makkahFrame.revalidate();
 		makkahFrame.setLocation(200,150);
 		makkahFrame.setAutoRequestFocus(false);
 		makkahFrame.setVisible(true);
-		
 		
 		//Set Routes for Campaigns
 		while(!firstDayTimeMan.isEnded()) {
@@ -421,6 +446,7 @@ public class MakkahCity {
 			if (isAllArrived() && allArrivedToArafatTime == null) allArrivedToArafatTime = (Date)currenttimeManager.getCurrentTime().clone();
 			firstDayTimeMan.step(Calendar.MINUTE, 1);
 			lblDate.setText(currenttimeManager.getCurrentTime().toString());
+			lblArrivedToArafatTime.setText(getDistTimeForLbl());
 		}
 		
 		currenttimeManager = lastDayTimeMan;
@@ -482,6 +508,7 @@ public class MakkahCity {
 			if (isAllArrived() && allArrivedToHotelsTime == null) allArrivedToHotelsTime = (Date)currenttimeManager.getCurrentTime().clone();
 			lastDayTimeMan.step(Calendar.MINUTE, 1);
 			lblDate.setText(currenttimeManager.getCurrentTime().toString());
+			lblArrivedToHotelsTime.setText(getDistTimeForLbl());
 		}
 		//When done show menu to analyze. Exit from menu too.
 		inputListener.pause();
@@ -1246,9 +1273,9 @@ public class MakkahCity {
 		
 		lblAverageTripForLastHourValue.setText(avgTimeOfTrip());
 		lblAverageTimeForTheTrip.setText(getAvgTripForAllDis());
+		
 	 }
 	 
-	 //TODO Avg for All the Dist
 	 public static String getAvgTripForAllDis() {
 		 int sum = 0;
 		 int counter = 1;
@@ -1264,9 +1291,28 @@ public class MakkahCity {
 		 sum = sum /counter;
 		 int hours = sum / 60;
 		 int minutes = sum % 60;
-		 if (hours == 0 && minutes == 0) return " n/a";
+		 if (hours == 0 && minutes == 0) return "-:--";
 		 return String.format("%2d:%02d", hours,minutes);
 	 }
+
+	 private static String getDistTimeForLbl() {
+			int numberOfBusses = 0;
+			int numberOfArrivedBuses = getNumberOfArrivedBusses();
+			
+			for (Campaign campaign : listOfCampaigns) {
+				numberOfBusses += campaign.getNumberOfBusses();
+			} 
+			
+			boolean Done = isAllArrived();
+			if (Done && allArrivedToArafatTime != null) {
+				return String.format("%s", allArrivedToArafatTime);
+			}
+			if (Done && allArrivedToHotelsTime != null) {
+				return String.format("%s",allArrivedToHotelsTime);
+			}
+			return "N/A";
+	 }
+			
 }
 
 
