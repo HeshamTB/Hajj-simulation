@@ -1,7 +1,9 @@
 import java.awt.Color;
 import java.awt.Font;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -46,8 +48,6 @@ public class GUI_ViewStreet {
 		frame.setBounds(100,100,815,480);
 		frame.getContentPane().setLayout(null);
 		frame.setLocationRelativeTo(null);
-		
-		
 		
 		vehicleData = new Object[vehicles.size()][6];
 		for (int i = 0; i < vehicles.size(); i++) {
@@ -157,7 +157,9 @@ public class GUI_ViewStreet {
 		lblDestination.setForeground(Color.WHITE);
 		lblDestination.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblDestination.setBounds(568, 11, 184, 20);
-		if (currenttimeManager.getMonth() == 9) 
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(currenttimeManager);
+		if (cal.get(Calendar.DAY_OF_MONTH) == 9)
 			 lblDestination.setText("Heading to Arafat");
 		else lblDestination.setText("Heading to Hotels");
 		frame.getContentPane().add(lblDestination);

@@ -154,7 +154,9 @@ public class GUI_ViewBuses {
 		lblDestination.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		lblDestination.setBounds(235, 317, 184, 18);
 		frame.getContentPane().add(lblDestination);
-    	if (currenttimeManager.getMonth() == 9) 
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(currenttimeManager);
+    	if (cal.get(Calendar.DAY_OF_MONTH) == 9)
 			 lblDestination.setText("Heading to Arafat");
 		else lblDestination.setText("Heading to Hotels");
     	
