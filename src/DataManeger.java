@@ -106,6 +106,8 @@ class State implements Serializable {
     private Date allArrivedToArafatTime;
     private Date allArrivedToHotelsTime;
     private Date stateTime;
+    private String maxTrip;
+    private String minTrip;
 
     public State(ArrayList<Campaign> listOfCampaigns,
                  ArrayList<Vehicle> listOfVehicles,
@@ -128,6 +130,14 @@ class State implements Serializable {
             this.allArrivedToHotelsTime = (Date) allArrivedToHotelsTime.clone();
         }
         this.stateTime = stateTime;
+        if (Vehicle.getMinArrived() != null && Vehicle.getMaxArrived() != null){
+            this.maxTrip = Vehicle.getMaxArrived().getTripTime();
+            this.minTrip = Vehicle.getMinArrived().getTripTime();
+        }
+        else {
+            this.maxTrip = "N/A";
+            this.minTrip = "N/A";
+        }
     }
 
     public ArrayList<Campaign> getListOfCampaigns() {
@@ -161,5 +171,12 @@ class State implements Serializable {
 	public Date getStateTime() {
 		return stateTime;
 	}
-    
+
+    public String getMaxTrip() {
+        return maxTrip;
+    }
+
+    public String getMinTrip() {
+        return minTrip;
+    }
 }

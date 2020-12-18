@@ -16,6 +16,7 @@ import java.awt.SystemColor;
 public class GUI_History {
 	
 	private List<State> states;
+	private State selectedState;
 	private ArrayList<Campaign> listOfCampaigns;
 	private ArrayList<Vehicle> listOfVehicles;
 	private ArrayList<Campaign>[] campPerDistrict;
@@ -39,7 +40,7 @@ public class GUI_History {
 										"Local Vehicles","Avg. Time"};
 	private String[] districtColNames = {"District", "Campaigns", "Busses", "Arrival %",
 			"Avg. Time", "Best time to Arafat", "Best time to District"};
-	
+
 	public GUI_History(List<State> states) {
 		this.states = states;
 		makeFrame();
@@ -302,6 +303,7 @@ public class GUI_History {
 		stdRoutes = state.getStdRoutes();
 		stdStreet = state.getStdStreet();
 		currenttimeManager = state.getStateTime();
+		selectedState = state;
 	}
 	
 	public void updateFrame() {
@@ -348,16 +350,13 @@ public class GUI_History {
 			String numOfdoneBuses = String.format("%d", getNumberOfArrivedBusses());
 			lblNumOfDonebuses.setText(numOfdoneBuses);
 			
-			if (Vehicle.getMaxArrived() != null && Vehicle.getMinArrived() != null) {
-				lblMaximumTripValue.setText(Vehicle.getMaxArrived().getTripTime().toString());
-				lblMinimumTripValue.setText(Vehicle.getMinArrived().getTripTime().toString());
-			}
-			
 			String NumberOfBussPerHour = String.format("%d", getNumberOfArrivedBussesPerHour());
 			lblBusesArrivedInTheLastHourValue.setText(NumberOfBussPerHour);
 			
 			lblAverageTripForLastHourValue.setText(avgTimeOfTrip());
 			lblAverageTimeForTheTrip.setText(getAvgTripForAllDis());
+			lblMaximumTripValue.setText(selectedState.getMaxTrip());
+			lblMinimumTripValue.setText(selectedState.getMinTrip());
 		 }
 
 	//Methods
