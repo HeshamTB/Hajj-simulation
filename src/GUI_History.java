@@ -1,8 +1,6 @@
 import java.awt.Color;
 import java.awt.Font;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -39,6 +37,8 @@ public class GUI_History {
 	private Object[][] streetData;
 	private String[] streetColNames = {"Street Name", "Street Load %", "Total", "Buses",
 										"Local Vehicles","Avg. Time"};
+	private String[] districtColNames = {"District", "Campaigns", "Busses", "Arrival %",
+			"Avg. Time", "Best time to Arafat", "Best time to District"};
 	
 	public GUI_History(List<State> states) {
 		this.states = states;
@@ -69,8 +69,7 @@ public class GUI_History {
 		}
 		//District data
 		Object[][] districtData = new Object[campPerDistrict.length][7];
-		String[] districtColNames = {"District", "Campaigns", "Busses", "Arrival %",
-				"Avg. Time", "Best time to Arafat", "Best time to District"};
+
 		
 		for (int i = 0; i < campPerDistrict.length; i++) {
 			districtData[i][0] = campPerDistrict[i].get(0).getHotelDistrict().name();
@@ -305,7 +304,7 @@ public class GUI_History {
 		currenttimeManager = state.getStateTime();
 	}
 	
-	 public void updateFrame() {
+	public void updateFrame() {
 			streetData = new Object[stdStreet.length][6];
 			for (int i = 0; i < stdStreet.length; i++) {
 				streetData[i][0] = stdStreet[i].getName().name();
@@ -313,7 +312,7 @@ public class GUI_History {
 				streetData[i][2] = stdStreet[i].getVehicles().size();
 				streetData[i][3] = stdStreet[i].getNumberOfBuses();
 				streetData[i][4] = stdStreet[i].getNumberOfLocalCars();
-				streetData[i][5] = MakkahCity.avgTimeOnStreet(stdStreet[i]);
+				streetData[i][5] = avgTimeOnStreet(stdStreet[i]);
 			}
 			streetTable.setModel(new DefaultTableModel(streetData ,streetColNames));
 			
@@ -321,17 +320,13 @@ public class GUI_History {
 			for (int i = 0; i < campPerDistrict.length; i++) {
 				districtData[i][0] = campPerDistrict[i].get(0).getHotelDistrict().name();
 				districtData[i][1] = campPerDistrict[i].size();
-				districtData[i][2] = MakkahCity.busesInDistrict(District.values()[i]);
-				districtData[i][3] = MakkahCity.getPercentArrival(District.values()[i]);
-				districtData[i][4] = MakkahCity.getAvgTimeOfTrip(District.values()[i]);
-				districtData[i][5] = MakkahCity.getShortestRoute(campPerDistrict[i].get(0), Mashier.ARAFAT).getFastestTimeOfTravel(new Bus());
-				districtData[i][6] = MakkahCity.getShortestRoute(campPerDistrict[i].get(0), Mashier.MINA).getFastestTimeOfTravel(new Bus());
+				districtData[i][2] = busesInDistrict(District.values()[i]);
+				districtData[i][3] = getPercentArrival(District.values()[i]);
+				districtData[i][4] = getAvgTimeOfTrip(District.values()[i]);
+				districtData[i][5] = getShortestRoute(campPerDistrict[i].get(0), Mashier.ARAFAT).getFastestTimeOfTravel(new Bus());
+				districtData[i][6] = getShortestRoute(campPerDistrict[i].get(0), Mashier.MINA).getFastestTimeOfTravel(new Bus());
 			}
-			for (int i = 0; i < districtData.length; i++) {
-				for (int j = 0; j < districtData[i].length; j++) {
-					districtTable.setValueAt(districtData[i][j], i, j);
-				}
-			}
+			districtTable.setModel(new DefaultTableModel(districtData, districtColNames));
 			lblDate.setText(currenttimeManager.toString());
 			
 			 String status = "";
@@ -350,7 +345,7 @@ public class GUI_History {
 			 String bus = String.format("%d", numberOfBusses);
 			 lblNumOfBuses.setText(bus);
 			
-			String numOfdoneBuses = String.format("%d",MakkahCity.getNumberOfArrivedBusses());
+			String numOfdoneBuses = String.format("%d", getNumberOfArrivedBusses());
 			lblNumOfDonebuses.setText(numOfdoneBuses);
 			
 			if (Vehicle.getMaxArrived() != null && Vehicle.getMinArrived() != null) {
@@ -358,11 +353,160 @@ public class GUI_History {
 				lblMinimumTripValue.setText(Vehicle.getMinArrived().getTripTime().toString());
 			}
 			
-			String NumberOfBussPerHour = String.format("%d", MakkahCity.getNumberOfArrivedBussesPerHour());
+			String NumberOfBussPerHour = String.format("%d", getNumberOfArrivedBussesPerHour());
 			lblBusesArrivedInTheLastHourValue.setText(NumberOfBussPerHour);
 			
-			lblAverageTripForLastHourValue.setText(MakkahCity.avgTimeOfTrip());
-			lblAverageTimeForTheTrip.setText(MakkahCity.getAvgTripForAllDis());
+			lblAverageTripForLastHourValue.setText(avgTimeOfTrip());
+			lblAverageTimeForTheTrip.setText(getAvgTripForAllDis());
 		 }
-	
+
+	//Methods
+	public String avgTimeOnStreet(Street street) {
+		int sum = 0;
+		int counter = 1;
+		for (Campaign campaign : listOfCampaigns)
+			for (Vehicle vehicle : campaign.getArrivedVehicles())
+				if (vehicle.hasCrossedStreet(street)){
+					sum += vehicle.getTimeOnStreet(street);
+					counter++;
+				}
+		sum /= counter;
+		int hours = sum / 60;
+		int minutes = sum % 60;
+		if (hours == 0 && minutes == 0) return street.getFastestTimeOfTravel(new Bus());
+		return String.format("%02d:%02d", hours, minutes);
+	}
+
+	private int busesInDistrict(District district){
+		int buses = 0;
+		for (Campaign campaign : campPerDistrict[district.ordinal()]){
+			buses += campaign.getNumberOfBusses();
+		}
+		return buses;
+	}
+
+	private int getPercentArrival(District district) {
+		int sum = 0;
+		for (Campaign campaign : campPerDistrict[district.ordinal()]) {
+			sum += campaign.getPercentArrived();
+		}
+		return sum/campPerDistrict[district.ordinal()].size();
+	}
+
+	private String getAvgTimeOfTrip(District district){
+		int sum = 0;
+		int counter = 1;
+		for (Campaign campaign : campPerDistrict[district.ordinal()]) {
+			for (Vehicle vehicle : campaign.getVehicles()) {
+				if (vehicle.isArrivedToDest()) {
+					long minutes = (vehicle.getTimeOfArrival().getTime() - vehicle.getTimeStartedMoving().getTime())/60000;
+					sum+= minutes;
+					counter++;
+				}
+			}
+		}
+		sum = sum /counter;
+		int hours = sum / 60;
+		int minutes = sum % 60;
+		if (hours == 0 && minutes == 0) return " n/a";
+		return String.format("%2d:%02d", hours,minutes);
+	}
+
+	private Route getShortestRoute(Campaign campaign, Mashier mashier) {
+		Route[] routes = getRoutesToDistrict(campaign.getHotelDistrict());
+		Route route = null;
+		double min = Double.MAX_VALUE;
+		for (Route r : routes) {
+			if (r.getMashier() == mashier){
+				if (r.getTotalLength() < min) {
+					min = r.getTotalLength();
+					route = r;
+				}
+			}
+		}
+		return route;
+	}
+
+	private Route[] getRoutesToDistrict(District district) {
+		ArrayList<Route> routes = new ArrayList<>();
+		for (Route route : stdRoutes) {
+			if (route.getHotelArea() == district) {
+				routes.add(route);
+			}
+		}
+		Route[] routesArray = new Route[routes.size()];
+		return routes.toArray(routesArray);
+	}
+
+	public int getNumberOfArrivedBusses() {
+		int num = 0;
+		for (Campaign campaign : listOfCampaigns) {
+			for (Vehicle vehicle : campaign.getVehicles()){
+				if (vehicle instanceof  Bus &&
+						vehicle.isArrivedToDest()) num++;
+			}
+		}
+		return num;
+	}
+
+	public int getNumberOfArrivedBussesPerHour() {
+		Calendar now = new GregorianCalendar();
+		now.setTime(currenttimeManager);
+		Calendar from = (GregorianCalendar)now.clone();
+		from.roll(Calendar.HOUR, -1);
+		int num = 0;
+		for (Campaign campaign : listOfCampaigns){
+			for (Vehicle bus : campaign.getVehicles()){
+				if (bus.isArrivedToDest() && bus.getTimeOfArrival().before(now.getTime())
+						&& bus.getTimeOfArrival().after(from.getTime())) {
+					num++;
+				}
+			}
+		}
+		return num;
+	}
+
+	public String avgTimeOfTrip() {
+		//TODO: does output diff value even after all have arrived.
+		Calendar now = new GregorianCalendar();
+		now.setTime(currenttimeManager);
+		Calendar from = (GregorianCalendar)now.clone();
+		from.roll(Calendar.HOUR, -1);
+		int counter = 1;
+		int sum = 0;
+		for (Campaign campaign : listOfCampaigns){
+			for (Vehicle bus : campaign.getVehicles()){
+				if (bus.isArrivedToDest() && bus.getTimeOfArrival().before(now.getTime())
+						&& bus.getTimeOfArrival().after(from.getTime())) {
+					long minutes = (bus.getTimeOfArrival().getTime() - bus.getTimeStartedMoving().getTime())/60000;
+					sum+= minutes;
+					counter++;
+				}
+			}
+		}
+		sum = sum /counter;
+		int hours = sum / 60;
+		int minutes = sum % 60;
+		if (hours == 0 && minutes == 0) return "(No Arrivals) In Last Hour";
+		return String.format("%2d:%02d", hours, minutes);
+	}
+
+	public String getAvgTripForAllDis() {
+		int sum = 0;
+		int counter = 1;
+		for (Campaign campaign : listOfCampaigns) {
+			for (Vehicle vehicle : campaign.getVehicles()) {
+				if (vehicle.isArrivedToDest()) {
+					long minutes = (vehicle.getTimeOfArrival().getTime() - vehicle.getTimeStartedMoving().getTime())/60000;
+					sum+= minutes;
+					counter++;
+				}
+			}
+		}//Make the following a method since it is the same other method
+		sum = sum /counter;
+		int hours = sum / 60;
+		int minutes = sum % 60;
+		if (hours == 0 && minutes == 0) return "-:--";
+		return String.format("%2d:%02d", hours,minutes);
+	}
 }

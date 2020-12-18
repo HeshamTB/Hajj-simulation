@@ -419,6 +419,11 @@ public class MakkahCity {
 		//Set Routes for Campaigns
 		while(!firstDayTimeMan.isEnded()) {
 			checkInput();
+			
+			if (!isAllRoutSet) {
+				isAllRoutSet = true;
+				setRoutesForCampaigns(Mashier.ARAFAT);
+			}
 			//Start of Every hour
 			if (firstDayTimeMan.getCurrentCalendar().get(Calendar.MINUTE) == 0){
 				System.out.println("\n\n" + getStreetsReport());
@@ -426,11 +431,7 @@ public class MakkahCity {
 				saveState();
 			}
 			else System.out.print(".");
-			
-			if (!isAllRoutSet) {
-				isAllRoutSet = true;
-				setRoutesForCampaigns(Mashier.ARAFAT);
-				}
+
 			clearDoneCivilVehicles();
 			addCivilVehicleNoise();
 			for (Vehicle vehicle : listOfVehicles) {
@@ -463,7 +464,7 @@ public class MakkahCity {
 			if (isAllArrived() && allArrivedToArafatTime == null) allArrivedToArafatTime = (Date)currenttimeManager.getCurrentTime().clone();
 			firstDayTimeMan.step(Calendar.MINUTE, 1);
 			lblDate.setText(currenttimeManager.getCurrentTime().toString());
-			lblArrivedToArafatTime.setText(getDistTimeForLbl());
+			//lblArrivedToArafatTime.setText(getDistTimeForLbl());
 		}
 		
 		currenttimeManager = lastDayTimeMan;
@@ -481,6 +482,12 @@ public class MakkahCity {
 		setRoutesForCampaigns(Mashier.MINA);
 		while(!lastDayTimeMan.isEnded()) {
 			checkInput();
+
+			if (!isAllRoutSet) {
+				isAllRoutSet = true;
+				setRoutesForCampaigns(Mashier.MINA);
+			}
+
 			//Start of Every hour
 			if (lastDayTimeMan.getCurrentCalendar().get(Calendar.MINUTE) == 0){
 				System.out.println("\n\n" + getStreetsReport());
@@ -488,12 +495,7 @@ public class MakkahCity {
 				saveState();
 			}
 			else System.out.print(".");
-			
-			
-			if (!isAllRoutSet) {
-				isAllRoutSet = true;
-				setRoutesForCampaigns(Mashier.MINA);
-				}
+
 			clearDoneCivilVehicles();
 			addCivilVehicleNoise();
 			for (Vehicle vehicle : listOfVehicles) {
@@ -525,7 +527,7 @@ public class MakkahCity {
 			if (isAllArrived() && allArrivedToHotelsTime == null) allArrivedToHotelsTime = (Date)currenttimeManager.getCurrentTime().clone();
 			lastDayTimeMan.step(Calendar.MINUTE, 1);
 			lblDate.setText(currenttimeManager.getCurrentTime().toString());
-			lblArrivedToHotelsTime.setText(getDistTimeForLbl());
+			//lblArrivedToHotelsTime.setText(getDistTimeForLbl());
 		}
 		//When done show menu to analyze. Exit from menu too.
 		inputListener.pause();
@@ -1261,7 +1263,16 @@ public class MakkahCity {
 			}
 		}
 		lblDate.setText(currenttimeManager.getCurrentTime().toString());
-		
+		if (lblArrivedToArafatTime.getText().equalsIgnoreCase("N/A"))
+			if (allArrivedToArafatTime != null) {
+				lblArrivedToArafatTime.setText(allArrivedToArafatTime.toString());
+		}
+
+		if (lblArrivedToHotelsTime.getText().equalsIgnoreCase("N/A"))
+			if (allArrivedToHotelsTime != null) {
+				lblArrivedToHotelsTime.setText(allArrivedToHotelsTime.toString());
+		}
+
 		 String status = "";
 		 if (currenttimeManager == firstDayTimeMan) {
 			 status = "Heading to Arafat";
