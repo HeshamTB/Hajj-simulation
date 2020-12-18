@@ -55,8 +55,6 @@ public class MakkahCity {
 
 	public static void main(String[] args) {
 
-		//TODO: View camp >> View Report
-		//TODO: History view
 		//TODO: fix state errors
 		t.start();
 		//Gen Camp
@@ -193,7 +191,7 @@ public class MakkahCity {
 		btnViewReport.setBackground(new Color(9,9,9));
 		btnViewReport.setForeground(Color.white);
 		btnViewReport.addActionListener(e -> {
-			GUI_Report r = new GUI_Report(listOfCampaigns, stdRoutes, stdStreet, campPerDistrict);
+			GUI_Report r = new GUI_Report(listOfCampaigns, stdRoutes, stdStreet, campPerDistrict, currenttimeManager.getCurrentTime());
 			pause_flag = true;
 			btnPause.setText("Unpause");
 		});

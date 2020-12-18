@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -15,17 +16,20 @@ public class GUI_Report {
 	private JTable streetTable;
 	private JTable districtTable;
 	private Street[] stdStreet;
+	private Date currenttimeManager;
 	private static ArrayList<Campaign>[] campPerDistrict;
 	private  String[] streetColNames = {"Street Name", "Street Load %", "Total","Buses","Local Vehicles","Avg. Time"};
 	private  String[] districtColNames = {"District", "Campaigns", "Busses", "Arrival %","Avg. Time", "Best time to Arafat", "Best time to District"};
 	private  Object[][] streetData;
 	private  Object[][] districtData;
+	private JLabel lblDate;
 	
-	public GUI_Report(ArrayList<Campaign> listOfCampaigns, Route[] stdRoutes, Street[] stdStreet, ArrayList<Campaign>[] campPerDistrict) {
+	public GUI_Report(ArrayList<Campaign> listOfCampaigns, Route[] stdRoutes, Street[] stdStreet, ArrayList<Campaign>[] campPerDistrict, Date currenttimeManager) {
 		this.listOfCampaigns = listOfCampaigns;
 		this.stdRoutes = stdRoutes;
 		this.stdStreet = stdStreet;
 		this.campPerDistrict = campPerDistrict;
+		this.currenttimeManager = currenttimeManager;
 		makeFrame();
 	}
 	
@@ -70,10 +74,16 @@ public class GUI_Report {
 			streetTable.setGridColor(new Color(102, 102, 102));
 			streetTable.setSelectionForeground(Color.white);
 			streetTable.setFont(new Font("Rockwell", Font.PLAIN, 18));
-			streetTable.setRowHeight(25);
+			streetTable.setRowHeight(20);
 			streetTable.setAutoCreateRowSorter(true);
 			JScrollPane streetScroll = new JScrollPane(streetTable);
-			streetScroll.setBounds(10,11,1216,329);
+			streetTable.getColumnModel().getColumn(0).setPreferredWidth(111);
+			streetTable.getColumnModel().getColumn(1).setPreferredWidth(46);
+			streetTable.getColumnModel().getColumn(2).setPreferredWidth(1);
+			streetTable.getColumnModel().getColumn(3).setPreferredWidth(0);
+			streetTable.getColumnModel().getColumn(4).setPreferredWidth(60);
+			streetTable.getColumnModel().getColumn(5).setPreferredWidth(0);
+			streetScroll.setBounds(10,75,809,269);
 			
 			//District table
 			districtTable = new JTable(districtData,districtColNames);
@@ -91,9 +101,16 @@ public class GUI_Report {
 			JScrollPane districtScroll = new JScrollPane(districtTable);
 			districtScroll.setEnabled(false);
 			districtTable.setAutoCreateRowSorter(true);
-			districtTable.setRowHeight(25);
+			districtTable.getColumnModel().getColumn(0).setPreferredWidth(43);
+			districtTable.getColumnModel().getColumn(1).setPreferredWidth(30);
+			districtTable.getColumnModel().getColumn(2).setPreferredWidth(0);
+			districtTable.getColumnModel().getColumn(3).setPreferredWidth(0);
+			districtTable.getColumnModel().getColumn(4).setPreferredWidth(0);
+			districtTable.getColumnModel().getColumn(5).setPreferredWidth(85);
+			districtTable.getColumnModel().getColumn(6).setPreferredWidth(93);
+			districtTable.setRowHeight(20);
 			districtTable.revalidate();
-			districtScroll.setBounds(10,370,1216,105);
+			districtScroll.setBounds(10,395,809,89);
 			
 			//lbl
 			
@@ -107,8 +124,32 @@ public class GUI_Report {
 			frame.getContentPane().add(districtScroll);
 			frame.getContentPane().setBackground(new Color(50,50,50));
 			frame.getContentPane().setForeground(new Color(0, 0, 0));
-			frame.setBounds(100,100,1255,526);
+			frame.setBounds(100,100,856,540);
 			frame.getContentPane().setLayout(null);
+			
+			JLabel lblStreets = new JLabel("Streets");
+			lblStreets.setForeground(Color.WHITE);
+			lblStreets.setFont(new Font("Rockwell", Font.PLAIN, 24));
+			lblStreets.setBounds(10, 34, 208, 30);
+			frame.getContentPane().add(lblStreets);
+			
+			JLabel lblDistrict = new JLabel("District");
+			lblDistrict.setForeground(Color.WHITE);
+			lblDistrict.setFont(new Font("Rockwell", Font.PLAIN, 24));
+			lblDistrict.setBounds(10, 355, 166, 29);
+			frame.getContentPane().add(lblDistrict);
+			
+			JLabel lblTime_1 = new JLabel("Time:");
+			lblTime_1.setForeground(Color.WHITE);
+			lblTime_1.setFont(new Font("Rockwell", Font.PLAIN, 16));
+			lblTime_1.setBounds(190, 21, 72, 14);
+			frame.getContentPane().add(lblTime_1);
+			
+			lblDate = new JLabel(currenttimeManager.toString());
+			lblDate.setForeground(Color.WHITE);
+			lblDate.setFont(new Font("Rockwell", Font.PLAIN, 16));
+			lblDate.setBounds(238, 18, 326, 21);
+			frame.getContentPane().add(lblDate);
 			frame.setLocationRelativeTo(null);
 			frame.revalidate();
 			frame.setLocation(100,150);
@@ -193,5 +234,4 @@ public class GUI_Report {
 		Route[] routesArray = new Route[routes.size()];
 		return routes.toArray(routesArray);
 	}
-
 }
