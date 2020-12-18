@@ -105,7 +105,7 @@ public class GUI_Report {
 			//Add Elements
 			frame.getContentPane().add(streetScroll);
 			frame.getContentPane().add(districtScroll);
-			frame.getContentPane().setBackground(new Color(70, 70, 70));
+			frame.getContentPane().setBackground(new Color(50,50,50));
 			frame.getContentPane().setForeground(new Color(0, 0, 0));
 			frame.setBounds(100,100,1255,526);
 			frame.getContentPane().setLayout(null);

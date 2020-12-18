@@ -41,7 +41,7 @@ public class GUI_ViewStreet {
 	private void makeFrame() {
 		//street = stdStreet[0];
 		frame = new JFrame("Streets");
-		frame.getContentPane().setBackground(new Color(70, 70, 70));
+		frame.getContentPane().setBackground(new Color(50,50,50));
 		frame.getContentPane().setForeground(new Color(0, 0, 0));
 		frame.setBounds(100,100,815,480);
 		frame.getContentPane().setLayout(null);

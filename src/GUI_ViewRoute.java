@@ -36,7 +36,7 @@ public class GUI_ViewRoute {
 
 	private void makeFrame() {
 		frame = new JFrame("Routes");
-		frame.getContentPane().setBackground(new Color(70, 70, 70));
+		frame.getContentPane().setBackground(new Color(50,50,50));
 		frame.getContentPane().setForeground(new Color(0, 0, 0));
 		frame.setBounds(100,100,815,480);
 		frame.getContentPane().setLayout(null);

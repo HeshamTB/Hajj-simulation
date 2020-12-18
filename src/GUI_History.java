@@ -50,7 +50,7 @@ public class GUI_History {
 		frame = new JFrame("History");
 		frame.setBounds(200, 150, 1386, 731);
 		frame.setLocationRelativeTo(null);
-		frame.getContentPane().setBackground(new Color(70, 70, 70));
+		frame.getContentPane().setBackground(new Color(50,50,50));
 		frame.getContentPane().setForeground(new Color(0, 0, 0));
 		frame.getContentPane().setLayout(null);
 		frame.revalidate();
