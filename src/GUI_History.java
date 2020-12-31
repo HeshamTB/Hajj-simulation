@@ -57,6 +57,7 @@ public class GUI_History {
 		frame.revalidate();
 		frame.setAutoRequestFocus(false);
 		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		
 		streetData = new Object[stdStreet.length][6];
