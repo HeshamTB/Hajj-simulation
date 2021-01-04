@@ -65,7 +65,7 @@ public class MakkahCity {
 		generateCamps(District.ALMANSOOR, (int)getRandom(1600, 1800));
 		generateCamps(District.ALHIJRA, (int)getRandom(1400, 1600));
 		
-		//Collections.shuffle(listOfCampaigns);
+		Collections.shuffle(listOfCampaigns);
 
 		fillBusesToList();
 		
@@ -727,6 +727,7 @@ public class MakkahCity {
 			if (!(vehicle instanceof Bus) && vehicle.isArrivedToDest())
 				listOfVehicles.remove(vehicle);
 			else i++;
+
 		}
 	}
 
@@ -734,7 +735,7 @@ public class MakkahCity {
 		for (Campaign camp : listOfCampaigns){
 			if(camp.getVehicles().get(0).getCurrentStreet() == null) {
 				isAllRoutSet = false;
-				camp.setRoute(getShortestRoute(camp, mashier));
+				camp.setRoute(getBestRoute(camp, mashier));
 			}
 		}
 	}
