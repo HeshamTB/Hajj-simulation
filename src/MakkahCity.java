@@ -65,7 +65,6 @@ public class MakkahCity {
 		generateCamps(District.ALMANSOOR, (int)getRandom(1600, 1800));
 		generateCamps(District.ALHIJRA, (int)getRandom(1400, 1600));
 		
-		Collections.shuffle(listOfCampaigns);
 
 		fillBusesToList();
 		
@@ -417,14 +416,11 @@ public class MakkahCity {
 		makkahFrame.setVisible(true);
 		
 		//Set Routes for Campaigns
+		setRoutesForCampaigns(Mashier.ARAFAT);
 		while(!firstDayTimeMan.isEnded()) {
 			checkInput();
 			
-			if (!isAllRoutSet) {
-				isAllRoutSet = true;
-				setRoutesForCampaigns(Mashier.ARAFAT);
-			}
-			//Start of Every hour
+
 			if (firstDayTimeMan.getCurrentCalendar().get(Calendar.MINUTE) == 0){
 				System.out.println("\n\n" + getStreetsReport());
 				updateStreetFrame();
@@ -440,7 +436,6 @@ public class MakkahCity {
 				Route route = vehicle.getRoute();
 				double currentLocation = vehicle.getCurrentLocation();
 				if (vehicle.getCurrentStreet() == null &&
-				firstDayTimeMan.getCurrentCalendar().get(Calendar.MINUTE) % 2 == 0 &&
 				route.getStreets()[0].capcityPoint(0,1000) < 1) {
 					vehicle.setCurrentStreet(route.getStreets()[0]);
 				}
@@ -464,12 +459,10 @@ public class MakkahCity {
 			if (isAllArrived() && allArrivedToArafatTime == null) allArrivedToArafatTime = (Date)currenttimeManager.getCurrentTime().clone();
 			firstDayTimeMan.step(Calendar.MINUTE, 1);
 			lblDate.setText(currenttimeManager.getCurrentTime().toString());
-			//lblArrivedToArafatTime.setText(getDistTimeForLbl());
 		}
 		
 		currenttimeManager = lastDayTimeMan;
 		System.out.println("\n***************FINSHIED ARAFAT DAY***************");
-		//Collections.shuffle(listOfVehicles);
 		isAllRoutSet = false;
 		for (Vehicle vehicle : listOfVehicles) {
 			vehicle.setCurrentStreet(null);
@@ -480,13 +473,10 @@ public class MakkahCity {
 
 		System.out.println("***************STARTING LAST DAY***************");
 		setRoutesForCampaigns(Mashier.MINA);
+		setRoutesForCampaigns(Mashier.MINA);
 		while(!lastDayTimeMan.isEnded()) {
 			checkInput();
 
-			if (!isAllRoutSet) {
-				isAllRoutSet = true;
-				setRoutesForCampaigns(Mashier.MINA);
-			}
 
 			//Start of Every hour
 			if (lastDayTimeMan.getCurrentCalendar().get(Calendar.MINUTE) == 0){
@@ -527,7 +517,6 @@ public class MakkahCity {
 			if (isAllArrived() && allArrivedToHotelsTime == null) allArrivedToHotelsTime = (Date)currenttimeManager.getCurrentTime().clone();
 			lastDayTimeMan.step(Calendar.MINUTE, 1);
 			lblDate.setText(currenttimeManager.getCurrentTime().toString());
-			//lblArrivedToHotelsTime.setText(getDistTimeForLbl());
 		}
 		//When done show menu to analyze. Exit from menu too.
 		inputListener.pause();
@@ -735,7 +724,7 @@ public class MakkahCity {
 		for (Campaign camp : listOfCampaigns){
 			if(camp.getVehicles().get(0).getCurrentStreet() == null) {
 				isAllRoutSet = false;
-				camp.setRoute(getBestRoute(camp, mashier));
+				camp.setRoute(getShortestRoute(camp, mashier));
 			}
 		}
 	}
@@ -889,8 +878,7 @@ public class MakkahCity {
 	private static void addCivilVehicleNoise() {
 
 		for (Street street: stdStreet) {
-			if (street.getPercentRemainingCapacity() >= 80) 
-				continue;
+
 			
 			int numOfSedan = (int)getRandom(10,15);
 			int numOfSUV = (int)getRandom(5,9);
@@ -960,7 +948,6 @@ public class MakkahCity {
 	 */
 	
 	private static Route getBestRoute(Campaign campaign , Mashier mashier) {
-		//ArrayList<Route> routes = (ArrayList<Route>) Arrays.asList(getRoutesToDistrict(campaign.getHotelDistrict()));
 		Route[] routes = getRoutesToDistrict(campaign.getHotelDistrict());
 		routes = sortRoutes(routes);
 		for (Route r : routes) {
