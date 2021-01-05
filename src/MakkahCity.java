@@ -32,6 +32,7 @@ public class MakkahCity {
 	private static final Thread t = new Thread(inputListener,"InputThread-Makkah");
 	private static boolean isAllRoutSet;
 	private static final DataManeger dataManeger = new DataManeger();
+	private static volatile boolean done_flag;
 	//GUI
 	private static boolean exit_flag;
 	private static boolean pause_flag;
@@ -212,7 +213,10 @@ public class MakkahCity {
 		btnExit.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		btnExit.setForeground(Color.white);
 		btnExit.setBounds(888, 623, 166, 29);
-		btnExit.addActionListener(actionEvent -> exit_flag = true);
+		btnExit.addActionListener(actionEvent -> {
+			if (pause_flag || done_flag) System.exit(0);
+			else exit_flag = true;
+		});
 
 		btnPause = new JButton("Pause");
 		btnPause.setBackground(new Color(9,9,9));
@@ -530,6 +534,7 @@ public class MakkahCity {
 			//lblArrivedToHotelsTime.setText(getDistTimeForLbl());
 		}
 		//When done show menu to analyze. Exit from menu too.
+		done_flag = true;
 		inputListener.pause();
 		startMenu();
 	}
