@@ -438,7 +438,7 @@ public class MakkahCity {
 			clearDoneCivilVehicles();
 			addCivilVehicleNoise();
 			for (Vehicle vehicle : listOfVehicles) {
-				if (vehicle.getRoute() == null)
+				if (vehicle.getRoute() == null || vehicle.isArrivedToDest())
 					continue;
 				Route route = vehicle.getRoute();
 				double currentLocation = vehicle.getCurrentLocation();
@@ -502,7 +502,7 @@ public class MakkahCity {
 			clearDoneCivilVehicles();
 			addCivilVehicleNoise();
 			for (Vehicle vehicle : listOfVehicles) {
-				if (vehicle.getRoute() == null)
+				if (vehicle.getRoute() == null || vehicle.isArrivedToDest())
 					continue;
 				Route route = vehicle.getRoute();
 				double currentLocation = vehicle.getCurrentLocation();
