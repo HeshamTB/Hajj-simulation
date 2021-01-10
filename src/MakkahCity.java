@@ -520,10 +520,7 @@ public class MakkahCity {
 					if (!vehicle.isArrivedToDest()) {
 						double factor = 1-(vehicle.getCurrentStreet().capcityPoint(vehicle.getCurrentLocation(),
 								vehicle.getCurrentLocation()+1000,vehicle)) ;
-						if (vehicle instanceof Bus) vehicle.move(Bus.MAX_FORWARD * factor );
-						else if (vehicle instanceof Sedan) vehicle.move(Sedan.MAX_FORWARD * factor );
-						else if (vehicle instanceof SUV) vehicle.move(SUV.MAX_FORWARD * factor );
-						else if (vehicle instanceof Truck) vehicle.move(Bus.MAX_FORWARD * factor );
+						vehicle.move(vehicle.getMaxSpeed()* factor);
 					}
 				}
 			}
