@@ -1,8 +1,8 @@
 
 public class Truck extends CivilVehicle {
-	private String UID;
-	private static int numeberOfTruck;
-    private final int TIME_TO_FIX = 20; //in minutes
+	private short UID;
+	private static short numeberOfTruck;
+    private final short TIME_TO_FIX = 20; //in minutes
 
     @Override
     public int getMaxSpeed() {
@@ -19,12 +19,13 @@ public class Truck extends CivilVehicle {
     }
     private void generateUID() {
     	numeberOfTruck++;
-    	this.UID = String.format("Truck%04d", numeberOfTruck);
+    	this.UID = numeberOfTruck;
     }
-    		  
-    	    public String getUID(){
-    	        return this.UID;
-    	    }
-    	}
+
+    public String getUID(){
+        return String.format("Truck%04d", UID);
+    }
+
+}
 
 
