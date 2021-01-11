@@ -1,11 +1,11 @@
 
 public class Bus extends CivilVehicle {
 	
-	private String UID;
+	private int UID;
 	private Campaign campaign;
 	private static int numeberOfBuses;
-    private final int TIME_TO_FIX = 20; //in minutes
-    public static final int MAX_FORWARD = 900; //Meter/Min
+    private final short TIME_TO_FIX = 20; //in minutes
+    public static final short MAX_FORWARD = 900; //Meter/Min
 
     public static final double STD_BUS_SIZE = 10;
 
@@ -40,11 +40,11 @@ public class Bus extends CivilVehicle {
 
     private void generateUID() {
         numeberOfBuses++;
-        this.UID = String.format("BUS%04d", numeberOfBuses);
+        this.UID = numeberOfBuses;
     }
 
     public String getUID(){
-        return this.UID;
+        return String.format("BUS%04d", UID);
     }
 
     public Campaign getCampaign() {

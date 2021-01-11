@@ -251,7 +251,7 @@ public class GUI_ViewStreet {
 		if (vehicles.isEmpty()) return;
 		vehicleData = new Object[vehicles.size()][6];
 		for (int i = 0; i < vehicles.size(); i++) {
-			vehicleData[i][0] = vehicles.get(i).getUID();// TODO: There is an Exception error here;
+			vehicleData[i][0] = vehicles.get(i).getUID();
 			if (vehicles.get(i) instanceof Bus)
 				vehicleData[i][1] = ((Bus)vehicles.get(i)).getCampaign().getHotelDistrict().name();
 			else vehicleData[i][1] = "Local Vehicle";

@@ -1,10 +1,10 @@
 
 public class Sedan extends CivilVehicle {
 
-	private String UID;
-	private static int numeberOfSedan;
-    private final int TIME_TO_FIX = 15; //in minutes
-    public static final int MAX_FORWARD = 1500; // Meter/Min
+	private short UID;
+	private static short numeberOfSedan;
+    private final short TIME_TO_FIX = 15; //in minutes
+    public static final short MAX_FORWARD = 1500; // Meter/Min
 
     public Sedan(double vehicleSize){
         super(vehicleSize);
@@ -16,12 +16,11 @@ public class Sedan extends CivilVehicle {
     
     private void generateUID() {
     	numeberOfSedan++;
-    	this.UID = String.format("Sedan%04d", numeberOfSedan);
-    	
+    	this.UID = numeberOfSedan;
     }
     
     public String getUID(){
-        return this.UID;
+        return String.format("Sedan%04d", UID);
     }
 
     @Override

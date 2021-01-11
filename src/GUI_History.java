@@ -467,7 +467,6 @@ public class GUI_History {
 	}
 
 	public String avgTimeOfTrip() {
-		//TODO: does output diff value even after all have arrived.
 		Calendar now = new GregorianCalendar();
 		now.setTime(currenttimeManager);
 		Calendar from = (GregorianCalendar)now.clone();
